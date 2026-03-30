@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GutCheck — AI Deepfake Detection for Video Calls</title>
+  <meta name="description" content="GutCheck reads your biometric response to detect AI deepfake video calls in real time. The only tool that cannot be fooled.">
+  <style>
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg: #08060F;
+      --surface: #110e1a;
+      --surface-border: #1e1a2e;
+      --accent: #6366f1;
+      --accent-hover: #818cf8;
+      --text: #e8e6f0;
+      --text-muted: #9b97a8;
+      --green: #22c55e;
+      --yellow: #eab308;
+      --red: #ef4444;
+      --radius: 12px;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      background: rgba(8, 6, 15, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--surface-border);
+    }
+
+    nav .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+    }
+
+    .logo {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text);
+      text-decoration: none;
+      letter-spacing: -0.02em;
+    }
+
+    .logo span {
+      color: var(--accent);
+    }
+
+    nav a.nav-cta {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: #fff;
+      background: var(--accent);
+      padding: 8px 20px;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+
+    nav a.nav-cta:hover {
+      background: var(--accent-hover);
+    }
+
+    /* HERO */
+    .hero {
+      padding: 160px 0 100px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -200px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 800px;
+      height: 800px;
+      background: radial-gradient(circle, rgba(99, 102, 241, 0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-badge {
+      display: inline-block;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--accent);
+      background: rgba(99, 102, 241, 0.1);
+      border: 1px solid rgba(99, 102, 241, 0.25);
+      padding: 6px 16px;
+      border-radius: 100px;
+      margin-bottom: 32px;
+      letter-spacing: 0.04em;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.5rem, 6vw, 4rem);
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+      max-width: 720px;
+      margin: 0 auto 24px;
+    }
+
+    .hero p {
+      font-size: 1.15rem;
+      color: var(--text-muted);
+      max-width: 600px;
+      margin: 0 auto 40px;
+      line-height: 1.7;
+    }
+
+    .hero-ctas {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      color: #fff;
+      background: var(--accent);
+      padding: 14px 32px;
+      border-radius: 10px;
+      text-decoration: none;
+      transition: background 0.2s, transform 0.15s;
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-hover);
+      transform: translateY(-1px);
+    }
+
+    .btn-ghost {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text);
+      background: transparent;
+      border: 1px solid var(--surface-border);
+      padding: 14px 32px;
+      border-radius: 10px;
+      text-decoration: none;
+      transition: border-color 0.2s, transform 0.15s;
+    }
+
+    .btn-ghost:hover {
+      border-color: var(--accent);
+      transform: translateY(-1px);
+    }
+
+    /* SECTIONS */
+    section {
+      padding: 100px 0;
+    }
+
+    .section-label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 12px;
+    }
+
+    .section-title {
+      font-size: clamp(1.75rem, 4vw, 2.5rem);
+      font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      margin-bottom: 20px;
+    }
+
+    .section-sub {
+      font-size: 1.05rem;
+      color: var(--text-muted);
+      max-width: 600px;
+      line-height: 1.7;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 60px;
+    }
+
+    .section-header .section-sub {
+      margin: 0 auto;
+    }
+
+    /* PROBLEM */
+    .problem {
+      border-top: 1px solid var(--surface-border);
+    }
+
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-bottom: 48px;
+    }
+
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--surface-border);
+      border-radius: var(--radius);
+      padding: 32px 28px;
+      text-align: center;
+    }
+
+    .stat-card .stat-value {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.4;
+    }
+
+    .stat-card .stat-source {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 8px;
+    }
+
+    .problem-note {
+      text-align: center;
+      font-size: 1.05rem;
+      color: var(--text-muted);
+      max-width: 680px;
+      margin: 0 auto;
+      line-height: 1.7;
+    }
+
+    /* HOW IT WORKS */
+    .how {
+      border-top: 1px solid var(--surface-border);
+    }
+
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 28px;
+      margin-bottom: 40px;
+    }
+
+    .step-card {
+      background: var(--surface);
+      border: 1px solid var(--surface-border);
+      border-radius: var(--radius);
+      padding: 36px 28px;
+      text-align: center;
+    }
+
+    .step-icon {
+      font-size: 2rem;
+      margin-bottom: 20px;
+    }
+
+    .step-num {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 8px;
+    }
+
+    .step-card h3 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .step-card p {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    .how-note {
+      text-align: center;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      background: rgba(99, 102, 241, 0.06);
+      border: 1px solid rgba(99, 102, 241, 0.15);
+      border-radius: 8px;
+      padding: 14px 24px;
+      max-width: 520px;
+      margin: 0 auto;
+    }
+
+    /* PRICING */
+    .pricing {
+      border-top: 1px solid var(--surface-border);
+    }
+
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+      max-width: 800px;
+      margin: 0 auto 32px;
+    }
+
+    .price-card {
+      background: var(--surface);
+      border: 1px solid var(--surface-border);
+      border-radius: var(--radius);
+      padding: 40px 32px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .price-card.featured {
+      border-color: var(--accent);
+      position: relative;
+    }
+
+    .price-card.featured::before {
+      content: 'Most Popular';
+      position: absolute;
+      top: -13px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: #fff;
+      background: var(--accent);
+      padding: 4px 16px;
+      border-radius: 100px;
+      letter-spacing: 0.04em;
+    }
+
+    .price-tier {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 8px;
+    }
+
+    .price-amount {
+      font-size: 2.5rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      margin-bottom: 4px;
+    }
+
+    .price-note {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 28px;
+    }
+
+    .price-features {
+      list-style: none;
+      margin-bottom: 32px;
+      flex: 1;
+    }
+
+    .price-features li {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .price-features li::before {
+      content: '✓';
+      color: var(--accent);
+      font-weight: 700;
+      font-size: 0.85rem;
+    }
+
+    .price-card .btn-primary,
+    .price-card .btn-ghost {
+      width: 100%;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .pricing-footer {
+      text-align: center;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    /* TRUST */
+    .trust {
+      border-top: 1px solid var(--surface-border);
+    }
+
+    .trust-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 28px;
+    }
+
+    .trust-card {
+      text-align: center;
+      padding: 24px;
+    }
+
+    .trust-icon {
+      width: 48px;
+      height: 48px;
+      background: rgba(99, 102, 241, 0.1);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 16px;
+      font-size: 1.25rem;
+    }
+
+    .trust-card p {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    /* FOOTER */
+    footer {
+      border-top: 1px solid var(--surface-border);
+      padding: 48px 0;
+    }
+
+    .footer-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .footer-brand p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 24px;
+      align-items: center;
+    }
+
+    .footer-links a {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover {
+      color: var(--text);
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      section {
+        padding: 72px 0;
+      }
+
+      .hero {
+        padding: 120px 0 72px;
+      }
+
+      .stat-grid,
+      .steps-grid,
+      .trust-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+
+      .pricing-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+
+      .footer-inner {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .footer-links {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <div class="container">
+      <a href="#" class="logo">Gut<span>Check</span></a>
+      <a href="#install" class="nav-cta">Add to Chrome</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-badge">🔒 PRIVATE BETA — Dating Safety Edition</div>
+      <h1>Is He Real? Your Gut Already Knows.</h1>
+      <p>GutCheck reads your biometric response to detect AI deepfake video calls in real time. The only tool that cannot be fooled, because it measures you, not the video.</p>
+      <div class="hero-ctas">
+        <a href="#install" class="btn-primary">Add to Chrome — Free</a>
+        <a href="#how" class="btn-ghost">See How It Works</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROBLEM -->
+  <section class="problem">
+    <div class="container">
+      <div class="section-header">
+        <p class="section-label">The Problem</p>
+        <h2 class="section-title">Real-time deepfake video calls are happening right now.</h2>
+      </div>
+      <div class="stat-grid">
+        <div class="stat-card">
+          <p class="stat-value">$650M+ lost to romance scams in 2023</p>
+          <p class="stat-source">FBI</p>
+        </div>
+        <div class="stat-card">
+          <p class="stat-value">74% of targeted online daters fall victim</p>
+          <p class="stat-source">Norton 2026</p>
+        </div>
+        <div class="stat-card">
+          <p class="stat-value">Real-time face-swap on video calls confirmed active</p>
+          <p class="stat-source">WIRED</p>
+        </div>
+      </div>
+      <p class="problem-note">In 2026, asking him to hold up a sign does not work anymore. Scammers run AI face-swap live. The old tests are dead.</p>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="how" id="how">
+    <div class="container">
+      <div class="section-header">
+        <p class="section-label">How It Works</p>
+        <h2 class="section-title">Your nervous system knows before your brain does.</h2>
+      </div>
+      <div class="steps-grid">
+        <div class="step-card">
+          <div class="step-icon">🔍</div>
+          <p class="step-num">Step 1</p>
+          <h3>Install GutCheck</h3>
+          <p>Free Chrome extension. One click.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-icon">👁</div>
+          <p class="step-num">Step 2</p>
+          <h3>Watch the video or call</h3>
+          <p>GutCheck activates your camera with your permission and reads your facial micro-expressions as you watch.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-icon">✅</div>
+          <p class="step-num">Step 3</p>
+          <h3>Get your score</h3>
+          <p><span style="color:var(--green);font-weight:700;">LIKELY REAL</span> / <span style="color:var(--yellow);font-weight:700;">UNCERTAIN</span> / <span style="color:var(--red);font-weight:700;">LIKELY AI</span>. Based on your biometric response, not video analysis.</p>
+        </div>
+      </div>
+      <div class="how-note">🔒 No video ever leaves your device. All analysis happens locally on your device.</div>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section class="pricing" id="install">
+    <div class="container">
+      <div class="section-header">
+        <p class="section-label">Pricing</p>
+        <h2 class="section-title">Start free. Stay protected.</h2>
+      </div>
+      <div class="pricing-grid">
+        <div class="price-card">
+          <p class="price-tier">Free</p>
+          <p class="price-amount">Free</p>
+          <p class="price-note">Get started instantly</p>
+          <ul class="price-features">
+            <li>3 analyses included</li>
+            <li>Basic verdict (Real / Uncertain / AI)</li>
+            <li>Works on any video or call</li>
+          </ul>
+          <a href="https://chrome.google.com/webstore" class="btn-ghost">Add to Chrome — Free</a>
+        </div>
+        <div class="price-card featured">
+          <p class="price-tier">Premium</p>
+          <p class="price-amount">$9.95</p>
+          <p class="price-note">One-time. Forever.</p>
+          <ul class="price-features">
+            <li>Unlimited analyses</li>
+            <li>Full signal breakdown (viewer + subject scores)</li>
+            <li>Divergence warning</li>
+            <li>Priority updates</li>
+          </ul>
+          <a href="/upgrade" class="btn-primary">Unlock GutCheck — $9.95</a>
+        </div>
+      </div>
+      <p class="pricing-footer">💳 Secure payment via Stripe. No subscription. No renewal.</p>
+    </div>
+  </section>
+
+  <!-- TRUST -->
+  <section class="trust">
+    <div class="container">
+      <div class="section-header">
+        <p class="section-label">Trust</p>
+        <h2 class="section-title">Built on real science.</h2>
+      </div>
+      <div class="trust-grid">
+        <div class="trust-card">
+          <div class="trust-icon">🛡</div>
+          <p>Edge-side processing. Your camera data never leaves your device.</p>
+        </div>
+        <div class="trust-card">
+          <div class="trust-icon">🧠</div>
+          <p>Based on mirror neuron research and emotional contagion science.</p>
+        </div>
+        <div class="trust-card">
+          <div class="trust-icon">🔬</div>
+          <p>Developed by a former private investigator and clinical micro-expression researcher.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <a href="#" class="logo">Gut<span>Check</span></a>
+          <p>Authenticity Detection. A product of Equitymind Ventures.</p>
+        </div>
+        <div class="footer-links">
+          <a href="/privacy">Privacy Policy</a>
+          <a href="/terms">Terms</a>
+          <a href="mailto:contact@gutcheck.you">contact@gutcheck.you</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

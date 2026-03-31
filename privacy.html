@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Privacy Policy - GutCheck</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #08060F;
+      color: #e8e6f0;
+      line-height: 1.6;
+      padding: 40px 20px;
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 12px;
+      color: #fff;
+    }
+    .updated {
+      color: #9b97a8;
+      margin-bottom: 40px;
+      font-size: 0.9rem;
+    }
+    h2 {
+      font-size: 1.5rem;
+      margin: 32px 0 16px;
+      color: #6366f1;
+    }
+    p {
+      margin-bottom: 16px;
+      color: #e8e6f0;
+    }
+    ul {
+      margin: 16px 0 16px 24px;
+    }
+    li {
+      margin-bottom: 8px;
+      color: #e8e6f0;
+    }
+    strong {
+      color: #fff;
+    }
+    a {
+      color: #6366f1;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    .back-link {
+      display: inline-block;
+      margin-bottom: 24px;
+      color: #9b97a8;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="/" class="back-link">← Back to GutCheck</a>
+    
+    <h1>Privacy Policy</h1>
+    <p class="updated">Last Updated: March 31, 2026</p>
+
+    <h2>Overview</h2>
+    <p>GutCheck is built on a privacy-first architecture. Your biometric data never leaves your device. All facial expression analysis happens locally using edge-side processing. We do not collect, store, or transmit your camera feed or facial data.</p>
+
+    <h2>What We Collect</h2>
+    
+    <p><strong>We DO NOT collect:</strong></p>
+    <ul>
+      <li>Camera video or images</li>
+      <li>Facial recognition data</li>
+      <li>Biometric identifiers</li>
+      <li>Personal identifying information from your face</li>
+      <li>Videos you analyze</li>
+    </ul>
+
+    <p><strong>We DO collect (minimal, anonymous):</strong></p>
+    <ul>
+      <li>Extension version number</li>
+      <li>Browser type (Chrome)</li>
+      <li>Anonymous usage statistics (number of analyses performed, not what was analyzed)</li>
+      <li>Premium license status (if purchased)</li>
+      <li>Error logs (no personal data included)</li>
+    </ul>
+
+    <h2>How It Works (Technical)</h2>
+    <p>When you click "Analyze" on a video:</p>
+    <ol style="margin: 16px 0 16px 24px;">
+      <li>Your camera activates with your explicit permission</li>
+      <li>Face-api.js (an open-source library) runs <strong>locally in your browser</strong></li>
+      <li>Facial expression data is analyzed <strong>on your device only</strong></li>
+      <li>A numerical score is calculated locally</li>
+      <li>The score is displayed to you</li>
+      <li>All camera data is immediately discarded (not saved, not transmitted)</li>
+    </ol>
+    <p><strong>Nothing leaves your device.</strong> GutCheck cannot see your face, cannot identify you, and cannot access your camera feed remotely.</p>
+
+    <h2>Camera Permission</h2>
+    <p>GutCheck requests camera access only when you explicitly click "Analyze" on a video. The camera is used exclusively for real-time facial expression analysis during the active analysis session. Once analysis completes, camera access ends and all data is discarded.</p>
+    <p>You can revoke camera permission at any time through Chrome's site settings.</p>
+
+    <h2>Local Storage</h2>
+    <p>GutCheck stores the following data locally in your browser (never transmitted to servers):</p>
+    <ul>
+      <li>Your analysis history (dates and verdicts only, not videos or facial data)</li>
+      <li>Premium license key (if purchased)</li>
+      <li>User preferences and settings</li>
+    </ul>
+    <p>This data is stored using Chrome's local storage API and remains on your device. You can clear it at any time by uninstalling the extension.</p>
+
+    <h2>Payment Processing</h2>
+    <p>If you purchase GutCheck Premium, payment processing is handled by Stripe, a PCI-compliant payment processor. GutCheck does not store your credit card information. We receive only:</p>
+    <ul>
+      <li>Confirmation that payment was successful</li>
+      <li>A license key to unlock premium features</li>
+      <li>Your email address (if you choose to provide it for receipts)</li>
+    </ul>
+
+    <h2>Third-Party Services</h2>
+    <p><strong>Face-api.js:</strong> Open-source JavaScript library that runs entirely in your browser. No data is sent to external servers.</p>
+    <p><strong>Stripe:</strong> Payment processing only. See <a href="https://stripe.com/privacy" target="_blank">Stripe's Privacy Policy</a>.</p>
+
+    <h2>Data Retention</h2>
+    <p>We retain no biometric data because we never collect it. Anonymous usage statistics (number of analyses, error logs) are retained for up to 90 days for product improvement purposes.</p>
+
+    <h2>Your Rights</h2>
+    <p>You have the right to:</p>
+    <ul>
+      <li>Revoke camera permission at any time</li>
+      <li>Clear local storage and analysis history</li>
+      <li>Uninstall the extension and delete all local data</li>
+      <li>Request deletion of any anonymous usage data (contact us)</li>
+    </ul>
+
+    <h2>Children's Privacy</h2>
+    <p>GutCheck is not intended for use by individuals under 13 years of age. We do not knowingly collect data from children.</p>
+
+    <h2>Changes to This Policy</h2>
+    <p>We may update this privacy policy from time to time. Changes will be posted on this page with an updated "Last Updated" date. Continued use of GutCheck after changes constitutes acceptance of the updated policy.</p>
+
+    <h2>Contact</h2>
+    <p>Questions about this privacy policy? Contact us at <a href="mailto:contact@gutcheck.you">contact@gutcheck.you</a></p>
+
+    <h2>Legal</h2>
+    <p><strong>Data Controller:</strong> Equitymind Ventures<br>
+    <strong>Email:</strong> contact@gutcheck.you<br>
+    <strong>Effective Date:</strong> March 31, 2026</p>
+
+    <p style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #1e1a2e; color: #9b97a8; font-size: 0.85rem;">
+      GutCheck is patent-pending technology. Developed by Joe Morin and Nora Betancourt. A product of Equitymind Ventures.
+    </p>
+  </div>
+</body>
+</html>

@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Analyze Video - GutCheck</title>
+  <meta name="description" content="Measure your biometric response to video content in real time. Your nervous system knows when something feels off.">
+  <script defer src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
+  <style>
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg: #08060F;
+      --surface: #110e1a;
+      --surface-border: #1e1a2e;
+      --accent: #6366f1;
+      --accent-hover: #818cf8;
+      --text: #e8e6f0;
+      --text-muted: #9b97a8;
+      --green: #22c55e;
+      --yellow: #eab308;
+      --red: #ef4444;
+      --radius: 12px;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 40px 20px;
+      flex: 1;
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-bottom: 32px;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: color 0.2s;
+    }
+
+    .back-link:hover {
+      color: var(--accent);
+    }
+
+    h1 {
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      margin-bottom: 12px;
+      color: #fff;
+    }
+
+    .lead {
+      font-size: 1.15rem;
+      color: var(--text-muted);
+      margin-bottom: 48px;
+      line-height: 1.6;
+    }
+
+    .analysis-card {
+      background: var(--surface);
+      border: 1px solid var(--surface-border);
+      border-radius: var(--radius);
+      padding: 40px;
+      text-align: center;
+    }
+
+    .step {
+      margin-bottom: 32px;
+    }
+
+    .step-num {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 8px;
+    }
+
+    .step h2 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+      color: #fff;
+    }
+
+    .step p {
+      color: var(--text-muted);
+      margin-bottom: 0;
+    }
+
+    #video-preview {
+      width: 100%;
+      max-width: 480px;
+      height: auto;
+      border-radius: var(--radius);
+      margin: 24px auto;
+      display: none;
+      border: 2px solid var(--surface-border);
+    }
+
+    .btn-primary {
+      display: inline-block;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #fff;
+      background: var(--accent);
+      padding: 16px 40px;
+      border-radius: 10px;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+      margin-top: 24px;
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-hover);
+      transform: translateY(-1px);
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .status {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      margin-top: 16px;
+    }
+
+    .result {
+      margin-top: 40px;
+      padding: 32px;
+      background: rgba(99, 102, 241, 0.06);
+      border: 1px solid rgba(99, 102, 241, 0.15);
+      border-radius: var(--radius);
+      display: none;
+    }
+
+    .result h3 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+
+    .result.real h3 { color: var(--green); }
+    .result.uncertain h3 { color: var(--yellow); }
+    .result.inauthentic h3 { color: var(--red); }
+
+    .result p {
+      color: var(--text);
+      line-height: 1.7;
+    }
+
+    .disclaimer {
+      margin-top: 40px;
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: var(--radius);
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="/" class="back-link">← Back to GutCheck</a>
+    
+    <h1>Analyze Video</h1>
+    <p class="lead">Measure your biometric response while watching video content. Your nervous system knows when something feels off.</p>
+
+    <div class="analysis-card">
+      <div class="step">
+        <p class="step-num">Step 1</p>
+        <h2>Grant Camera Access</h2>
+        <p>Click "Start Analysis" below to activate your camera. Your camera feed stays local, never leaves your device.</p>
+      </div>
+
+      <video id="video-preview" autoplay muted playsinline></video>
+
+      <div class="step">
+        <p class="step-num">Step 2</p>
+        <h2>Watch Your Video</h2>
+        <p>Open the video you want to analyze in another window or tab. Watch it naturally while GutCheck captures your biometric response.</p>
+      </div>
+
+      <button id="startBtn" class="btn-primary">Start Analysis</button>
+      <button id="stopBtn" class="btn-primary" style="display:none;">Stop Analysis</button>
+
+      <p id="status" class="status"></p>
+
+      <div id="result" class="result">
+        <h3 id="verdict"></h3>
+        <p id="explanation"></p>
+      </div>
+    </div>
+
+    <div class="disclaimer">
+      <strong>Important:</strong> GutCheck measures your biometric response (viewer-side only in this web version). This is one signal among many when evaluating video authenticity. Not a definitive deepfake detector. For full dual-signal analysis (viewer + subject), use the Chrome extension (coming soon).
+    </div>
+  </div>
+
+  <script>
+    let video, stream, detectionInterval;
+    let analysisData = [];
+    let startTime;
+
+    const startBtn = document.getElementById('startBtn');
+    const stopBtn = document.getElementById('stopBtn');
+    const status = document.getElementById('status');
+    const videoEl = document.getElementById('video-preview');
+    const resultEl = document.getElementById('result');
+    const verdictEl = document.getElementById('verdict');
+    const explanationEl = document.getElementById('explanation');
+
+    startBtn.addEventListener('click', startAnalysis);
+    stopBtn.addEventListener('click', stopAnalysis);
+
+    async function startAnalysis() {
+      try {
+        status.textContent = 'Requesting camera access...';
+        
+        stream = await navigator.mediaDevices.getUserMedia({ 
+          video: { facingMode: 'user' },
+          audio: false 
+        });
+        
+        videoEl.srcObject = stream;
+        videoEl.style.display = 'block';
+        
+        status.textContent = 'Loading face detection models...';
+        await loadModels();
+        
+        status.textContent = '✓ Ready. Now watch your video in another tab. Analysis in progress...';
+        startBtn.style.display = 'none';
+        stopBtn.style.display = 'inline-block';
+        
+        startTime = Date.now();
+        analysisData = [];
+        runDetection();
+        
+      } catch (error) {
+        status.textContent = 'Error: ' + error.message;
+        console.error(error);
+      }
+    }
+
+    async function loadModels() {
+      const MODEL_URL = 'https://cdn.jsdelivr.net/npm/@vladmandic/face-api/model/';
+      await faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL);
+      await faceapi.nets.faceExpressionNet.loadFromUri(MODEL_URL);
+    }
+
+    async function runDetection() {
+      detectionInterval = setInterval(async () => {
+        const detections = await faceapi.detectSingleFace(
+          videoEl, 
+          new faceapi.TinyFaceDetectorOptions()
+        ).withFaceExpressions();
+        
+        if (detections) {
+          analysisData.push({
+            timestamp: Date.now() - startTime,
+            expressions: detections.expressions
+          });
+        }
+      }, 500);
+    }
+
+    function stopAnalysis() {
+      if (detectionInterval) clearInterval(detectionInterval);
+      if (stream) stream.getTracks().forEach(track => track.stop());
+      
+      videoEl.style.display = 'none';
+      stopBtn.style.display = 'none';
+      startBtn.style.display = 'inline-block';
+      
+      if (analysisData.length < 5) {
+        status.textContent = 'Not enough data captured. Please try again and watch for at least 5 seconds.';
+        return;
+      }
+      
+      status.textContent = 'Analyzing your biometric response...';
+      
+      setTimeout(() => {
+        const result = analyzeData();
+        displayResult(result);
+      }, 1500);
+    }
+
+    function analyzeData() {
+      const avgExpressions = {
+        neutral: 0,
+        happy: 0,
+        sad: 0,
+        angry: 0,
+        fearful: 0,
+        disgusted: 0,
+        surprised: 0
+      };
+      
+      analysisData.forEach(frame => {
+        Object.keys(avgExpressions).forEach(expr => {
+          avgExpressions[expr] += frame.expressions[expr];
+        });
+      });
+      
+      Object.keys(avgExpressions).forEach(expr => {
+        avgExpressions[expr] /= analysisData.length;
+      });
+      
+      const disgustLevel = avgExpressions.disgusted;
+      const neutralLevel = avgExpressions.neutral;
+      const emotionalVariance = calculateVariance(analysisData);
+      
+      let score = 50;
+      
+      if (disgustLevel > 0.15) score -= 20;
+      if (disgustLevel > 0.25) score -= 15;
+      
+      if (neutralLevel > 0.7) score -= 15;
+      
+      if (emotionalVariance < 0.05) score -= 20;
+      
+      if (emotionalVariance > 0.15) score += 15;
+      if (avgExpressions.happy + avgExpressions.surprised > 0.3) score += 10;
+      
+      score = Math.max(0, Math.min(100, score));
+      
+      if (score >= 65) return { verdict: 'LIKELY AUTHENTIC', class: 'real', score };
+      if (score >= 40) return { verdict: 'UNCERTAIN', class: 'uncertain', score };
+      return { verdict: 'LIKELY INAUTHENTIC', class: 'inauthentic', score };
+    }
+
+    function calculateVariance(data) {
+      if (data.length < 2) return 0;
+      
+      const expressionKeys = Object.keys(data[0].expressions);
+      let totalVariance = 0;
+      
+      expressionKeys.forEach(key => {
+        const values = data.map(d => d.expressions[key]);
+        const mean = values.reduce((a, b) => a + b, 0) / values.length;
+        const variance = values.reduce((sum, val) => sum + Math.pow(val - mean, 2), 0) / values.length;
+        totalVariance += variance;
+      });
+      
+      return totalVariance / expressionKeys.length;
+    }
+
+    function displayResult(result) {
+      status.textContent = '';
+      resultEl.style.display = 'block';
+      resultEl.className = 'result ' + result.class;
+      verdictEl.textContent = result.verdict;
+      
+      let explanation = '';
+      if (result.class === 'real') {
+        explanation = `Your biometric response indicates natural emotional engagement with the content (confidence: ${result.score}/100). Your nervous system appears to be responding authentically to what you're watching.`;
+      } else if (result.class === 'uncertain') {
+        explanation = `Mixed signals detected (confidence: ${result.score}/100). Your biometric response doesn't clearly indicate authentic or inauthentic content. Consider additional verification methods.`;
+      } else {
+        explanation = `Your biometric response suggests potential inauthenticity (confidence: ${result.score}/100). Elevated micro-disgust markers or reduced emotional engagement detected. Your nervous system may be flagging something off about this content.`;
+      }
+      
+      explanationEl.textContent = explanation;
+    }
+  </script>
+</body>
+</html>

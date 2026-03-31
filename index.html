@@ -77,6 +77,29 @@
       color: var(--accent);
     }
 
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+    }
+
+    .nav-links a {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover {
+      color: var(--text);
+    }
+
     nav a.nav-cta {
       font-size: 0.875rem;
       font-weight: 600;
@@ -542,8 +565,14 @@
   <!-- NAV -->
   <nav>
     <div class="container">
-      <a href="#" class="logo">Gut<span>Check</span></a>
-      <a href="#install" class="nav-cta">Add to Chrome</a>
+      <a href="/" class="logo">Gut<span>Check</span></a>
+      <div class="nav-right">
+        <div class="nav-links">
+          <a href="/blog-origin-story.html">Our Story</a>
+          <a href="/blog-romance-scams.html">Blog</a>
+        </div>
+        <a href="#install" class="nav-cta">Add to Chrome</a>
+      </div>
     </div>
   </nav>
 
@@ -691,9 +720,10 @@
           <p>Authenticity Detection. A product of Equitymind Ventures.</p>
         </div>
         <div class="footer-links">
-          <a href="/privacy">Privacy Policy</a>
-          <a href="/terms">Terms</a>
-          <a href="mailto:contact@gutcheck.you">contact@gutcheck.you</a>
+          <a href="/blog-origin-story.html">Our Story</a>
+          <a href="/blog-romance-scams.html">Blog</a>
+          <a href="/privacy.html">Privacy Policy</a>
+          <a href="mailto:contact@gutcheck.you">Contact</a>
         </div>
       </div>
     </div>

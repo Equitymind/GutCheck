@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>How We Built GutCheck: From Movie Studios to Authenticity Detection</title>
+  <meta name="description" content="The origin story of GutCheck and how years of biometric research for Hollywood led to breakthrough authenticity detection technology.">
+  <style>
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg: #08060F;
+      --surface: #110e1a;
+      --surface-border: #1e1a2e;
+      --accent: #6366f1;
+      --accent-hover: #818cf8;
+      --text: #e8e6f0;
+      --text-muted: #9b97a8;
+      --radius: 12px;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 40px 20px 80px;
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-bottom: 32px;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: color 0.2s;
+    }
+
+    .back-link:hover {
+      color: var(--accent);
+    }
+
+    .post-meta {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      margin-bottom: 8px;
+    }
+
+    h1 {
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      margin-bottom: 24px;
+      color: #fff;
+    }
+
+    .lead {
+      font-size: 1.15rem;
+      color: var(--text-muted);
+      margin-bottom: 40px;
+      line-height: 1.7;
+    }
+
+    h2 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin: 48px 0 20px;
+      color: #fff;
+    }
+
+    h3 {
+      font-size: 1.35rem;
+      font-weight: 600;
+      margin: 32px 0 16px;
+      color: var(--accent);
+    }
+
+    p {
+      margin-bottom: 20px;
+      color: var(--text);
+    }
+
+    strong {
+      color: #fff;
+      font-weight: 600;
+    }
+
+    blockquote {
+      border-left: 3px solid var(--accent);
+      padding-left: 24px;
+      margin: 32px 0;
+      color: var(--text-muted);
+      font-style: italic;
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    a:hover {
+      color: var(--accent-hover);
+      text-decoration: underline;
+    }
+
+    .cta-box {
+      background: var(--surface);
+      border: 1px solid var(--surface-border);
+      border-radius: var(--radius);
+      padding: 32px;
+      margin: 48px 0;
+      text-align: center;
+    }
+
+    .cta-box h3 {
+      margin-top: 0;
+      margin-bottom: 12px;
+    }
+
+    .cta-box p {
+      margin-bottom: 20px;
+    }
+
+    .btn-primary {
+      display: inline-block;
+      font-size: 1rem;
+      font-weight: 600;
+      color: #fff;
+      background: var(--accent);
+      padding: 12px 28px;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-hover);
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="/" class="back-link">← Back to GutCheck</a>
+    
+    <article>
+      <p class="post-meta">March 31, 2026 • By Joe Morin</p>
+      
+      <h1>How We Built GutCheck: From Movie Studios to Authenticity Detection</h1>
+      
+      <p class="lead">The technology behind GutCheck started in Hollywood screening rooms, not security labs. Here's how years of measuring authentic human reactions led to a breakthrough in video authenticity detection.</p>
+
+      <h2>The Problem We Weren't Looking For</h2>
+
+      <p>In 2023, my co-founder Nora Betancourt and I were building <a href="https://reactr.gg" target="_blank">Reactr</a>, a platform that captures authentic audience reactions to movie trailers and entertainment content. Major studios wanted to know: does this trailer actually move people? Not what they say in a focus group afterward, but what their faces show in real time, before conscious evaluation kicks in.</p>
+
+      <p>We built edge-side biometric analysis using face-api.js to capture micro-expressions, emotional contagion, cognitive load signals. The technology worked. Studios could see genuine surprise, laughter, tension, boredom written on viewers' faces as they watched. <strong>The nervous system doesn't lie, even when the person does.</strong></p>
+
+      <p>That insight came from my years as a private investigator working alongside polygraph examiners. The body betrays inauthenticity before the mind decides to.</p>
+
+      <h2>The Pattern We Couldn't Ignore</h2>
+
+      <p>As we refined Reactr's biometric models, something unexpected emerged in our data. When test participants watched AI-generated video (synthetic faces, voice clones, manipulated content we seeded into test sessions), their biometric signatures looked different. Not dramatically, but consistently.</p>
+
+      <p><strong>Micro-disgust markers.</strong> Subtle furrowing. Reduced emotional mirroring. Cognitive load elevation. The uncanny valley response was measurable, even when viewers consciously reported the video "seemed fine."</p>
+
+      <p>Nora, whose clinical background is in using micro-expressions as mental health diagnostic signals, recognized what we were seeing: the human threat detection system flagging inauthenticity at a subconscious level.</p>
+
+      <h2>The Dual-Signal Insight</h2>
+
+      <p>Most authenticity detection tools analyze the video itself. Compression artifacts, GAN fingerprints, frequency anomalies, blink patterns, lighting inconsistencies. The problem? That's an arms race. AI generation improves, detection retrains, generation adapts again. It's reactive.</p>
+
+      <p>We realized Reactr's viewer-side biometric analysis was a fundamentally different signal. <strong>You can't train an AI model against millions of individual human nervous systems.</strong> The detection happens inside the viewer, not in the video.</p>
+
+      <p>But viewer-side alone wasn't enough. What if the viewer is simply uncomfortable with video calls in general? What if they're distracted, tired, or naturally low-empathy?</p>
+
+      <p>That's when we added the second signal: subject-side biological authenticity analysis. The same biometric models we used to measure viewer response could analyze the face in the video itself. Real human faces exhibit micro-motion even at rest, asymmetrical expressions, biologically timed emotional cascades. AI-generated faces are subtly too still, too perfect, too regular.</p>
+
+      <p><strong>The breakthrough was combining both.</strong> When viewer-side and subject-side scores agree, confidence is high. When they diverge significantly (viewer shows authentic response, but subject shows synthetic markers, or vice versa), that divergence itself is a red flag indicating sophisticated manipulation.</p>
+
+      <h2>Why We Built GutCheck</h2>
+
+      <p>By late 2025, the need was obvious. Romance scams exploiting real-time face-swap on video calls. Synthetic CEO videos authorizing wire transfers. Political deepfakes during election season. Influencers faking entire personalities.</p>
+
+      <p>The existing tools weren't working. Artifact detection is reactive. Blockchain watermarking requires adoption. Manual verification doesn't scale.</p>
+
+      <p>We had years of biometric research infrastructure built for entertainment that could be repurposed for authenticity detection. The technology was proven. The science was sound. The timing was urgent.</p>
+
+      <p>GutCheck became a standalone company in March 2026, powered by Reactr's biometric engine but focused entirely on authenticity verification. Same core technology. Different mission.</p>
+
+      <h2>How It Works (Technical Summary)</h2>
+
+      <p>When you click "Analyze" on a video:</p>
+
+      <p><strong>Viewer-side analysis (your camera, edge-only):</strong> Face-api.js captures your emotional contagion index, micro-expression patterns, cognitive load markers, temporal resonance with the subject's displayed emotions. All processing happens locally in your browser. No video leaves your device.</p>
+
+      <p><strong>Subject-side analysis (the video you're watching):</strong> Same biometric models analyze blink regularity, micro-expression timing, facial asymmetry, idle motion, emotional sequence coherence in the person on screen.</p>
+
+      <p><strong>Composite scoring:</strong> Both signals are weighted 50/50. If they agree (both authentic or both suspicious), confidence is high. If they diverge by more than 20 points, a divergence penalty applies and you get a warning: sophisticated manipulation detected.</p>
+
+      <p>The result: LIKELY REAL, UNCERTAIN, or LIKELY INAUTHENTIC.</p>
+
+      <h2>What We Learned</h2>
+
+      <p>Building for Hollywood taught us that <strong>the body knows before the brain decides.</strong> Audiences react to authentic storytelling in measurable, predictable ways. That same principle applies to authenticity detection.</p>
+
+      <p>Your gut already knows when something feels off. GutCheck just measures it and gives you data to trust that instinct.</p>
+
+      <div class="cta-box">
+        <h3>Try GutCheck</h3>
+        <p>Free Chrome extension. 3 analyses included. See what your nervous system already knows.</p>
+        <a href="https://chrome.google.com/webstore" class="btn-primary">Add to Chrome</a>
+      </div>
+
+      <p><em>Joe Morin is co-founder and CEO of GutCheck and Reactr. Former private investigator, current builder of biometric analysis tools that measure what people feel, not what they say.</em></p>
+    </article>
+  </div>
+</body>
+</html>

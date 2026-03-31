@@ -18,8 +18,8 @@
       --bg: #08060F;
       --surface: #110e1a;
       --surface-border: #1e1a2e;
-      --accent: #6366f1;
-      --accent-hover: #818cf8;
+      --accent: #14B8A6;
+      --accent-hover: #2DD4BF;
       --text: #e8e6f0;
       --text-muted: #9b97a8;
       --green: #22c55e;
@@ -118,7 +118,7 @@
       font-weight: 600;
       color: var(--accent);
       background: rgba(20, 184, 166, 0.1);
-border: 1px solid rgba(20, 184, 166, 0.25);
+      border: 1px solid rgba(20, 184, 166, 0.25);
       padding: 6px 16px;
       border-radius: 100px;
       margin-bottom: 32px;

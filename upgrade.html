@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Get GutCheck Premium | Unlimited Authenticity Analysis</title>
   <meta name="description" content="Unlimited biometric authenticity analyses. Know when something feels off on video calls. Full dashboard access. $19.99/mo or $149/year.">
-  <script src="https://js.stripe.com/v3/"></script>
+
   <style>
     *, *::before, *::after {
       margin: 0;
@@ -282,12 +282,9 @@
   </div>
 
   <script>
-    // Initialize Stripe
-    const stripe = Stripe('pk_test_51T4G2b8kAFC9VsZHLmDlDVTuMwlFR06E9Hc84oW5bnQQBjwQbRmPu5pLs02AzGpFM53HgZfAogq0z4a0mFx0QbLa00kOg1VGgH');
-
-    const prices = {
-      monthly: 'price_1TH8Ao8kAFC9VsZHWomrtDdK',
-      annual: 'price_1TH8Au8kAFC9VsZHq4ACKtPZ'
+    const paymentLinks = {
+      monthly: 'https://buy.stripe.com/test_dRm6oBf8Y7Dj1Old04bfO00',
+      annual: 'https://buy.stripe.com/test_aFaeV77Gw7Dj1Ol2lqbfO01'
     };
 
     let selectedPlan = 'annual';
@@ -305,54 +302,13 @@
     // Handle payment button clicks
     document.getElementById('monthly-btn').addEventListener('click', (e) => {
       e.stopPropagation();
-      checkout('monthly');
+      window.location.href = paymentLinks.monthly;
     });
 
     document.getElementById('annual-btn').addEventListener('click', (e) => {
       e.stopPropagation();
-      checkout('annual');
+      window.location.href = paymentLinks.annual;
     });
-
-    async function checkout(plan) {
-      const errorMessage = document.getElementById('error-message');
-      errorMessage.textContent = '';
-
-      try {
-        // Disable buttons
-        document.querySelectorAll('.btn-select').forEach(btn => btn.disabled = true);
-
-        // Create Checkout Session
-        const response = await fetch('/create-checkout-session', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            priceId: prices[plan],
-            plan: plan
-          }),
-        });
-
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-
-        const session = await response.json();
-
-        // Redirect to Stripe Checkout
-        const result = await stripe.redirectToCheckout({
-          sessionId: session.id,
-        });
-
-        if (result.error) {
-          throw new Error(result.error.message);
-        }
-      } catch (error) {
-        errorMessage.textContent = error.message || 'Payment failed. Please try again.';
-        // Re-enable buttons
-        document.querySelectorAll('.btn-select').forEach(btn => btn.disabled = false);
-      }
-    }
   </script>
 </body>
 </html>

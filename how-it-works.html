@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>How It Works - GutCheck Dual-Signal Authenticity Detection</title>
+  <meta name="description" content="Technical deep dive into GutCheck's dual-signal authenticity detection system combining viewer biometrics and subject analysis.">
+  <style>
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg: #08060F;
+      --surface: #110e1a;
+      --surface-border: #1e1a2e;
+      --accent: #6366f1;
+      --accent-hover: #818cf8;
+      --text: #e8e6f0;
+      --text-muted: #9b97a8;
+      --green: #22c55e;
+      --yellow: #eab308;
+      --red: #ef4444;
+      --radius: 12px;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 40px 20px 80px;
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-bottom: 32px;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: color 0.2s;
+    }
+
+    .back-link:hover {
+      color: var(--accent);
+    }
+
+    h1 {
+      font-size: clamp(2.5rem, 6vw, 3.5rem);
+      font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      margin-bottom: 16px;
+      color: #fff;
+    }
+
+    .lead {
+      font-size: 1.25rem;
+      color: var(--text-muted);
+      margin-bottom: 48px;
+      line-height: 1.6;
+    }
+
+    h2 {
+      font-size: 2rem;
+      font-weight: 700;
+      margin: 56px 0 20px;
+      color: #fff;
+    }
+
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin: 40px 0 16px;
+      color: var(--accent);
+    }
+
+    p {
+      margin-bottom: 20px;
+      color: var(--text);
+    }
+
+    strong {
+      color: #fff;
+      font-weight: 600;
+    }
+
+    .signal-box {
+      background: var(--surface);
+      border-left: 4px solid var(--accent);
+      padding: 28px;
+      margin: 32px 0;
+      border-radius: 0 var(--radius) var(--radius) 0;
+    }
+
+    .signal-box h4 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 12px;
+    }
+
+    .signal-box ul {
+      margin: 12px 0 0 20px;
+    }
+
+    .signal-box li {
+      margin-bottom: 8px;
+      color: var(--text);
+    }
+
+    .tech-note {
+      background: rgba(99, 102, 241, 0.06);
+      border: 1px solid rgba(99, 102, 241, 0.15);
+      border-radius: var(--radius);
+      padding: 20px;
+      margin: 32px 0;
+      font-size: 0.95rem;
+      color: var(--text-muted);
+    }
+
+    .score-example {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin: 32px 0;
+    }
+
+    .score-card {
+      background: var(--surface);
+      border: 1px solid var(--surface-border);
+      border-radius: var(--radius);
+      padding: 24px;
+      text-align: center;
+    }
+
+    .score-card .verdict {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .score-card.real .verdict { color: var(--green); }
+    .score-card.uncertain .verdict { color: var(--yellow); }
+    .score-card.inauthentic .verdict { color: var(--red); }
+
+    .score-card .desc {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    .cta-box {
+      background: var(--surface);
+      border: 1px solid var(--surface-border);
+      border-radius: var(--radius);
+      padding: 32px;
+      margin: 56px 0;
+      text-align: center;
+    }
+
+    .cta-box h3 {
+      margin-top: 0;
+      margin-bottom: 12px;
+    }
+
+    .cta-box p {
+      margin-bottom: 20px;
+    }
+
+    .btn-primary {
+      display: inline-block;
+      font-size: 1rem;
+      font-weight: 600;
+      color: #fff;
+      background: var(--accent);
+      padding: 12px 28px;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-hover);
+      text-decoration: none;
+    }
+
+    @media (max-width: 768px) {
+      .score-example {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="/" class="back-link">← Back to GutCheck</a>
+    
+    <h1>How It Works</h1>
+    <p class="lead">GutCheck uses dual-signal detection to verify video authenticity. We analyze <strong>you</strong> watching the video and <strong>the video itself</strong>, then combine both signals to produce a composite authenticity score.</p>
+
+    <h2>The Core Insight</h2>
+    <p>Traditional deepfake detectors analyze video artifacts: compression patterns, GAN fingerprints, frequency anomalies. That's an arms race the defenders are losing. Scammers update their tools faster than detectors retrain.</p>
+    
+    <p><strong>GutCheck takes a different approach.</strong> Instead of trying to spot the fake in the video, we measure how your nervous system responds to what you're watching. Your mirror neuron system evolved over millions of years to detect inauthenticity in faces. That signal is measurable.</p>
+
+    <p>We combine that viewer-side signal with subject-side biological authenticity analysis. When both signals agree, confidence is high. When they diverge, that divergence itself is a warning: sophisticated manipulation detected.</p>
+
+    <h2>Signal 1: Viewer Side (Your Biometric Response)</h2>
+
+    <div class="signal-box">
+      <h4>What we measure in you:</h4>
+      <ul>
+        <li><strong>Emotional contagion index:</strong> Do your facial expressions mirror the subject's emotions? Real faces trigger natural mirroring. AI faces reduce this response.</li>
+        <li><strong>Uncanny valley markers:</strong> Micro-disgust, subtle furrowing, lip compression when something feels "off."</li>
+        <li><strong>Cognitive load elevation:</strong> Brow tension, blink rate changes indicating your brain is working harder to process what it's seeing.</li>
+        <li><strong>Temporal resonance:</strong> Natural emotional mirroring happens 200-400ms after the subject displays the emotion. Timing matters.</li>
+      </ul>
+    </div>
+
+    <p><strong>How it works technically:</strong> When you click "Analyze," GutCheck activates your camera (with your permission). Face-api.js runs locally in your browser to capture your facial expression data in real time. This is edge-side processing — no video leaves your device. The analysis produces a numerical score representing your biometric response authenticity.</p>
+
+    <div class="tech-note">
+      🔒 <strong>Privacy first:</strong> All facial analysis happens on your device. GutCheck does not collect, store, or transmit your camera feed or facial data. The biometric score is calculated locally and displayed to you. Your face data is immediately discarded after analysis.
+    </div>
+
+    <h2>Signal 2: Subject Side (Video Analysis)</h2>
+
+    <div class="signal-box">
+      <h4>What we measure in the video:</h4>
+      <ul>
+        <li><strong>Blink pattern regularity:</strong> AI faces blink too regularly or not enough. Real humans have natural variance in blink timing.</li>
+        <li><strong>Micro-expression cascade timing:</strong> Genuine emotions transition over 200-500ms. AI jumps between expressions or holds them unnaturally.</li>
+        <li><strong>Facial asymmetry index:</strong> Real faces are asymmetric. AI averages features toward symmetry.</li>
+        <li><strong>Idle motion noise:</strong> Real faces micro-move even in neutral states. AI is suspiciously still.</li>
+        <li><strong>Emotional sequence coherence:</strong> Real emotions fire in biologically correct order (surprise before fear, disgust before anger). AI sometimes gets this wrong.</li>
+      </ul>
+    </div>
+
+    <p><strong>How it works technically:</strong> GutCheck analyzes the video content using the same face-api.js models. We extract biological authenticity signals from the subject's face and produce a second numerical score representing the video's authenticity.</p>
+
+    <h2>Signal 3: Divergence Detection (The Novel Part)</h2>
+
+    <p>Here's what makes GutCheck different from every other tool:</p>
+
+    <p><strong>When both signals agree</strong> (both high or both low), the verdict is straightforward. High confidence.</p>
+
+    <p><strong>When the signals diverge significantly</strong> (viewer response says authentic, but video shows synthetic markers, or vice versa), that disagreement is itself a red flag. It indicates sophisticated manipulation that defeats one detection method but not both simultaneously.</p>
+
+    <p>Example: A deepfake video is so well-made that artifact analysis shows "likely real," but your nervous system still produces uncanny valley markers. The divergence catches what artifact detection alone would miss.</p>
+
+    <p><strong>This is patent-pending.</strong> No existing tool uses signal divergence as a third detection layer.</p>
+
+    <h2>The Composite Score</h2>
+
+    <p>GutCheck combines viewer-side and subject-side scores (weighted 50/50) and applies a divergence penalty if the signals conflict. The result:</p>
+
+    <div class="score-example">
+      <div class="score-card real">
+        <div class="verdict">LIKELY REAL</div>
+        <p class="desc">Both signals agree: authentic</p>
+      </div>
+      <div class="score-card uncertain">
+        <div class="verdict">UNCERTAIN</div>
+        <p class="desc">Mixed signals or low confidence</p>
+      </div>
+      <div class="score-card inauthentic">
+        <div class="verdict">LIKELY INAUTHENTIC</div>
+        <p class="desc">Both signals agree: synthetic, OR high divergence detected</p>
+      </div>
+    </div>
+
+    <h2>Why This Works</h2>
+
+    <p><strong>Viewer-side cannot be adversarially trained.</strong> An AI model can study what artifact detectors look for and route around them. It cannot study a distributed population of individual human nervous systems and train against them. Your biometric response is unique to you.</p>
+
+    <p><strong>Subject-side catches low-effort fakes.</strong> Poorly made deepfakes still exhibit obvious biological implausibilities (bad blink timing, unnatural emotional sequences). Artifact detection is reactive, but biology-based detection is foundational.</p>
+
+    <p><strong>Divergence catches sophisticated attacks.</strong> When a deepfake is good enough to fool artifact detection but not good enough to fool your nervous system (or vice versa), the divergence metric surfaces that inconsistency.</p>
+
+    <h2>The Data Flywheel</h2>
+
+    <p>Every GutCheck analysis generates labeled training data. When a user checks a video and later confirms the result ("I met him in person, he was real" or "I confronted him, he disappeared"), that feedback trains the model.</p>
+
+    <p>Over time, GutCheck gets smarter. The more people use it, the more accurate it becomes. This is especially powerful in the dating vertical, where users have high motivation to verify results and provide ground truth feedback.</p>
+
+    <h2>Technical Stack</h2>
+
+    <ul style="margin: 20px 0 20px 24px;">
+      <li><strong>Face-api.js:</strong> Open-source JavaScript library for facial expression analysis. Runs entirely in the browser.</li>
+      <li><strong>Edge-side processing:</strong> All biometric analysis happens on the user's device. No server-side video processing.</li>
+      <li><strong>Chrome Extension:</strong> Manifest V3, content scripts inject GutCheck badge on video players, popup UI for results.</li>
+      <li><strong>Local storage:</strong> Analysis history stored in browser local storage, never transmitted.</li>
+    </ul>
+
+    <div class="cta-box">
+      <h3>Try It Yourself</h3>
+      <p>Free Chrome extension. 3 analyses included. See how dual-signal detection works in real time.</p>
+      <a href="https://chrome.google.com/webstore" class="btn-primary">Add to Chrome</a>
+    </div>
+
+    <p style="margin-top: 48px; padding-top: 24px; border-top: 1px solid var(--surface-border); color: var(--text-muted); font-size: 0.9rem;">
+      Patent pending. Dual-signal authenticity detection combining viewer biometric response and subject biological analysis. A product of Equitymind Ventures.
+    </p>
+  </div>
+</body>
+</html>

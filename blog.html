@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blog - GutCheck</title>
+  <meta name="description" content="The story behind GutCheck and why authenticity detection matters now.">
+  <style>
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg: #08060F;
+      --surface: #110e1a;
+      --surface-border: #1e1a2e;
+      --accent: #6366f1;
+      --accent-hover: #818cf8;
+      --text: #e8e6f0;
+      --text-muted: #9b97a8;
+      --radius: 12px;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 40px 20px 80px;
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-bottom: 32px;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: color 0.2s;
+    }
+
+    .back-link:hover {
+      color: var(--accent);
+    }
+
+    h1 {
+      font-size: clamp(2.5rem, 6vw, 3.5rem);
+      font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      margin-bottom: 16px;
+      color: #fff;
+    }
+
+    .page-lead {
+      font-size: 1.15rem;
+      color: var(--text-muted);
+      margin-bottom: 60px;
+      line-height: 1.7;
+    }
+
+    .post-card {
+      background: var(--surface);
+      border: 1px solid var(--surface-border);
+      border-radius: var(--radius);
+      padding: 32px;
+      margin-bottom: 24px;
+      transition: border-color 0.2s;
+      text-decoration: none;
+      display: block;
+    }
+
+    .post-card:hover {
+      border-color: var(--accent);
+    }
+
+    .post-meta {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      margin-bottom: 12px;
+    }
+
+    .post-card h2 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+      color: #fff;
+      transition: color 0.2s;
+    }
+
+    .post-card:hover h2 {
+      color: var(--accent);
+    }
+
+    .post-excerpt {
+      font-size: 1rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 16px;
+    }
+
+    .read-more {
+      color: var(--accent);
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    .post-card:hover .read-more {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="/" class="back-link">← Back to GutCheck</a>
+    
+    <h1>Blog</h1>
+    <p class="page-lead">The story behind GutCheck and why authenticity detection matters now.</p>
+
+    <a href="/blog-origin-story.html" class="post-card">
+      <p class="post-meta">March 31, 2026</p>
+      <h2>How We Built GutCheck: From Movie Studios to Authenticity Detection</h2>
+      <p class="post-excerpt">The technology behind GutCheck started in screening rooms, not security labs. Here's how analyzing authentic human reactions led to a breakthrough in video authenticity detection.</p>
+      <span class="read-more">Read more →</span>
+    </a>
+
+    <a href="/blog-romance-scams.html" class="post-card">
+      <p class="post-meta">March 31, 2026</p>
+      <h2>Why We're Starting with Romance Scams</h2>
+      <p class="post-excerpt">Romance scams are the fastest-growing fraud category. Real-time face-swap on video calls is here. Why GutCheck is focusing on dating safety first.</p>
+      <span class="read-more">Read more →</span>
+    </a>
+  </div>
+</body>
+</html>

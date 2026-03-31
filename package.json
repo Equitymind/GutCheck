@@ -1,0 +1,12 @@
+{
+  "name": "gutcheck",
+  "version": "1.0.0",
+  "description": "GutCheck - Authenticity Detection",
+  "main": "index.html",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "nodemailer": "^6.9.7"
+  }
+}

@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sample Dashboard - GutCheck</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #08060F;
+    --surface: #13131F;
+    --surface-alt: #1a1a2e;
+    --accent: #6366f1;
+    --accent-glow: rgba(99, 102, 241, 0.4);
+    --green: #22c55e;
+    --yellow: #eab308;
+    --red: #ef4444;
+    --text: #e2e8f0;
+    --text-dim: #94a3b8;
+    --text-muted: #64748b;
+    --border: rgba(99, 102, 241, 0.15);
+    --mono: 'JetBrains Mono', monospace;
+    --sans: 'Inter', system-ui, sans-serif;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Header */
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 32px;
+    border-bottom: 1px solid var(--border);
+    background: linear-gradient(180deg, rgba(99,102,241,0.04) 0%, transparent 100%);
+  }
+
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .logo-mark {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, var(--accent), #818cf8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--mono);
+    font-weight: 700;
+    font-size: 16px;
+    color: white;
+  }
+
+  .header-title {
+    font-family: var(--mono);
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+
+  .header-title span {
+    color: var(--accent);
+  }
+
+  .badge {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    padding: 4px 10px;
+    border-radius: 4px;
+    background: rgba(99, 102, 241, 0.15);
+    color: var(--accent);
+    border: 1px solid rgba(99, 102, 241, 0.3);
+  }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  /* Main Container */
+  .container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 32px;
+  }
+
+  /* Back Link */
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 14px;
+    margin-bottom: 24px;
+    transition: color 0.2s;
+  }
+
+  .back-link:hover {
+    color: var(--accent);
+  }
+
+  /* Grid Layout */
+  .grid {
+    display: grid;
+    gap: 24px;
+    grid-template-columns: repeat(12, 1fr);
+  }
+
+  .col-12 { grid-column: span 12; }
+  .col-6 { grid-column: span 6; }
+  .col-4 { grid-column: span 4; }
+  .col-3 { grid-column: span 3; }
+
+  /* Card */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+  }
+
+  .card-header {
+    margin-bottom: 20px;
+  }
+
+  .card-title {
+    font-family: var(--mono);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  /* Hero Score */
+  .hero-score {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 40px;
+  }
+
+  .score-circle {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    margin-bottom: 24px;
+  }
+
+  .score-value {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: var(--mono);
+    font-size: 56px;
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  .score-label {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .verdict {
+    font-family: var(--mono);
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+
+  .verdict.real { color: var(--green); }
+  .verdict.uncertain { color: var(--yellow); }
+  .verdict.inauthentic { color: var(--red); }
+
+  .verdict-desc {
+    font-size: 14px;
+    color: var(--text-dim);
+    max-width: 400px;
+  }
+
+  /* Metric Row */
+  .metric-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+
+  .metric-row:last-child {
+    border-bottom: none;
+  }
+
+  .metric-label {
+    font-size: 14px;
+    color: var(--text-dim);
+  }
+
+  .metric-value {
+    font-family: var(--mono);
+    font-size: 18px;
+    font-weight: 600;
+  }
+
+  .metric-value.good { color: var(--green); }
+  .metric-value.warning { color: var(--yellow); }
+  .metric-value.bad { color: var(--red); }
+
+  /* Progress Bar */
+  .progress-bar {
+    width: 100%;
+    height: 8px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-top: 8px;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 4px;
+    transition: width 0.3s ease;
+  }
+
+  .progress-fill.good { background: var(--green); }
+  .progress-fill.warning { background: var(--yellow); }
+  .progress-fill.bad { background: var(--red); }
+
+  /* Timestamp */
+  .timestamp {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid rgba(255,255,255,0.05);
+  }
+
+  /* Download Button */
+  .btn-download {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-family: var(--mono);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  .btn-download:hover {
+    background: #818cf8;
+  }
+
+  /* Notice */
+  .notice {
+    background: rgba(99, 102, 241, 0.06);
+    border: 1px solid rgba(99, 102, 241, 0.15);
+    border-radius: 8px;
+    padding: 16px;
+    font-size: 13px;
+    color: var(--text-dim);
+    line-height: 1.6;
+  }
+
+  @media (max-width: 768px) {
+    .col-6, .col-4, .col-3 {
+      grid-column: span 12;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left">
+    <div class="logo-mark">GC</div>
+    <div class="header-title">Gut<span>Check</span></div>
+    <div class="badge">PREMIUM</div>
+  </div>
+  <div class="header-right">
+    <span id="session-time">Session: 32s</span>
+  </div>
+</div>
+
+<div class="container">
+  <a href="/" class="back-link">← Back to Home</a>
+  
+  <div style="background: rgba(99, 102, 241, 0.1); border: 1px solid rgba(99, 102, 241, 0.3); border-radius: 8px; padding: 16px; margin-bottom: 24px; text-align: center;">
+    <p style="font-family: var(--mono); font-size: 14px; color: var(--accent); margin: 0;">
+      <strong>SAMPLE DASHBOARD</strong> - This is what you get with GutCheck Premium
+    </p>
+  </div>
+
+  <div class="grid">
+    
+    <!-- Hero Score -->
+    <div class="col-12">
+      <div class="card hero-score">
+        <div class="score-circle">
+          <svg width="200" height="200" style="transform: rotate(-90deg)">
+            <circle cx="100" cy="100" r="90" stroke="rgba(255,255,255,0.05)" stroke-width="12" fill="none"/>
+            <circle id="score-ring" cx="100" cy="100" r="90" stroke="var(--green)" stroke-width="12" fill="none"
+              stroke-dasharray="565" stroke-dashoffset="141" stroke-linecap="round"/>
+          </svg>
+          <div class="score-value" id="score-number">75</div>
+          <div class="score-label">/ 100</div>
+        </div>
+        <div class="verdict real" id="verdict">LIKELY AUTHENTIC</div>
+        <p class="verdict-desc" id="verdict-desc">Your biometric response indicates natural emotional engagement with the content. Your nervous system appears to be responding authentically.</p>
+      </div>
+    </div>
+
+    <!-- Viewer Biometrics -->
+    <div class="col-6">
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Viewer Biometrics</h3>
+        </div>
+        
+        <div class="metric-row">
+          <span class="metric-label">Emotional Engagement</span>
+          <span class="metric-value good" id="engagement-score">82</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill good" id="engagement-bar" style="width: 82%"></div>
+        </div>
+
+        <div class="metric-row">
+          <span class="metric-label">Uncanny Valley Detection</span>
+          <span class="metric-value good" id="uncanny-score">Low</span>
+        </div>
+
+        <div class="metric-row">
+          <span class="metric-label">Cognitive Load</span>
+          <span class="metric-value good" id="cognitive-score">Normal</span>
+        </div>
+
+        <div class="metric-row">
+          <span class="metric-label">Temporal Mirroring</span>
+          <span class="metric-value good" id="temporal-score">320ms</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Expression Breakdown -->
+    <div class="col-6">
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Expression Analysis</h3>
+        </div>
+        
+        <div class="metric-row">
+          <span class="metric-label">Neutral</span>
+          <span class="metric-value">42%</span>
+        </div>
+        <div class="metric-row">
+          <span class="metric-label">Happy</span>
+          <span class="metric-value">18%</span>
+        </div>
+        <div class="metric-row">
+          <span class="metric-label">Surprised</span>
+          <span class="metric-value">12%</span>
+        </div>
+        <div class="metric-row">
+          <span class="metric-label">Sad</span>
+          <span class="metric-value">8%</span>
+        </div>
+        <div class="metric-row">
+          <span class="metric-label">Disgust</span>
+          <span class="metric-value warning">6%</span>
+        </div>
+        <div class="metric-row">
+          <span class="metric-label">Angry</span>
+          <span class="metric-value">4%</span>
+        </div>
+        <div class="metric-row">
+          <span class="metric-label">Fearful</span>
+          <span class="metric-value">10%</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Session Info -->
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Session Information</h3>
+        </div>
+        <div class="metric-row">
+          <span class="metric-label">Analysis Duration</span>
+          <span class="metric-value" id="duration">32 seconds</span>
+        </div>
+        <div class="metric-row">
+          <span class="metric-label">Frames Captured</span>
+          <span class="metric-value" id="frames">64 frames</span>
+        </div>
+        <div class="metric-row">
+          <span class="metric-label">Detection Confidence</span>
+          <span class="metric-value good" id="confidence">High (87%)</span>
+        </div>
+        <div class="timestamp">
+          Analysis completed: <span id="timestamp"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Notice -->
+    <div class="col-12">
+      <div class="notice">
+        <strong>Viewer-side analysis only.</strong> This version measures your biometric response while watching. For full dual-signal detection (viewer + subject analysis + divergence warnings), use the Chrome extension when available.
+      </div>
+    </div>
+
+    <!-- Download -->
+    <div class="col-12" style="text-align: center;">
+      <button class="btn-download" onclick="downloadReport()">
+        <span>↓</span> Download Full Report (PDF)
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  // Set timestamp
+  document.getElementById('timestamp').textContent = new Date().toLocaleString();
+
+  function downloadReport() {
+    alert('PDF download will be implemented with premium tier.');
+  }
+</script>
+
+</body>
+</html>

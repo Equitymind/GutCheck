@@ -5,8 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>GutCheck: Real-Time Video Authenticity Detection | Analyzes Viewer Response to Identify Manipulated or Synthetic Video Calls</title>
   <meta name="description" content="GutCheck analyzes your real-time response while you watch and compares it to the behavior of the video itself, surfacing authenticity signals in real time.">
-  <style>
-    *, *::before, *::after {
+<link rel="icon" type="image/png" href="assets/favicon.png">
+
+<style>
+  *, *::before, *::after {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
@@ -106,7 +108,7 @@
       transform: translateX(-50%);
       width: 800px;
       height: 800px;
-      background: radial-gradient(circle, rgba(99, 102, 241, 0.12) 0%, transparent 70%);
+      background: radial-gradient(circle, rgba(20, 184, 166, 0.12) 0%, transparent 70%);
       pointer-events: none;
     }
 
@@ -115,15 +117,21 @@
       font-size: 0.8rem;
       font-weight: 600;
       color: var(--accent);
-      background: rgba(99, 102, 241, 0.1);
-      border: 1px solid rgba(99, 102, 241, 0.25);
+      background: rgba(20, 184, 166, 0.1);
+border: 1px solid rgba(20, 184, 166, 0.25);
       padding: 6px 16px;
       border-radius: 100px;
       margin-bottom: 32px;
       letter-spacing: 0.04em;
     }
-
-    .hero h1 {
+.site-logo {
+  width: 240px;
+  max-width: 80vw;
+  height: auto;
+  display: block;
+  margin: 0 auto 28px auto;
+}  
+  .hero h1 {
       font-size: clamp(2.5rem, 6vw, 4rem);
       font-weight: 800;
       line-height: 1.1;
@@ -542,8 +550,12 @@
   <!-- HERO -->
   <section class="hero">
     <div class="container">
-      <div class="hero-badge">🔒 PRIVATE BETA — Dating Safety Edition</div>
-      <h1>See what your own reaction reveals about a video call</h1>
+
+  <img src="assets/primary-logo.png" alt="GutCheck logo" class="site-logo">
+
+  <div class="hero-badge">🔒 PRIVATE BETA — Dating Safety Edition</div>
+
+  <h1>See what your own reaction reveals about a video call</h1>
       <p>GutCheck analyzes your real-time response while you watch and compares it to the behavior of the video itself, surfacing authenticity signals in real time.</p>
       <div class="hero-ctas">
         <a href="#install" class="btn-primary">Add to Chrome — Free</a>

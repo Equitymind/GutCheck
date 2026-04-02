@@ -4,9 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>GutCheck | Verify Video Call Authenticity in Real Time</title>
-  <meta name="description" content="GutCheck analyzes your biometric response and video behavior to detect potential manipulation during live calls.">
+  <meta name="description" content="GutCheck analyzes your biometric response and video behavior to detect manipulation during live calls. Share results with friends using SquadCheck™ and see if they noticed the same moment.">
+  <meta name="keywords" content="video call authenticity, deepfake detection, romance scam protection, video verification, biometric analysis, dating safety, catfish detection, video manipulation detection">
   <meta name="google-site-verification" content="CcX0vOYX8Mkuy32cjYpX-YF_v6z5xmnCVQmXLW5MVvk">
-<link rel="icon" type="image/png" href="assets/favicon.png">
+  <link rel="icon" type="image/png" href="assets/favicon.png">
+  <link rel="canonical" href="https://gutcheck.site/">
 
 <style>
   *, *::before, *::after {
@@ -124,7 +126,7 @@
       position: relative;
       overflow: hidden;
     }
-    
+
     .hero .container {
       display: flex;
       flex-direction: column;
@@ -155,26 +157,37 @@
       margin-bottom: 32px;
       letter-spacing: 0.04em;
     }
-.site-logo {
-  width: 400px;
-  max-width: 85vw;
-  height: auto;
-  display: block;
-  margin: 0 auto 32px auto;
-}  
-  .hero h1 {
+
+    .site-logo {
+      width: 400px;
+      max-width: 85vw;
+      height: auto;
+      display: block;
+      margin: 0 auto 32px auto;
+    }
+
+    .hero h1 {
       font-size: clamp(2.5rem, 6vw, 4rem);
       font-weight: 800;
       line-height: 1.1;
       letter-spacing: -0.03em;
       max-width: 720px;
+      margin: 0 auto 16px;
+    }
+
+    .hero h2 {
+      font-size: 1.35rem;
+      font-weight: 400;
+      color: var(--text-muted);
+      max-width: 600px;
       margin: 0 auto 24px;
+      line-height: 1.5;
     }
 
     .hero p {
-      font-size: 1.15rem;
+      font-size: 1.05rem;
       color: var(--text-muted);
-      max-width: 600px;
+      max-width: 640px;
       margin: 0 auto 40px;
       line-height: 1.7;
     }
@@ -184,6 +197,21 @@
       gap: 16px;
       justify-content: center;
       flex-wrap: wrap;
+    }
+
+    .hero-subtext {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin-top: 16px;
+    }
+
+    .hero-subtext a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .hero-subtext a:hover {
+      text-decoration: underline;
     }
 
     .btn-primary {
@@ -263,6 +291,92 @@
       margin: 0 auto;
     }
 
+    /* SQUADCHECK FEATURE */
+    .squadcheck-feature {
+      border-top: 1px solid var(--surface-border);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .squadcheck-feature::before {
+      content: '';
+      position: absolute;
+      top: -100px;
+      right: -200px;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(20, 184, 166, 0.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .squadcheck-badge {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: #fff;
+      background: var(--accent);
+      padding: 5px 14px;
+      border-radius: 100px;
+      letter-spacing: 0.04em;
+      margin-bottom: 20px;
+    }
+
+    .coming-soon-badge {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--yellow);
+      background: rgba(234, 179, 8, 0.1);
+      border: 1px solid rgba(234, 179, 8, 0.25);
+      padding: 4px 12px;
+      border-radius: 100px;
+      letter-spacing: 0.04em;
+      margin-left: 10px;
+      vertical-align: middle;
+    }
+
+    .squadcheck-content {
+      max-width: 640px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .squadcheck-content .section-title {
+      margin-bottom: 24px;
+    }
+
+    .squadcheck-body {
+      font-size: 1.05rem;
+      color: var(--text-muted);
+      line-height: 1.8;
+      margin-bottom: 32px;
+    }
+
+    .squadcheck-callout {
+      background: var(--surface);
+      border: 1px solid rgba(234, 179, 8, 0.2);
+      border-left: 3px solid var(--yellow);
+      border-radius: var(--radius);
+      padding: 20px 28px;
+      margin-bottom: 32px;
+      text-align: left;
+    }
+
+    .squadcheck-callout p {
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    .squadcheck-callout .callout-stat {
+      font-weight: 700;
+      color: var(--yellow);
+      margin-bottom: 4px;
+    }
+
+    .squadcheck-callout .callout-detail {
+      color: var(--text-muted);
+    }
+
     /* PROBLEM */
     .problem {
       border-top: 1px solid var(--surface-border);
@@ -303,6 +417,32 @@
       max-width: 680px;
       margin: 0 auto;
       line-height: 1.7;
+    }
+
+    /* POSITIONING */
+    .positioning {
+      border-top: 1px solid var(--surface-border);
+    }
+
+    .positioning-content {
+      max-width: 640px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .positioning-content .section-title {
+      margin-bottom: 28px;
+    }
+
+    .positioning-body {
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      line-height: 1.9;
+    }
+
+    .positioning-body strong {
+      color: var(--text);
+      font-weight: 600;
     }
 
     /* HOW IT WORKS */
@@ -351,16 +491,131 @@
       line-height: 1.6;
     }
 
-    .how-note {
+    .how-bridge {
       text-align: center;
-      font-size: 0.9rem;
+      font-size: 1.05rem;
       color: var(--text-muted);
-      background: rgba(99, 102, 241, 0.06);
-      border: 1px solid rgba(99, 102, 241, 0.15);
+      background: rgba(20, 184, 166, 0.06);
+      border: 1px solid rgba(20, 184, 166, 0.15);
       border-radius: 8px;
       padding: 14px 24px;
       max-width: 520px;
       margin: 0 auto;
+    }
+
+    .how-bridge a {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .how-bridge a:hover {
+      text-decoration: underline;
+    }
+
+    /* GROUP CONSENSUS */
+    .consensus {
+      border-top: 1px solid var(--surface-border);
+    }
+
+    .consensus-content {
+      max-width: 640px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .consensus-body {
+      font-size: 1.05rem;
+      color: var(--text-muted);
+      line-height: 1.8;
+      margin-bottom: 32px;
+    }
+
+    .consensus-callout {
+      background: var(--surface);
+      border: 1px solid rgba(20, 184, 166, 0.2);
+      border-left: 3px solid var(--accent);
+      border-radius: var(--radius);
+      padding: 20px 28px;
+      margin-bottom: 28px;
+      text-align: left;
+    }
+
+    .consensus-callout .callout-stat {
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 4px;
+      font-size: 0.95rem;
+    }
+
+    .consensus-callout .callout-detail {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    .consensus-closer {
+      font-size: 1.05rem;
+      color: var(--text-muted);
+      line-height: 1.7;
+      margin-bottom: 12px;
+    }
+
+    .consensus-signal {
+      font-size: 0.95rem;
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    /* WHY IT WORKS */
+    .science {
+      border-top: 1px solid var(--surface-border);
+    }
+
+    .science-content {
+      max-width: 680px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .science-body {
+      font-size: 1.05rem;
+      color: var(--text-muted);
+      line-height: 1.8;
+    }
+
+    /* TRUST */
+    .trust {
+      border-top: 1px solid var(--surface-border);
+    }
+
+    .trust-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .trust-card {
+      background: var(--surface);
+      border: 1px solid var(--surface-border);
+      border-radius: var(--radius);
+      padding: 28px 24px;
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+    }
+
+    .trust-icon {
+      font-size: 1.5rem;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .trust-card p {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      line-height: 1.6;
     }
 
     /* PRICING */
@@ -444,7 +699,7 @@
     }
 
     .price-features li::before {
-      content: '✓';
+      content: '\2713';
       color: var(--accent);
       font-weight: 700;
       font-size: 0.85rem;
@@ -463,38 +718,91 @@
       color: var(--text-muted);
     }
 
-    /* TRUST */
-    .trust {
+    /* USE CASES */
+    .use-cases {
       border-top: 1px solid var(--surface-border);
     }
 
-    .trust-grid {
+    .use-cases-grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 28px;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+      max-width: 800px;
+      margin: 0 auto;
     }
 
-    .trust-card {
-      text-align: center;
-      padding: 24px;
+    .use-case-card {
+      background: var(--surface);
+      border: 1px solid var(--surface-border);
+      border-radius: var(--radius);
+      padding: 36px 28px;
     }
 
-    .trust-icon {
-      width: 80px;
-      height: 80px;
-      background: rgba(99, 102, 241, 0.1);
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 16px;
-      font-size: 2.25rem;
+    .use-case-card h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 12px;
     }
 
-    .trust-card p {
+    .use-case-quote {
       font-size: 0.95rem;
       color: var(--text-muted);
+      font-style: italic;
       line-height: 1.6;
+      margin-bottom: 20px;
+      padding-left: 16px;
+      border-left: 2px solid var(--accent);
+    }
+
+    .use-case-card ul {
+      list-style: none;
+    }
+
+    .use-case-card ul li {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      padding: 5px 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .use-case-card ul li::before {
+      content: '\2713';
+      color: var(--accent);
+      font-weight: 700;
+      font-size: 0.8rem;
+    }
+
+    /* SEO BLOCK */
+    .seo-block {
+      border-top: 1px solid var(--surface-border);
+      padding: 60px 0;
+    }
+
+    .seo-block p {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      max-width: 720px;
+      margin: 0 auto;
+      text-align: center;
+      line-height: 1.7;
+    }
+
+    /* FINAL CTA */
+    .final-cta {
+      border-top: 1px solid var(--surface-border);
+      text-align: center;
+    }
+
+    .final-cta .section-title {
+      margin-bottom: 16px;
+    }
+
+    .final-cta p {
+      font-size: 1.05rem;
+      color: var(--text-muted);
+      margin-bottom: 32px;
     }
 
     /* FOOTER */
@@ -534,6 +842,8 @@
       color: var(--text);
     }
 
+    .teal { color: var(--accent); }
+
     /* RESPONSIVE */
     @media (max-width: 768px) {
       section {
@@ -545,13 +855,14 @@
       }
 
       .stat-grid,
-      .steps-grid,
-      .trust-grid {
+      .steps-grid {
         grid-template-columns: 1fr;
         gap: 16px;
       }
 
-      .pricing-grid {
+      .trust-grid,
+      .pricing-grid,
+      .use-cases-grid {
         grid-template-columns: 1fr;
         gap: 20px;
       }
@@ -579,30 +890,50 @@
   </nav>
 
   <!-- HERO -->
-<section class="hero">
-  <div class="container">
+  <section class="hero">
+    <div class="container">
+      <img src="logo-primary.png" alt="GutCheck logo" class="site-logo">
+      <div class="hero-badge">🔒 PRIVATE BETA &mdash; Dating Safety Edition</div>
+      <h1>Verify Video Call Authenticity in Real Time</h1>
+      <h2>Know when something feels off &mdash; and see if others caught it too</h2>
+      <p>Gut<span class="teal">Check</span> analyzes your biometric response and video behavior to detect manipulation during live calls. Then use <a href="/squadcheck.html" style="color:var(--accent);text-decoration:none;">Squad<span class="teal">Check</span>&trade;</a> to share it with friends and see if they noticed the same moment.</p>
+      <div class="hero-ctas">
+        <a href="/analyze.html" class="btn-primary">Try It Free</a>
+        <a href="#how" class="btn-ghost">See How It Works</a>
+      </div>
+      <p class="hero-subtext">Or <a href="/squadcheck.html">send it to friends and compare results</a></p>
+    </div>
+  </section>
 
-    <img src="logo-primary.png" alt="GutCheck logo" class="site-logo">
-
-  <div class="hero-badge">🔒 PRIVATE BETA  -  Dating Safety Edition</div>
-
-<h1>Verify Video Call Authenticity in Real Time</h1>
-
-<p>GutCheck analyzes your biometric response and video behavior to detect potential manipulation during live calls.</p>
-
-<div class="hero-ctas">
-        <a href="/analyze.html" class="btn-primary">Try It Now  -  Free</a>
-        <a href="/demo.html" class="btn-ghost">See Sample Dashboard</a>
+  <!-- SQUADCHECK FEATURE -->
+  <section class="squadcheck-feature" id="squadcheck">
+    <div class="container">
+      <div class="squadcheck-content">
+        <div>
+          <span class="squadcheck-badge">NEW &mdash; SQUAD<span class="teal">CHECK</span>&trade;</span>
+          <span class="coming-soon-badge">COMING SOON</span>
+        </div>
+        <h2 class="section-title">See if your friends noticed the same thing</h2>
+        <div class="squadcheck-body">
+          If something feels off, send it to your friends.<br><br>
+          They watch independently. They react in real time.<br>
+          You see if everyone noticed the same moment.
+        </div>
+        <div class="squadcheck-callout">
+          <p class="callout-stat">&#9888;&#65039; 4 out of 5 friends flagged this as suspicious</p>
+          <p class="callout-detail">All reactions spiked at 0:42</p>
+        </div>
+        <a href="/squadcheck.html" class="btn-primary">Try Squad<span class="teal">Check</span></a>
       </div>
     </div>
   </section>
 
-  <!-- PROBLEM -->
+  <!-- THE PROBLEM -->
   <section class="problem">
     <div class="container">
       <div class="section-header">
         <p class="section-label">The Problem</p>
-        <h2 class="section-title">Manipulated video calls are already here.</h2>
+        <h2 class="section-title">Fake and manipulated video calls are already here</h2>
       </div>
       <div class="stat-grid">
         <div class="stat-card">
@@ -618,7 +949,21 @@
           <p class="stat-source">WIRED</p>
         </div>
       </div>
-      <p class="problem-note">Traditional “prove it” tests are no longer enough. A video call can look convincing and still feel off. GutCheck is built for that moment.</p>
+    </div>
+  </section>
+
+  <!-- POSITIONING -->
+  <section class="positioning">
+    <div class="container">
+      <div class="positioning-content">
+        <h2 class="section-title">Built for the moment something feels off</h2>
+        <div class="positioning-body">
+          A video call can look real and still feel wrong.<br><br>
+          Traditional "prove it" tests don't catch that.<br>
+          Gut<span class="teal">Check</span> is built for that moment.<br><br>
+          <strong>You don't need proof. You need clarity.</strong>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -627,30 +972,103 @@
     <div class="container">
       <div class="section-header">
         <p class="section-label">How It Works</p>
-        <h2 class="section-title">Dual-signal detection: analyzing you AND the video.</h2>
-        <p class="section-sub">GutCheck combines two signals to detect authenticity. Your nervous system response reveals what artifact analysis alone cannot catch.</p>
+        <h2 class="section-title">Two signals. One answer.</h2>
+        <p class="section-sub">Gut<span class="teal">Check</span> analyzes both: your reaction and the video itself. When they match, confidence is high. When they don't, something's wrong.</p>
       </div>
       <div class="steps-grid">
         <div class="step-card">
           <div class="step-icon">🔍</div>
           <p class="step-num">Step 1</p>
-          <h3>Install GutCheck</h3>
-          <p>Free Chrome extension. One click.</p>
+          <h3>Install Gut<span class="teal">Check</span></h3>
+          <p>Free Chrome extension. One click to start analyzing video calls in real time.</p>
         </div>
         <div class="step-card">
           <div class="step-icon">👁</div>
           <p class="step-num">Step 2</p>
-          <h3>Watch the video or call</h3>
-          <p>GutCheck captures TWO signals: (1) your biometric response (facial micro-expressions, emotional contagion), and (2) biological authenticity markers in the video itself (blink patterns, micro-expression timing).</p>
+          <h3>Watch the video or live call</h3>
+          <p>Gut<span class="teal">Check</span> captures two signals: (1) Your biometric response &mdash; facial micro-expressions, attention shifts, emotional reactions. (2) Behavioral authenticity markers in the video &mdash; blink patterns, timing, movement consistency.</p>
         </div>
         <div class="step-card">
           <div class="step-icon">✅</div>
           <p class="step-num">Step 3</p>
-          <h3>Get your composite result</h3>
-          <p><span style="color:var(--green);font-weight:700;">LIKELY REAL</span> / <span style="color:var(--yellow);font-weight:700;">UNCERTAIN</span> / <span style="color:var(--red);font-weight:700;">LIKELY INAUTHENTIC</span>. When both signals agree, confidence is high. When they diverge, you get a warning: sophisticated manipulation detected.</p>
+          <h3>Get your result &mdash; then compare it</h3>
+          <p><span style="color:var(--green);font-weight:700;">LIKELY REAL</span> / <span style="color:var(--yellow);font-weight:700;">UNCERTAIN</span> / <span style="color:var(--red);font-weight:700;">LIKELY INAUTHENTIC</span></p>
+          <p style="margin-top:10px;">When both signals agree, confidence is high. When they diverge, something doesn't line up.</p>
+          <p style="margin-top:10px;">Send it to your friends with <a href="/squadcheck.html" style="color:var(--accent);text-decoration:none;">Squad<span class="teal">Check</span>&trade;</a> and see if they noticed the same moment.</p>
         </div>
       </div>
-      <div class="how-note">🔒 No raw camera or audio data leaves your device. All analysis happens locally on your device. Your nervous system is the signal. The video is the test.</div>
+      <div class="how-bridge">That's when a second opinion matters most. <a href="#squadcheck">Try Squad<span class="teal">Check</span></a></div>
+    </div>
+  </section>
+
+  <!-- GROUP CONSENSUS -->
+  <section class="consensus">
+    <div class="container">
+      <div class="consensus-content">
+        <p class="section-label">Group Consensus</p>
+        <h2 class="section-title">See what others saw</h2>
+        <div class="consensus-body">
+          Share a clip. Your friends run their own analysis.<br>
+          Compare results side-by-side and spot exactly when suspicion spikes.
+        </div>
+        <div class="consensus-callout">
+          <p class="callout-stat">3 of 4 friends flagged the same moment</p>
+          <p class="callout-detail">Consensus: likely inauthentic</p>
+        </div>
+        <p class="consensus-closer">Trust your instincts &mdash; and verify them with others.</p>
+        <p class="consensus-signal">When multiple people react at the same point, it stops being a feeling &mdash; it becomes a signal.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHY IT WORKS -->
+  <section class="science">
+    <div class="container">
+      <div class="science-content">
+        <p class="section-label">Why It Works</p>
+        <h2 class="section-title">Your body detects what your eyes miss</h2>
+        <div class="science-body">
+          Humans have evolved over thousands of years to detect subtle inconsistencies in behavior &mdash; often before we can explain why.<br><br>
+          Gut<span class="teal">Check</span> taps into that system.<br><br>
+          By measuring your real-time reactions and comparing them to the video itself, it surfaces signals traditional analysis misses.<br><br>
+          And when multiple people react the same way at the same moment, that pattern becomes impossible to ignore.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SEO PARAGRAPH -->
+  <div class="seo-block">
+    <div class="container">
+      <p>Gut<span class="teal">Check</span> is a real-time video authenticity detection tool that analyzes biometric response, facial micro-expressions, and behavioral patterns to help identify manipulated or synthetic video calls. It works on live video calls and recorded content, providing instant feedback on whether a person appears authentic, uncertain, or potentially inauthentic.</p>
+    </div>
+  </div>
+
+  <!-- TRUST -->
+  <section class="trust">
+    <div class="container">
+      <div class="section-header">
+        <p class="section-label">Trust</p>
+        <h2 class="section-title">Built for signal quality, privacy, and real-world use</h2>
+      </div>
+      <div class="trust-grid">
+        <div class="trust-card">
+          <div class="trust-icon">🛡</div>
+          <p>On-device processing &mdash; your camera and audio data never leave your device</p>
+        </div>
+        <div class="trust-card">
+          <div class="trust-icon">🔒</div>
+          <p>No raw video stored &mdash; analysis happens locally</p>
+        </div>
+        <div class="trust-card">
+          <div class="trust-icon">🧠</div>
+          <p>Built on behavioral analysis, micro-expression research, and response pattern detection</p>
+        </div>
+        <div class="trust-card">
+          <div class="trust-icon">🎯</div>
+          <p>Designed for real decisions &mdash; dating, business calls, and high-trust conversations</p>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -668,10 +1086,10 @@
           <p class="price-note">Get started instantly</p>
           <ul class="price-features">
             <li>3 analyses included</li>
-            <li>Basic verdict (Real / Uncertain / AI)</li>
+            <li>Basic verdict (Real / Uncertain / Inauthentic)</li>
             <li>Works on any video or call</li>
           </ul>
-          <a href="https://chrome.google.com/webstore" class="btn-ghost">Add to Chrome  -  Free</a>
+          <a href="https://chrome.google.com/webstore" class="btn-ghost">Add to Chrome &mdash; Free</a>
         </div>
         <div class="price-card featured">
           <p class="price-tier">Premium</p>
@@ -679,39 +1097,57 @@
           <p class="price-note">or $149/year (save 38%)</p>
           <ul class="price-features">
             <li>Unlimited personal analyses</li>
-            <li>SquadCheck™ - Get group consensus from friends</li>
+            <li>Squad<span class="teal">Check</span>&trade; &mdash; group consensus from friends</li>
             <li>Full biometric dashboard with all signals</li>
-            <li>Earn referral credits (12 friends = free year!)</li>
-            <li>Priority updates & support</li>
+            <li>Shareable video analysis links</li>
+            <li>Earn referral credits (12 friends = free year)</li>
+            <li>Priority updates &amp; support</li>
           </ul>
           <a href="/upgrade" class="btn-primary">Unlock Premium</a>
         </div>
       </div>
-      <p class="pricing-footer">💳 Secure payment via Stripe. Cancel anytime. Get $5 cashback on your first month with ACH bank transfer.</p>
+      <p class="pricing-footer">💳 Secure payment via Stripe. Cancel anytime.</p>
     </div>
   </section>
 
-  <!-- TRUST -->
-  <section class="trust">
+  <!-- USE CASES -->
+  <section class="use-cases">
     <div class="container">
       <div class="section-header">
-        <p class="section-label">Trust</p>
-        <h2 class="section-title">Built for signal quality, privacy, and real world use.</h2>
+        <p class="section-label">Use Cases</p>
+        <h2 class="section-title">Real people. Real situations.</h2>
       </div>
-      <div class="trust-grid">
-        <div class="trust-card">
-          <div class="trust-icon">🛡</div>
-          <p>On-device processing. Your camera and audio data stay on your device.</p>
+      <div class="use-cases-grid">
+        <div class="use-case-card">
+          <h3>Women &amp; Dating Safety</h3>
+          <p class="use-case-quote">"I sent my match's video to my friends. All four of us caught the same weird moment."</p>
+          <ul>
+            <li>Verify matches before meeting</li>
+            <li>Check video calls for authenticity</li>
+            <li>Get second opinions on red flags</li>
+            <li>Avoid scams early</li>
+          </ul>
         </div>
-        <div class="trust-card">
-          <div class="trust-icon">🧠</div>
-          <p>Based on mirror neuron research and emotional contagion science.</p>
-        </div>
-        <div class="trust-card">
-          <div class="trust-icon">🔬</div>
-          <p>Developed by a former private investigator and clinical micro-expression researcher.</p>
+        <div class="use-case-card">
+          <h3>Men &amp; Catfish Prevention</h3>
+          <p class="use-case-quote">"Something felt off. Ran it through Gut<span class="teal">Check</span>. Turned out she was reading from a script."</p>
+          <ul>
+            <li>Confirm the person is real</li>
+            <li>Detect fake profiles and scams</li>
+            <li>Validate video matches photos</li>
+            <li>Avoid wasted time and money</li>
+          </ul>
         </div>
       </div>
+    </div>
+  </section>
+
+  <!-- FINAL CTA -->
+  <section class="final-cta">
+    <div class="container">
+      <h2 class="section-title">Stop guessing &mdash; check it with your friends</h2>
+      <p>Send it to your friends and see if they noticed the same thing.</p>
+      <a href="https://chrome.google.com/webstore" class="btn-primary">Add to Chrome &mdash; Free</a>
     </div>
   </section>
 
@@ -725,7 +1161,7 @@
         </div>
         <div class="footer-links">
           <a href="/how-it-works.html">How It Works</a>
-          <a href="/squadcheck.html">SquadCheck <span style="background:#14B8A6;color:#08060F;padding:2px 6px;border-radius:3px;font-size:0.65rem;font-weight:700;margin-left:4px;">NEW!</span></a>
+          <a href="/squadcheck.html">Squad<span class="teal">Check</span> <span style="background:#14B8A6;color:#08060F;padding:2px 6px;border-radius:3px;font-size:0.65rem;font-weight:700;margin-left:4px;">NEW!</span></a>
           <a href="/blog.html">Blog</a>
           <a href="/privacy.html">Privacy</a>
           <a href="/contact.html">Contact</a>

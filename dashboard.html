@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Analysis Dashboard - GutCheck</title>
+<title>Premium Dashboard - GutCheck</title>
+<meta name="robots" content="noindex, nofollow">
 <style>
   @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
 
@@ -19,6 +20,8 @@
     --yellow: #eab308;
     --red: #ef4444;
     --teal: #14B8A6;
+    --pink: #ec4899;
+    --orange: #f97316;
     --text: #e2e8f0;
     --text-dim: #94a3b8;
     --text-muted: #64748b;
@@ -35,14 +38,109 @@
     overflow-x: hidden;
   }
 
-  /* Header */
+  /* Auth Gate */
+  #auth-gate {
+    position: fixed;
+    inset: 0;
+    background: var(--bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+  }
+
+  .gate-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 48px;
+    text-align: center;
+    max-width: 420px;
+    width: 90%;
+  }
+
+  .gate-logo {
+    font-family: var(--mono);
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+
+  .gate-logo span { color: var(--accent); }
+
+  .gate-subtitle {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--pink);
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    margin-bottom: 32px;
+  }
+
+  .gate-input {
+    width: 100%;
+    padding: 14px 18px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 14px;
+    margin-bottom: 12px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .gate-input:focus { border-color: var(--accent); }
+
+  .gate-btn {
+    width: 100%;
+    padding: 14px;
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-family: var(--mono);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+    margin-top: 4px;
+  }
+
+  .gate-btn:hover { background: #818cf8; }
+
+  .gate-error {
+    color: var(--red);
+    font-size: 13px;
+    margin-top: 12px;
+    display: none;
+  }
+
+  .gate-link {
+    display: block;
+    margin-top: 16px;
+    color: var(--text-muted);
+    font-size: 13px;
+  }
+
+  .gate-link a { color: var(--accent); text-decoration: none; }
+  .gate-link a:hover { text-decoration: underline; }
+
+  /* Dashboard Layout */
+  #dashboard { display: none; }
+
   .header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 20px 32px;
+    padding: 16px 32px;
     border-bottom: 1px solid var(--border);
     background: linear-gradient(180deg, rgba(99,102,241,0.04) 0%, transparent 100%);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(12px);
   }
 
   .header-left {
@@ -55,13 +153,13 @@
     width: 36px;
     height: 36px;
     border-radius: 8px;
-    background: linear-gradient(135deg, var(--accent), #818cf8);
+    background: linear-gradient(135deg, var(--accent), var(--pink));
     display: flex;
     align-items: center;
     justify-content: center;
     font-family: var(--mono);
     font-weight: 700;
-    font-size: 16px;
+    font-size: 14px;
     color: white;
   }
 
@@ -72,65 +170,130 @@
     letter-spacing: -0.02em;
   }
 
-  .header-title span {
-    color: var(--accent);
-  }
+  .header-title span { color: var(--accent); }
 
-  .badge {
+  .premium-badge {
     font-family: var(--mono);
     font-size: 10px;
     font-weight: 600;
     letter-spacing: 0.1em;
     padding: 4px 10px;
     border-radius: 4px;
-    background: rgba(99, 102, 241, 0.15);
-    color: var(--accent);
-    border: 1px solid rgba(99, 102, 241, 0.3);
+    background: linear-gradient(135deg, rgba(99,102,241,0.2), rgba(236,72,153,0.2));
+    color: var(--pink);
+    border: 1px solid rgba(236,72,153,0.3);
   }
 
   .header-right {
     display: flex;
     align-items: center;
     gap: 16px;
+  }
+
+  .header-email {
     font-family: var(--mono);
     font-size: 12px;
     color: var(--text-muted);
   }
 
-  /* Main Container */
-  .container {
+  .btn-logout {
+    padding: 8px 16px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text-dim);
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .btn-logout:hover { border-color: var(--red); color: var(--red); }
+
+  /* Main Layout */
+  .main {
     max-width: 1400px;
     margin: 0 auto;
-    padding: 32px;
+    padding: 24px 32px;
   }
 
-  /* Back Link */
-  .back-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
+  /* Nav Tabs */
+  .nav-tabs {
+    display: flex;
+    gap: 4px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 4px;
+    margin-bottom: 28px;
+    overflow-x: auto;
+  }
+
+  .nav-tab {
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 600;
     color: var(--text-muted);
-    text-decoration: none;
-    font-size: 14px;
-    margin-bottom: 24px;
-    transition: color 0.2s;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
   }
 
-  .back-link:hover {
-    color: var(--accent);
+  .nav-tab.active {
+    background: var(--accent);
+    color: white;
   }
 
-  /* Grid Layout */
-  .grid {
-    display: grid;
-    gap: 24px;
-    grid-template-columns: repeat(12, 1fr);
+  .nav-tab:hover:not(.active) {
+    color: var(--text);
+    background: rgba(255,255,255,0.05);
   }
 
-  .col-12 { grid-column: span 12; }
-  .col-6 { grid-column: span 6; }
-  .col-4 { grid-column: span 4; }
-  .col-3 { grid-column: span 3; }
+  /* Tab Panels */
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* Section */
+  .section { margin-bottom: 28px; }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+  }
+
+  .section-title {
+    font-family: var(--mono);
+    font-size: 15px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .section-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 700;
+    font-family: var(--mono);
+  }
+
+  /* Grids */
+  .grid { display: grid; gap: 20px; }
+  .grid-4 { grid-template-columns: repeat(4, 1fr); }
+  .grid-3 { grid-template-columns: repeat(3, 1fr); }
+  .grid-2 { grid-template-columns: repeat(2, 1fr); }
 
   /* Card */
   .card {
@@ -141,296 +304,144 @@
   }
 
   .card-header {
-    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
   }
 
   .card-title {
     font-family: var(--mono);
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--text-dim);
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-  }
-
-  /* Hero Score */
-  .hero-score {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: 40px;
-  }
-
-  .score-circle {
-    position: relative;
-    width: 200px;
-    height: 200px;
-    margin-bottom: 24px;
-  }
-
-  .score-value {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-family: var(--mono);
-    font-size: 56px;
-    font-weight: 700;
-    line-height: 1;
-  }
-
-  .score-label {
-    font-family: var(--mono);
     font-size: 12px;
+    font-weight: 600;
     color: var(--text-muted);
     text-transform: uppercase;
     letter-spacing: 0.1em;
   }
 
-  .verdict {
-    font-family: var(--mono);
-    font-size: 24px;
-    font-weight: 700;
-    margin-bottom: 8px;
-  }
-
-  .verdict.real { color: var(--green); }
-  .verdict.uncertain { color: var(--yellow); }
-  .verdict.inauthentic { color: var(--red); }
-
-  .verdict-desc {
-    font-size: 14px;
-    color: var(--text-dim);
-    max-width: 400px;
-  }
-
-  /* Metric Row */
-  .metric-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 16px 0;
-    border-bottom: 1px solid rgba(255,255,255,0.05);
-  }
-
-  .metric-row:last-child {
-    border-bottom: none;
-  }
-
-  .metric-label {
-    font-size: 14px;
-    color: var(--text-dim);
-  }
-
-  .metric-value {
-    font-family: var(--mono);
-    font-size: 18px;
-    font-weight: 600;
-  }
-
-  .metric-value.good { color: var(--green); }
-  .metric-value.warning { color: var(--yellow); }
-  .metric-value.bad { color: var(--red); }
-
-  /* Progress Bar */
-  .progress-bar {
-    width: 100%;
-    height: 8px;
-    background: rgba(255,255,255,0.05);
-    border-radius: 4px;
-    overflow: hidden;
-    margin-top: 8px;
-  }
-
-  .progress-fill {
-    height: 100%;
-    background: var(--accent);
-    border-radius: 4px;
-    transition: width 0.3s ease;
-  }
-
-  .progress-fill.good { background: var(--green); }
-  .progress-fill.warning { background: var(--yellow); }
-  .progress-fill.bad { background: var(--red); }
-
-  /* Timestamp */
-  .timestamp {
-    font-family: var(--mono);
-    font-size: 12px;
-    color: var(--text-muted);
-    margin-top: 16px;
-    padding-top: 16px;
-    border-top: 1px solid rgba(255,255,255,0.05);
-  }
-
-  /* Download Button */
-  .btn-download {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 12px 24px;
-    background: var(--accent);
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-family: var(--mono);
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.2s;
-  }
-
-  .btn-download:hover {
-    background: #818cf8;
-  }
-
-  /* Notice */
-  .notice {
-    background: rgba(99, 102, 241, 0.06);
-    border: 1px solid rgba(99, 102, 241, 0.15);
-    border-radius: 8px;
-    padding: 16px;
-    font-size: 13px;
-    color: var(--text-dim);
-    line-height: 1.6;
-  }
-
-  /* SquadCheck Section */
-  .squadcheck-section {
-    border: 1px solid rgba(20, 184, 166, 0.3);
-    background: linear-gradient(135deg, rgba(20, 184, 166, 0.06) 0%, rgba(99, 102, 241, 0.04) 100%);
-  }
-
-  .squadcheck-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 24px;
-  }
-
-  .squadcheck-title {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-
-  .squadcheck-title h3 {
-    font-family: var(--mono);
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--teal);
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-  }
-
-  .squad-badge {
+  .card-badge {
     font-family: var(--mono);
     font-size: 10px;
-    font-weight: 600;
-    padding: 3px 8px;
+    padding: 2px 8px;
     border-radius: 4px;
-    background: rgba(20, 184, 166, 0.15);
-    color: var(--teal);
-    border: 1px solid rgba(20, 184, 166, 0.3);
+    font-weight: 600;
   }
 
-  .squad-consensus-score {
+  /* KPI Cards */
+  .kpi {
     text-align: center;
-    padding: 20px 0;
-    margin-bottom: 20px;
-    border-bottom: 1px solid rgba(255,255,255,0.05);
+    padding: 28px 20px;
+    position: relative;
+    overflow: hidden;
   }
 
-  .consensus-value {
+  .kpi::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    border-radius: 12px 12px 0 0;
+  }
+
+  .kpi.accent::before { background: linear-gradient(90deg, var(--accent), var(--pink)); }
+  .kpi.teal::before { background: linear-gradient(90deg, var(--teal), var(--green)); }
+  .kpi.yellow::before { background: linear-gradient(90deg, var(--yellow), var(--orange)); }
+  .kpi.pink::before { background: linear-gradient(90deg, var(--pink), var(--accent)); }
+
+  .kpi-value {
     font-family: var(--mono);
-    font-size: 48px;
+    font-size: 36px;
     font-weight: 700;
-    color: var(--green);
     line-height: 1;
+    margin-bottom: 6px;
   }
 
-  .consensus-label {
+  .kpi-label {
+    font-size: 13px;
+    color: var(--text-dim);
+  }
+
+  /* Table */
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+
+  .data-table th {
     font-family: var(--mono);
     font-size: 11px;
     color: var(--text-muted);
     text-transform: uppercase;
-    letter-spacing: 0.15em;
-    margin-top: 8px;
-  }
-
-  .squad-members {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 16px;
-    margin-bottom: 20px;
-  }
-
-  .squad-member {
-    background: rgba(255,255,255,0.03);
-    border: 1px solid rgba(255,255,255,0.06);
-    border-radius: 10px;
-    padding: 16px;
-    text-align: center;
-    transition: border-color 0.2s;
-  }
-
-  .squad-member:hover {
-    border-color: rgba(20, 184, 166, 0.3);
-  }
-
-  .member-avatar {
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    margin: 0 auto 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: var(--mono);
-    font-weight: 700;
-    font-size: 16px;
-    color: white;
-  }
-
-  .member-name {
-    font-size: 13px;
+    letter-spacing: 0.05em;
+    text-align: left;
+    padding: 10px 12px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
     font-weight: 600;
-    margin-bottom: 4px;
   }
 
-  .member-score {
-    font-family: var(--mono);
-    font-size: 20px;
-    font-weight: 700;
-    margin-bottom: 2px;
+  .data-table td {
+    padding: 14px 12px;
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+    color: var(--text-dim);
+    vertical-align: middle;
   }
 
-  .member-verdict {
+  .data-table tr:hover td {
+    background: rgba(255,255,255,0.02);
+  }
+
+  /* Verdict Badges */
+  .verdict-badge {
+    display: inline-block;
     font-family: var(--mono);
     font-size: 10px;
-    font-weight: 600;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 4px;
     text-transform: uppercase;
     letter-spacing: 0.05em;
   }
 
-  .member-time {
-    font-size: 11px;
-    color: var(--text-muted);
-    margin-top: 6px;
-  }
+  .verdict-badge.authentic { background: rgba(34,197,94,0.15); color: var(--green); border: 1px solid rgba(34,197,94,0.3); }
+  .verdict-badge.uncertain { background: rgba(234,179,8,0.15); color: var(--yellow); border: 1px solid rgba(234,179,8,0.3); }
+  .verdict-badge.inauthentic { background: rgba(239,68,68,0.15); color: var(--red); border: 1px solid rgba(239,68,68,0.3); }
 
-  .consensus-bar {
-    margin-top: 16px;
-  }
-
-  .consensus-bar-label {
+  /* Confidence bar */
+  .conf-bar {
     display: flex;
-    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .conf-track {
+    flex: 1;
+    height: 6px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .conf-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.4s ease;
+  }
+
+  .conf-val {
+    font-family: var(--mono);
     font-size: 12px;
-    color: var(--text-dim);
-    margin-bottom: 6px;
+    font-weight: 600;
+    width: 38px;
+    text-align: right;
+  }
+
+  /* Squad consensus card */
+  .squad-card {
+    border: 1px solid rgba(20,184,166,0.25);
+    background: linear-gradient(135deg, rgba(20,184,166,0.04) 0%, rgba(99,102,241,0.03) 100%);
   }
 
   .consensus-bar-track {
@@ -440,22 +451,31 @@
     border-radius: 5px;
     overflow: hidden;
     display: flex;
+    margin: 12px 0;
   }
 
-  .consensus-bar-fill {
+  .consensus-fill {
     height: 100%;
     transition: width 0.5s ease;
   }
 
-  .consensus-note {
-    text-align: center;
+  .consensus-legend {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
     font-size: 12px;
-    color: var(--text-muted);
-    margin-top: 16px;
-    font-style: italic;
+    color: var(--text-dim);
   }
 
-  /* Squad Impact */
+  .legend-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-right: 6px;
+  }
+
+  /* Impact Stats */
   .impact-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -466,13 +486,13 @@
     background: rgba(255,255,255,0.03);
     border: 1px solid rgba(255,255,255,0.06);
     border-radius: 10px;
-    padding: 20px;
+    padding: 24px;
     text-align: center;
   }
 
   .impact-number {
     font-family: var(--mono);
-    font-size: 32px;
+    font-size: 36px;
     font-weight: 700;
     color: var(--teal);
     line-height: 1;
@@ -482,577 +502,986 @@
   .impact-label {
     font-size: 13px;
     color: var(--text-dim);
-    line-height: 1.4;
   }
 
-  /* Inflection Timeline */
-  .timeline-container {
-    position: relative;
-    padding: 20px 0;
-  }
-
-  .timeline-track {
-    position: relative;
-    height: 60px;
-    background: rgba(255,255,255,0.03);
-    border-radius: 8px;
-    overflow: hidden;
-    margin-bottom: 16px;
-  }
-
-  .timeline-line {
-    position: absolute;
-    top: 50%;
-    left: 0;
-    right: 0;
-    height: 2px;
-    background: rgba(255,255,255,0.1);
-  }
-
-  .timeline-point {
-    position: absolute;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    width: 14px;
-    height: 14px;
-    border-radius: 50%;
-    border: 2px solid;
-    cursor: pointer;
-    transition: transform 0.2s;
-    z-index: 2;
-  }
-
-  .timeline-point:hover {
-    transform: translate(-50%, -50%) scale(1.4);
-  }
-
-  .timeline-point.green { border-color: var(--green); background: rgba(34, 197, 94, 0.3); }
-  .timeline-point.yellow { border-color: var(--yellow); background: rgba(234, 179, 8, 0.3); }
-  .timeline-point.red { border-color: var(--red); background: rgba(239, 68, 68, 0.3); }
-
-  .timeline-wave {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    opacity: 0.4;
-  }
-
-  .timeline-labels {
-    display: flex;
-    justify-content: space-between;
-    font-family: var(--mono);
-    font-size: 11px;
-    color: var(--text-muted);
-  }
-
-  .timeline-events {
-    margin-top: 16px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-
-  .timeline-event {
+  /* Invite Codes */
+  .code-box {
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 8px 12px;
-    background: rgba(255,255,255,0.02);
-    border-radius: 6px;
-    font-size: 13px;
-    color: var(--text-dim);
+    gap: 12px;
+    padding: 12px 16px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 8px;
+    margin-bottom: 8px;
   }
 
-  .event-dot {
-    width: 8px;
-    height: 8px;
+  .code-text {
+    font-family: var(--mono);
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--accent);
+    flex: 1;
+    letter-spacing: 0.05em;
+  }
+
+  .code-status {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 4px;
+    text-transform: uppercase;
+  }
+
+  .code-status.available { background: rgba(34,197,94,0.15); color: var(--green); }
+  .code-status.redeemed { background: rgba(99,102,241,0.15); color: var(--accent); }
+
+  .btn-copy {
+    padding: 6px 12px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text-dim);
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .btn-copy:hover { border-color: var(--accent); color: var(--accent); }
+
+  .btn-generate {
+    padding: 12px 24px;
+    background: linear-gradient(135deg, var(--accent), var(--pink));
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.2s;
+    margin-top: 12px;
+  }
+
+  .btn-generate:hover { opacity: 0.9; }
+  .btn-generate:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  .code-limit {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 8px;
+  }
+
+  .code-limit strong { color: var(--text-dim); }
+
+  /* Activity Feed */
+  .activity-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+
+  .activity-item:last-child { border-bottom: none; }
+
+  .activity-dot {
+    width: 10px;
+    height: 10px;
     border-radius: 50%;
     flex-shrink: 0;
   }
 
-  .event-time {
+  .activity-dot.authentic { background: var(--green); }
+  .activity-dot.uncertain { background: var(--yellow); }
+  .activity-dot.inauthentic { background: var(--red); }
+
+  .activity-info { flex: 1; }
+
+  .activity-name {
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 2px;
+  }
+
+  .activity-meta {
     font-family: var(--mono);
     font-size: 11px;
     color: var(--text-muted);
-    margin-left: auto;
-    flex-shrink: 0;
   }
 
-  /* Shareable Card */
-  .share-card-preview {
-    background: linear-gradient(135deg, #13131F 0%, #1a1a2e 100%);
-    border: 1px solid rgba(99, 102, 241, 0.25);
-    border-radius: 16px;
-    padding: 32px;
-    text-align: center;
-    max-width: 400px;
-    margin: 0 auto;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .share-card-preview::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: radial-gradient(circle at 30% 20%, rgba(99,102,241,0.08) 0%, transparent 50%),
-                radial-gradient(circle at 70% 80%, rgba(20,184,166,0.06) 0%, transparent 50%);
-    pointer-events: none;
-  }
-
-  .share-card-logo {
-    font-family: var(--mono);
-    font-size: 14px;
-    font-weight: 600;
-    margin-bottom: 16px;
-    position: relative;
-  }
-
-  .share-card-logo span { color: var(--accent); }
-
-  .share-card-score {
-    font-family: var(--mono);
-    font-size: 64px;
-    font-weight: 700;
-    line-height: 1;
-    margin-bottom: 8px;
-    position: relative;
-  }
-
-  .share-card-verdict {
+  .activity-score {
     font-family: var(--mono);
     font-size: 16px;
     font-weight: 700;
-    margin-bottom: 16px;
-    position: relative;
   }
 
-  .share-card-meta {
-    display: flex;
-    justify-content: center;
-    gap: 24px;
+  /* Settings Form */
+  .form-group {
+    margin-bottom: 20px;
+  }
+
+  .form-label {
+    display: block;
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 8px;
+  }
+
+  .form-input {
+    width: 100%;
+    padding: 12px 16px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .form-input:focus { border-color: var(--accent); }
+
+  .form-input:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .plan-cards {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+
+  .plan-card {
+    background: rgba(255,255,255,0.03);
+    border: 2px solid rgba(255,255,255,0.06);
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .plan-card.active {
+    border-color: var(--accent);
+    background: rgba(99,102,241,0.08);
+  }
+
+  .plan-card:hover:not(.active) {
+    border-color: rgba(99,102,241,0.3);
+  }
+
+  .plan-name {
+    font-family: var(--mono);
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+
+  .plan-price {
+    font-family: var(--mono);
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 4px;
+  }
+
+  .plan-period {
     font-size: 12px;
     color: var(--text-muted);
-    margin-bottom: 16px;
-    position: relative;
   }
 
-  .share-card-squad {
-    font-size: 12px;
-    color: var(--teal);
+  .plan-save {
     font-family: var(--mono);
-    position: relative;
+    font-size: 10px;
+    color: var(--green);
+    font-weight: 600;
+    margin-top: 4px;
   }
 
-  .share-actions {
-    display: flex;
-    gap: 12px;
-    justify-content: center;
-    margin-top: 24px;
+  .btn-primary {
+    padding: 12px 24px;
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
   }
 
-  .btn-share {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 10px 20px;
+  .btn-primary:hover { background: #818cf8; }
+
+  .btn-danger {
+    padding: 12px 24px;
+    background: transparent;
+    color: var(--red);
+    border: 1px solid rgba(239,68,68,0.3);
     border-radius: 8px;
     font-family: var(--mono);
     font-size: 13px;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s;
-    border: none;
   }
 
-  .btn-share.primary {
-    background: var(--accent);
-    color: white;
+  .btn-danger:hover { background: rgba(239,68,68,0.1); }
+
+  /* Toast */
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 24px;
+    font-family: var(--mono);
+    font-size: 13px;
+    z-index: 999;
+    transform: translateY(100px);
+    opacity: 0;
+    transition: all 0.3s ease;
   }
 
-  .btn-share.primary:hover { background: #818cf8; }
+  .toast.show {
+    transform: translateY(0);
+    opacity: 1;
+  }
 
-  .btn-share.ghost {
-    background: transparent;
+  .toast.success { border-color: rgba(34,197,94,0.4); color: var(--green); }
+  .toast.error { border-color: rgba(239,68,68,0.4); color: var(--red); }
+
+  /* Empty State */
+  .empty-state {
+    text-align: center;
+    padding: 48px 24px;
+    color: var(--text-muted);
+  }
+
+  .empty-icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+    opacity: 0.3;
+  }
+
+  .empty-title {
+    font-family: var(--mono);
+    font-size: 16px;
+    font-weight: 600;
     color: var(--text-dim);
-    border: 1px solid rgba(255,255,255,0.1);
+    margin-bottom: 8px;
   }
 
-  .btn-share.ghost:hover {
-    border-color: var(--accent);
-    color: var(--accent);
+  .empty-desc {
+    font-size: 14px;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
+
+  /* Loading shimmer */
+  .shimmer {
+    background: linear-gradient(90deg, rgba(255,255,255,0.03) 25%, rgba(255,255,255,0.06) 50%, rgba(255,255,255,0.03) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: 6px;
+    height: 20px;
+  }
+
+  @keyframes shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+
+  @media (max-width: 1024px) {
+    .grid-4 { grid-template-columns: repeat(2, 1fr); }
+    .grid-3 { grid-template-columns: 1fr; }
+    .impact-grid { grid-template-columns: 1fr; }
+    .plan-cards { grid-template-columns: 1fr; }
   }
 
   @media (max-width: 768px) {
-    .col-6, .col-4, .col-3 {
-      grid-column: span 12;
-    }
-    .squad-members {
-      grid-template-columns: repeat(2, 1fr);
-    }
-    .impact-grid {
-      grid-template-columns: 1fr;
-    }
-    .share-actions {
-      flex-direction: column;
-    }
+    .grid-4, .grid-2 { grid-template-columns: 1fr; }
+    .header { padding: 12px 16px; flex-wrap: wrap; gap: 8px; }
+    .main { padding: 16px; }
+    .nav-tabs { flex-wrap: nowrap; }
   }
 </style>
 </head>
 <body>
 
-<div class="header">
-  <div class="header-left">
-    <div class="logo-mark">GC</div>
-    <div class="header-title">Gut<span>Check</span></div>
-    <div class="badge">PREMIUM</div>
-  </div>
-  <div class="header-right">
-    <span id="session-time">Session: 32s</span>
+<!-- Auth Gate -->
+<div id="auth-gate">
+  <div class="gate-box">
+    <div class="gate-logo">Gut<span>Check</span></div>
+    <div class="gate-subtitle">Premium Dashboard</div>
+    <input type="email" id="gate-email" class="gate-input" placeholder="Email" autocomplete="email">
+    <input type="password" id="gate-password" class="gate-input" placeholder="Password" autocomplete="current-password">
+    <button class="gate-btn" id="gate-btn" onclick="login()">Sign In</button>
+    <div class="gate-error" id="gate-error"></div>
+    <div class="gate-link">Don't have an account? <a href="/upgrade">Get Premium</a></div>
   </div>
 </div>
 
-<div class="container">
-  <a href="/analyze.html" class="back-link">&larr; Back to Analyze</a>
+<!-- Dashboard -->
+<div id="dashboard">
+  <div class="header">
+    <div class="header-left">
+      <div class="logo-mark">GC</div>
+      <div class="header-title">Gut<span>Check</span></div>
+      <div class="premium-badge">PREMIUM</div>
+    </div>
+    <div class="header-right">
+      <span class="header-email" id="user-email"></span>
+      <button class="btn-logout" onclick="logout()">Sign Out</button>
+    </div>
+  </div>
 
-  <div class="grid">
-
-    <!-- Hero Score -->
-    <div class="col-12">
-      <div class="card hero-score">
-        <div class="score-circle">
-          <svg width="200" height="200" style="transform: rotate(-90deg)">
-            <circle cx="100" cy="100" r="90" stroke="rgba(255,255,255,0.05)" stroke-width="12" fill="none"/>
-            <circle id="score-ring" cx="100" cy="100" r="90" stroke="var(--green)" stroke-width="12" fill="none"
-              stroke-dasharray="565" stroke-dashoffset="141" stroke-linecap="round"/>
-          </svg>
-          <div class="score-value" id="score-number">75</div>
-          <div class="score-label">/ 100</div>
-        </div>
-        <div class="verdict real" id="verdict">LIKELY AUTHENTIC</div>
-        <p class="verdict-desc" id="verdict-desc">Your biometric response indicates natural emotional engagement with the content. Your nervous system appears to be responding authentically.</p>
-      </div>
+  <div class="main">
+    <!-- Nav Tabs -->
+    <div class="nav-tabs">
+      <button class="nav-tab active" onclick="switchTab('overview')">Overview</button>
+      <button class="nav-tab" onclick="switchTab('scans')">My Scans</button>
+      <button class="nav-tab" onclick="switchTab('squad')">SquadCheck</button>
+      <button class="nav-tab" onclick="switchTab('impact')">Squad Impact</button>
+      <button class="nav-tab" onclick="switchTab('codes')">Invite Codes</button>
+      <button class="nav-tab" onclick="switchTab('settings')">Account</button>
     </div>
 
-    <!-- Viewer Biometrics -->
-    <div class="col-6">
-      <div class="card">
-        <div class="card-header">
-          <h3 class="card-title">Viewer Biometrics</h3>
-        </div>
+    <!-- OVERVIEW TAB -->
+    <div class="tab-panel active" id="panel-overview">
 
-        <div class="metric-row">
-          <span class="metric-label">Emotional Engagement</span>
-          <span class="metric-value good" id="engagement-score">82</span>
-        </div>
-        <div class="progress-bar">
-          <div class="progress-fill good" id="engagement-bar" style="width: 82%"></div>
-        </div>
-
-        <div class="metric-row">
-          <span class="metric-label">Uncanny Valley Detection</span>
-          <span class="metric-value good" id="uncanny-score">Low</span>
-        </div>
-
-        <div class="metric-row">
-          <span class="metric-label">Cognitive Load</span>
-          <span class="metric-value good" id="cognitive-score">Normal</span>
-        </div>
-
-        <div class="metric-row">
-          <span class="metric-label">Temporal Mirroring</span>
-          <span class="metric-value good" id="temporal-score">320ms</span>
+      <!-- Quick Stats -->
+      <div class="section">
+        <div class="grid grid-4">
+          <div class="card kpi accent">
+            <div class="kpi-value" style="color: var(--accent);" id="stat-total">--</div>
+            <div class="kpi-label">Total Scans</div>
+          </div>
+          <div class="card kpi teal">
+            <div class="kpi-value" style="color: var(--teal);" id="stat-week">--</div>
+            <div class="kpi-label">This Week</div>
+          </div>
+          <div class="card kpi yellow">
+            <div class="kpi-value" style="color: var(--yellow);" id="stat-uncertain">--</div>
+            <div class="kpi-label">Uncertain Results</div>
+          </div>
+          <div class="card kpi pink">
+            <div class="kpi-value" style="color: var(--pink);" id="stat-shares">--</div>
+            <div class="kpi-label">Squad Shares</div>
+          </div>
         </div>
       </div>
-    </div>
 
-    <!-- Expression Breakdown -->
-    <div class="col-6">
-      <div class="card">
-        <div class="card-header">
-          <h3 class="card-title">Expression Analysis</h3>
-        </div>
-
-        <div class="metric-row">
-          <span class="metric-label">Neutral</span>
-          <span class="metric-value">42%</span>
-        </div>
-        <div class="metric-row">
-          <span class="metric-label">Happy</span>
-          <span class="metric-value">18%</span>
-        </div>
-        <div class="metric-row">
-          <span class="metric-label">Surprised</span>
-          <span class="metric-value">12%</span>
-        </div>
-        <div class="metric-row">
-          <span class="metric-label">Sad</span>
-          <span class="metric-value">8%</span>
-        </div>
-        <div class="metric-row">
-          <span class="metric-label">Disgust</span>
-          <span class="metric-value warning">6%</span>
-        </div>
-        <div class="metric-row">
-          <span class="metric-label">Angry</span>
-          <span class="metric-value">4%</span>
-        </div>
-        <div class="metric-row">
-          <span class="metric-label">Fearful</span>
-          <span class="metric-value">10%</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Session Info -->
-    <div class="col-12">
-      <div class="card">
-        <div class="card-header">
-          <h3 class="card-title">Session Information</h3>
-        </div>
-        <div class="metric-row">
-          <span class="metric-label">Analysis Duration</span>
-          <span class="metric-value" id="duration">32 seconds</span>
-        </div>
-        <div class="metric-row">
-          <span class="metric-label">Frames Captured</span>
-          <span class="metric-value" id="frames">64 frames</span>
-        </div>
-        <div class="metric-row">
-          <span class="metric-label">Detection Confidence</span>
-          <span class="metric-value good" id="confidence">High (87%)</span>
-        </div>
-        <div class="timestamp">
-          Analysis completed: <span id="timestamp"></span>
-        </div>
-      </div>
-    </div>
-
-    <!-- SquadCheck Group Consensus -->
-    <div class="col-12">
-      <div class="card squadcheck-section">
-        <div class="squadcheck-header">
-          <div class="squadcheck-title">
-            <h3>SquadCheck&trade; Group Consensus</h3>
-            <span class="squad-badge">4 OF 4 ANALYZED</span>
+      <!-- Recent Activity -->
+      <div class="section">
+        <div class="section-header">
+          <div class="section-title">
+            <div class="section-icon" style="background: rgba(99,102,241,0.15); color: var(--accent);">R</div>
+            Recent Activity
           </div>
+          <span style="font-family: var(--mono); font-size: 11px; color: var(--text-muted);">LAST 10 SCANS</span>
         </div>
-
-        <div class="squad-consensus-score">
-          <div class="consensus-value">82</div>
-          <div class="consensus-label">Squad Consensus Score</div>
-        </div>
-
-        <div class="squad-members">
-          <div class="squad-member">
-            <div class="member-avatar" style="background: linear-gradient(135deg, #6366f1, #818cf8);">S</div>
-            <div class="member-name">Sarah</div>
-            <div class="member-score good">78</div>
-            <div class="member-verdict" style="color: var(--green);">Authentic</div>
-            <div class="member-time">Analyzed 2m ago</div>
-          </div>
-          <div class="squad-member">
-            <div class="member-avatar" style="background: linear-gradient(135deg, #14B8A6, #2DD4BF);">J</div>
-            <div class="member-name">Jessica</div>
-            <div class="member-score good">85</div>
-            <div class="member-verdict" style="color: var(--green);">Authentic</div>
-            <div class="member-time">Analyzed 5m ago</div>
-          </div>
-          <div class="squad-member">
-            <div class="member-avatar" style="background: linear-gradient(135deg, #f59e0b, #fbbf24);">A</div>
-            <div class="member-name">Amanda</div>
-            <div class="member-score warning">62</div>
-            <div class="member-verdict" style="color: var(--yellow);">Uncertain</div>
-            <div class="member-time">Analyzed 8m ago</div>
-          </div>
-          <div class="squad-member">
-            <div class="member-avatar" style="background: linear-gradient(135deg, #ec4899, #f472b6);">K</div>
-            <div class="member-name">Katie</div>
-            <div class="member-score good">91</div>
-            <div class="member-verdict" style="color: var(--green);">Authentic</div>
-            <div class="member-time">Analyzed 12m ago</div>
-          </div>
-        </div>
-
-        <div class="consensus-bar">
-          <div class="consensus-bar-label">
-            <span>Authentic (3)</span>
-            <span>Uncertain (1)</span>
-            <span>Inauthentic (0)</span>
-          </div>
-          <div class="consensus-bar-track">
-            <div class="consensus-bar-fill" style="width: 75%; background: var(--green); border-radius: 5px 0 0 5px;"></div>
-            <div class="consensus-bar-fill" style="width: 25%; background: var(--yellow); border-radius: 0 5px 5px 0;"></div>
-          </div>
-        </div>
-
-        <div class="consensus-note">"When everyone feels the same thing, trust it."</div>
-      </div>
-    </div>
-
-    <!-- Squad Impact -->
-    <div class="col-12">
-      <div class="card">
-        <div class="card-header">
-          <h3 class="card-title" style="color: var(--teal);">Squad Impact</h3>
-        </div>
-        <div class="impact-grid">
-          <div class="impact-stat">
-            <div class="impact-number">23</div>
-            <div class="impact-label">Friends Protected</div>
-          </div>
-          <div class="impact-stat">
-            <div class="impact-number">47</div>
-            <div class="impact-label">SquadChecks Shared</div>
-          </div>
-          <div class="impact-stat">
-            <div class="impact-number">6</div>
-            <div class="impact-label">Flags Raised by Squad</div>
-          </div>
-        </div>
-        <div style="text-align: center; margin-top: 16px; font-size: 13px; color: var(--text-dim);">
-          You've protected <strong style="color: var(--teal);">23 friends</strong> with GutCheck. Your squad is stronger together.
-        </div>
-      </div>
-    </div>
-
-    <!-- Inflection Point Timeline -->
-    <div class="col-12">
-      <div class="card">
-        <div class="card-header">
-          <h3 class="card-title">Inflection Point Timeline</h3>
-        </div>
-        <div class="timeline-container">
-          <div class="timeline-track">
-            <svg class="timeline-wave" viewBox="0 0 800 60" preserveAspectRatio="none">
-              <path d="M0,30 Q50,10 100,30 Q150,50 200,30 Q250,10 300,25 Q350,45 400,35 Q450,15 500,28 Q550,48 600,20 Q650,8 700,30 Q750,45 800,30"
-                fill="none" stroke="rgba(99,102,241,0.3)" stroke-width="1.5"/>
-              <path d="M0,32 Q50,22 100,32 Q150,42 200,28 Q250,18 300,35 Q350,42 400,22 Q450,12 500,30 Q550,40 600,25 Q650,15 700,35 Q750,38 800,30"
-                fill="none" stroke="rgba(20,184,166,0.25)" stroke-width="1.5"/>
-            </svg>
-            <div class="timeline-line"></div>
-            <div class="timeline-point green" style="left: 12%;" title="Natural smile response"></div>
-            <div class="timeline-point green" style="left: 28%;" title="Emotional mirroring detected"></div>
-            <div class="timeline-point yellow" style="left: 45%;" title="Micro-hesitation detected"></div>
-            <div class="timeline-point green" style="left: 62%;" title="Genuine surprise reaction"></div>
-            <div class="timeline-point red" style="left: 73%;" title="Expression-audio mismatch"></div>
-            <div class="timeline-point green" style="left: 88%;" title="Recovery to baseline"></div>
-          </div>
-          <div class="timeline-labels">
-            <span>0:00</span>
-            <span>0:08</span>
-            <span>0:16</span>
-            <span>0:24</span>
-            <span>0:32</span>
-          </div>
-          <div class="timeline-events">
-            <div class="timeline-event">
-              <div class="event-dot" style="background: var(--green);"></div>
-              Natural smile response, emotional mirroring detected
-              <span class="event-time">0:04 - 0:09</span>
-            </div>
-            <div class="timeline-event">
-              <div class="event-dot" style="background: var(--yellow);"></div>
-              Micro-hesitation: brief cognitive load spike
-              <span class="event-time">0:14</span>
-            </div>
-            <div class="timeline-event">
-              <div class="event-dot" style="background: var(--green);"></div>
-              Genuine surprise reaction with authentic temporal delay
-              <span class="event-time">0:20</span>
-            </div>
-            <div class="timeline-event">
-              <div class="event-dot" style="background: var(--red);"></div>
-              Expression-audio mismatch: smile during negative statement
-              <span class="event-time">0:23</span>
-            </div>
-            <div class="timeline-event">
-              <div class="event-dot" style="background: var(--green);"></div>
-              Recovery to emotional baseline, natural exit pattern
-              <span class="event-time">0:28</span>
+        <div class="card">
+          <div id="activity-feed">
+            <div class="empty-state">
+              <div class="empty-icon">&#128269;</div>
+              <div class="empty-title">No scans yet</div>
+              <div class="empty-desc">Analyze a video to see your activity here.</div>
             </div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Shareable Result Card -->
-    <div class="col-12">
-      <div class="card">
-        <div class="card-header">
-          <h3 class="card-title">Shareable Result Card</h3>
-        </div>
-        <div class="share-card-preview">
-          <div class="share-card-logo">Gut<span>Check</span></div>
-          <div class="share-card-score" style="color: var(--green);">75</div>
-          <div class="share-card-verdict" style="color: var(--green);">LIKELY AUTHENTIC</div>
-          <div class="share-card-meta">
-            <span>Confidence: 87%</span>
-            <span>Squad: 4/4</span>
-            <span>32s analyzed</span>
+    <!-- MY SCANS TAB -->
+    <div class="tab-panel" id="panel-scans">
+      <div class="section">
+        <div class="section-header">
+          <div class="section-title">
+            <div class="section-icon" style="background: rgba(99,102,241,0.15); color: var(--accent);">S</div>
+            Scan History
           </div>
-          <div class="share-card-squad">Squad Consensus: 82 / 100</div>
         </div>
-        <div class="share-actions">
-          <button class="btn-share primary" onclick="shareResult()">Share with Squad</button>
-          <button class="btn-share ghost" onclick="copyLink()">Copy Link</button>
-          <button class="btn-share ghost" onclick="downloadCard()">Save Image</button>
+        <div class="card">
+          <div id="scans-table-wrap">
+            <table class="data-table" id="scans-table">
+              <thead>
+                <tr>
+                  <th>Video</th>
+                  <th>Verdict</th>
+                  <th>Confidence</th>
+                  <th>Score</th>
+                  <th>Date</th>
+                </tr>
+              </thead>
+              <tbody id="scans-body">
+              </tbody>
+            </table>
+            <div class="empty-state" id="scans-empty">
+              <div class="empty-icon">&#128249;</div>
+              <div class="empty-title">No scan history</div>
+              <div class="empty-desc">Your analyzed videos will appear here with verdicts, confidence scores, and timestamps.</div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- Notice -->
-    <div class="col-12">
-      <div class="notice">
-        <strong>Viewer-side analysis.</strong> GutCheck measures your biometric response while you watch video content. Your nervous system knows when something feels off. This dashboard shows what your body is telling you.
+    <!-- SQUADCHECK TAB -->
+    <div class="tab-panel" id="panel-squad">
+      <div class="section">
+        <div class="section-header">
+          <div class="section-title">
+            <div class="section-icon" style="background: rgba(20,184,166,0.15); color: var(--teal);">Q</div>
+            SquadCheck Results
+          </div>
+        </div>
+        <div id="squad-results">
+          <div class="empty-state">
+            <div class="empty-icon">&#128101;</div>
+            <div class="empty-title">No SquadCheck sessions yet</div>
+            <div class="empty-desc">Share a video with your squad to see group verdicts and consensus view here.</div>
+          </div>
+        </div>
       </div>
     </div>
 
-    <!-- Download -->
-    <div class="col-12" style="text-align: center;">
-      <button class="btn-download" onclick="downloadReport()">
-        <span>&darr;</span> Download Full Report (PDF)
-      </button>
+    <!-- SQUAD IMPACT TAB -->
+    <div class="tab-panel" id="panel-impact">
+      <div class="section">
+        <div class="section-header">
+          <div class="section-title">
+            <div class="section-icon" style="background: rgba(20,184,166,0.15); color: var(--teal);">I</div>
+            Squad Impact
+          </div>
+        </div>
+        <div class="card">
+          <div style="text-align: center; padding: 16px 0 24px;">
+            <div style="font-size: 14px; color: var(--text-dim); margin-bottom: 8px;">You've protected</div>
+            <div style="font-family: var(--mono); font-size: 64px; font-weight: 700; color: var(--teal); line-height: 1;" id="impact-hero">0</div>
+            <div style="font-size: 14px; color: var(--text-dim); margin-top: 8px;">friends with GutCheck</div>
+          </div>
+          <div class="impact-grid">
+            <div class="impact-stat">
+              <div class="impact-number" id="impact-protected">0</div>
+              <div class="impact-label">Friends Protected</div>
+            </div>
+            <div class="impact-stat">
+              <div class="impact-number" id="impact-shares">0</div>
+              <div class="impact-label">Shares Sent</div>
+            </div>
+            <div class="impact-stat">
+              <div class="impact-number" id="impact-conversions">0</div>
+              <div class="impact-label">Code Conversions</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- INVITE CODES TAB -->
+    <div class="tab-panel" id="panel-codes">
+      <div class="section">
+        <div class="section-header">
+          <div class="section-title">
+            <div class="section-icon" style="background: rgba(236,72,153,0.15); color: var(--pink);">C</div>
+            Friend Invite Codes
+          </div>
+        </div>
+        <div class="grid grid-2">
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">Generate Code</span>
+            </div>
+            <p style="font-size: 14px; color: var(--text-dim); margin-bottom: 16px;">
+              Give friends a premium trial with your personal invite code. Format: GUTCHECK + 4 letters.
+            </p>
+            <button class="btn-generate" id="btn-gen-code" onclick="generateCode()">Generate Invite Code</button>
+            <div class="code-limit" id="code-limit">Loading...</div>
+          </div>
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">Your Codes</span>
+              <span class="card-badge" style="background: rgba(99,102,241,0.1); color: var(--accent);" id="code-count">0 codes</span>
+            </div>
+            <div id="codes-list">
+              <div class="empty-state" style="padding: 24px;">
+                <div class="empty-title">No codes yet</div>
+                <div class="empty-desc">Generate your first invite code to share with friends.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ACCOUNT SETTINGS TAB -->
+    <div class="tab-panel" id="panel-settings">
+      <div class="section">
+        <div class="section-header">
+          <div class="section-title">
+            <div class="section-icon" style="background: rgba(99,102,241,0.15); color: var(--accent);">A</div>
+            Account Settings
+          </div>
+        </div>
+        <div class="grid grid-2">
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">Profile</span>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Email</label>
+              <input type="email" class="form-input" id="settings-email" placeholder="your@email.com">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Current Password</label>
+              <input type="password" class="form-input" id="settings-current-pw" placeholder="Enter current password">
+            </div>
+            <div class="form-group">
+              <label class="form-label">New Password</label>
+              <input type="password" class="form-input" id="settings-new-pw" placeholder="Enter new password (optional)">
+            </div>
+            <button class="btn-primary" onclick="saveAccount()">Save Changes</button>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">Subscription</span>
+            </div>
+            <div class="plan-cards">
+              <div class="plan-card" id="plan-monthly">
+                <div class="plan-name">Monthly</div>
+                <div class="plan-price">$19.99</div>
+                <div class="plan-period">per month</div>
+              </div>
+              <div class="plan-card" id="plan-annual">
+                <div class="plan-name">Annual</div>
+                <div class="plan-price">$149</div>
+                <div class="plan-period">per year</div>
+                <div class="plan-save">Save 38%</div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Current Plan</label>
+              <input type="text" class="form-input" id="settings-plan" disabled>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Member Since</label>
+              <input type="text" class="form-input" id="settings-since" disabled>
+            </div>
+
+            <div style="display: flex; gap: 12px; margin-top: 8px;">
+              <a href="/upgrade" class="btn-primary" style="text-decoration: none; text-align: center; flex: 1;">Manage Billing</a>
+              <button class="btn-danger" onclick="cancelSubscription()">Cancel Plan</button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
   </div>
 </div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
 
 <script>
-  document.getElementById('timestamp').textContent = new Date().toLocaleString();
+var token = localStorage.getItem('gc_token');
+var userData = null;
 
-  function downloadReport() {
-    alert('PDF download will be implemented with premium tier.');
+// Check if already logged in
+if (token) {
+  showDashboard();
+}
+
+// Enter key on password field
+document.getElementById('gate-password').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') login();
+});
+
+function login() {
+  var email = document.getElementById('gate-email').value;
+  var password = document.getElementById('gate-password').value;
+  var errEl = document.getElementById('gate-error');
+
+  if (!email || !password) {
+    errEl.textContent = 'Email and password required';
+    errEl.style.display = 'block';
+    return;
   }
 
-  function shareResult() {
-    if (navigator.share) {
-      navigator.share({
-        title: 'GutCheck Analysis Result',
-        text: 'Score: 75/100 - LIKELY AUTHENTIC. Squad consensus: 82/100.',
-        url: window.location.href
-      });
-    } else {
-      copyLink();
+  document.getElementById('gate-btn').textContent = 'Signing in...';
+
+  fetch('/api/auth/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email: email, password: password })
+  })
+  .then(function(r) { return r.json().then(function(d) { return { ok: r.ok, data: d }; }); })
+  .then(function(res) {
+    if (!res.ok) {
+      errEl.textContent = res.data.error || 'Login failed';
+      errEl.style.display = 'block';
+      document.getElementById('gate-btn').textContent = 'Sign In';
+      return;
     }
-  }
+    token = res.data.token;
+    localStorage.setItem('gc_token', token);
+    showDashboard();
+  })
+  .catch(function() {
+    errEl.textContent = 'Connection error. Try again.';
+    errEl.style.display = 'block';
+    document.getElementById('gate-btn').textContent = 'Sign In';
+  });
+}
 
-  function copyLink() {
-    navigator.clipboard.writeText(window.location.href).then(function() {
-      var btn = event.target;
-      btn.textContent = 'Copied!';
-      setTimeout(function() { btn.textContent = 'Copy Link'; }, 2000);
+function logout() {
+  localStorage.removeItem('gc_token');
+  token = null;
+  document.getElementById('auth-gate').style.display = 'flex';
+  document.getElementById('dashboard').style.display = 'none';
+}
+
+function showDashboard() {
+  document.getElementById('auth-gate').style.display = 'none';
+  document.getElementById('dashboard').style.display = 'block';
+  loadAllData();
+}
+
+function api(path, opts) {
+  var options = opts || {};
+  options.headers = options.headers || {};
+  options.headers['Authorization'] = 'Bearer ' + token;
+  if (options.body && typeof options.body === 'object') {
+    options.headers['Content-Type'] = 'application/json';
+    options.body = JSON.stringify(options.body);
+  }
+  return fetch(path, options).then(function(r) {
+    if (r.status === 401 || r.status === 403) { logout(); throw new Error('Auth expired'); }
+    return r.json();
+  });
+}
+
+function loadAllData() {
+  loadAccount();
+  loadStats();
+  loadActivity();
+  loadScans();
+  loadSquadResults();
+  loadSquadImpact();
+  loadInviteCodes();
+}
+
+// --- Stats ---
+function loadStats() {
+  api('/api/dashboard/stats').then(function(d) {
+    animateValue('stat-total', d.totalScans);
+    animateValue('stat-week', d.weekScans);
+    animateValue('stat-uncertain', d.uncertainScans);
+    animateValue('stat-shares', d.squadShares);
+  });
+}
+
+// --- Activity ---
+function loadActivity() {
+  api('/api/dashboard/activity').then(function(d) {
+    var feed = document.getElementById('activity-feed');
+    if (!d.activity || d.activity.length === 0) return;
+
+    var html = '';
+    d.activity.forEach(function(s) {
+      var verdictClass = s.verdict === 'authentic' ? 'authentic' : s.verdict === 'uncertain' ? 'uncertain' : 'inauthentic';
+      var scoreColor = s.verdict === 'authentic' ? 'var(--green)' : s.verdict === 'uncertain' ? 'var(--yellow)' : 'var(--red)';
+      var dateStr = new Date(s.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+
+      html += '<div class="activity-item">' +
+        '<div class="activity-dot ' + verdictClass + '"></div>' +
+        '<div class="activity-info">' +
+          '<div class="activity-name">' + escHtml(s.video_name || 'Video Analysis') + '</div>' +
+          '<div class="activity-meta">' + dateStr + '</div>' +
+        '</div>' +
+        '<span class="verdict-badge ' + verdictClass + '">' + s.verdict + '</span>' +
+        '<div class="activity-score" style="color:' + scoreColor + ';">' + (s.score != null ? s.score : Math.round(s.confidence)) + '</div>' +
+      '</div>';
     });
+    feed.innerHTML = html;
+  });
+}
+
+// --- Scans ---
+function loadScans() {
+  api('/api/dashboard/scans?limit=50').then(function(d) {
+    var body = document.getElementById('scans-body');
+    var empty = document.getElementById('scans-empty');
+
+    if (!d.scans || d.scans.length === 0) {
+      document.getElementById('scans-table').style.display = 'none';
+      empty.style.display = 'block';
+      return;
+    }
+
+    document.getElementById('scans-table').style.display = 'table';
+    empty.style.display = 'none';
+
+    var html = '';
+    d.scans.forEach(function(s) {
+      var verdictClass = s.verdict === 'authentic' ? 'authentic' : s.verdict === 'uncertain' ? 'uncertain' : 'inauthentic';
+      var confColor = s.confidence >= 70 ? 'var(--green)' : s.confidence >= 40 ? 'var(--yellow)' : 'var(--red)';
+      var dateStr = new Date(s.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+
+      html += '<tr>' +
+        '<td style="color: var(--text);">' + escHtml(s.video_name || 'Untitled Video') + '</td>' +
+        '<td><span class="verdict-badge ' + verdictClass + '">' + s.verdict + '</span></td>' +
+        '<td><div class="conf-bar"><div class="conf-track"><div class="conf-fill" style="width:' + s.confidence + '%;background:' + confColor + ';"></div></div><span class="conf-val" style="color:' + confColor + ';">' + Math.round(s.confidence) + '%</span></div></td>' +
+        '<td style="font-family: var(--mono); font-weight: 600;">' + (s.score != null ? s.score : '--') + '</td>' +
+        '<td style="font-family: var(--mono); font-size: 12px; color: var(--text-muted);">' + dateStr + '</td>' +
+      '</tr>';
+    });
+    body.innerHTML = html;
+  });
+}
+
+// --- SquadCheck Results ---
+function loadSquadResults() {
+  api('/api/dashboard/squad-results').then(function(d) {
+    var container = document.getElementById('squad-results');
+    if (!d.results || d.results.length === 0) return;
+
+    var html = '';
+    d.results.forEach(function(r) {
+      var totalVotes = r.friendVerdicts.length;
+      var authCount = r.friendVerdicts.filter(function(v) { return v.verdict === 'authentic'; }).length;
+      var uncCount = r.friendVerdicts.filter(function(v) { return v.verdict === 'uncertain'; }).length;
+      var inaCount = totalVotes - authCount - uncCount;
+      var authPct = totalVotes > 0 ? Math.round(authCount / totalVotes * 100) : 0;
+      var uncPct = totalVotes > 0 ? Math.round(uncCount / totalVotes * 100) : 0;
+      var inaPct = totalVotes > 0 ? 100 - authPct - uncPct : 0;
+      var dateStr = new Date(r.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+
+      html += '<div class="card squad-card" style="margin-bottom: 16px;">' +
+        '<div class="card-header">' +
+          '<span class="card-title" style="color: var(--teal);">' + escHtml(r.video_name || 'Shared Video') + '</span>' +
+          '<span class="card-badge" style="background: rgba(20,184,166,0.1); color: var(--teal);">' + totalVotes + ' verdict' + (totalVotes !== 1 ? 's' : '') + '</span>' +
+        '</div>' +
+        '<div style="display: flex; gap: 24px; margin-bottom: 16px;">' +
+          '<div><span style="font-size:12px;color:var(--text-muted);">Your verdict:</span> <span class="verdict-badge ' + (r.original_verdict === 'authentic' ? 'authentic' : r.original_verdict === 'uncertain' ? 'uncertain' : 'inauthentic') + '">' + r.original_verdict + '</span></div>' +
+          '<div style="font-family:var(--mono);font-size:12px;color:var(--text-muted);">' + dateStr + '</div>' +
+        '</div>' +
+        '<div class="consensus-bar-track">' +
+          '<div class="consensus-fill" style="width:' + authPct + '%;background:var(--green);border-radius:5px 0 0 5px;"></div>' +
+          '<div class="consensus-fill" style="width:' + uncPct + '%;background:var(--yellow);"></div>' +
+          '<div class="consensus-fill" style="width:' + inaPct + '%;background:var(--red);border-radius:0 5px 5px 0;"></div>' +
+        '</div>' +
+        '<div class="consensus-legend">' +
+          '<span><span class="legend-dot" style="background:var(--green);"></span>Authentic (' + authCount + ')</span>' +
+          '<span><span class="legend-dot" style="background:var(--yellow);"></span>Uncertain (' + uncCount + ')</span>' +
+          '<span><span class="legend-dot" style="background:var(--red);"></span>Inauthentic (' + inaCount + ')</span>' +
+        '</div>' +
+      '</div>';
+    });
+    container.innerHTML = html;
+  });
+}
+
+// --- Squad Impact ---
+function loadSquadImpact() {
+  api('/api/dashboard/squad-impact').then(function(d) {
+    document.getElementById('impact-hero').textContent = d.friendsProtected;
+    document.getElementById('impact-protected').textContent = d.friendsProtected;
+    document.getElementById('impact-shares').textContent = d.sharesSent;
+    document.getElementById('impact-conversions').textContent = d.conversions;
+  });
+}
+
+// --- Invite Codes ---
+function loadInviteCodes() {
+  api('/api/dashboard/invite-codes').then(function(d) {
+    var list = document.getElementById('codes-list');
+    var limitEl = document.getElementById('code-limit');
+    var countEl = document.getElementById('code-count');
+    var btnGen = document.getElementById('btn-gen-code');
+
+    limitEl.innerHTML = '<strong>' + d.monthlyUsed + '</strong> of <strong>' + d.monthlyLimit + '</strong> codes used this month (resets monthly)';
+    countEl.textContent = d.codes.length + ' code' + (d.codes.length !== 1 ? 's' : '');
+
+    if (d.monthlyUsed >= d.monthlyLimit) {
+      btnGen.disabled = true;
+      btnGen.textContent = 'Limit Reached (5/month)';
+    } else {
+      btnGen.disabled = false;
+      btnGen.textContent = 'Generate Invite Code';
+    }
+
+    if (d.codes.length === 0) return;
+
+    var html = '';
+    d.codes.forEach(function(c) {
+      var isUsed = c.used_by != null;
+      html += '<div class="code-box">' +
+        '<span class="code-text">' + c.code + '</span>' +
+        '<span class="code-status ' + (isUsed ? 'redeemed' : 'available') + '">' + (isUsed ? 'Redeemed' : 'Available') + '</span>' +
+        (isUsed ? '' : '<button class="btn-copy" onclick="copyCode(\'' + c.code + '\', this)">Copy</button>') +
+      '</div>';
+    });
+    list.innerHTML = html;
+  });
+}
+
+function generateCode() {
+  var btn = document.getElementById('btn-gen-code');
+  btn.disabled = true;
+  btn.textContent = 'Generating...';
+
+  api('/api/dashboard/invite-codes', { method: 'POST', body: {} }).then(function(d) {
+    showToast('Code generated: ' + d.code, 'success');
+    loadInviteCodes();
+  }).catch(function() {
+    showToast('Failed to generate code', 'error');
+    btn.disabled = false;
+    btn.textContent = 'Generate Invite Code';
+  });
+}
+
+function copyCode(code, btn) {
+  navigator.clipboard.writeText(code).then(function() {
+    btn.textContent = 'Copied!';
+    setTimeout(function() { btn.textContent = 'Copy'; }, 2000);
+  });
+}
+
+// --- Account ---
+function loadAccount() {
+  api('/api/dashboard/account').then(function(d) {
+    userData = d;
+    document.getElementById('user-email').textContent = d.email;
+    document.getElementById('settings-email').value = d.email;
+    document.getElementById('settings-plan').value = (d.plan || 'free').charAt(0).toUpperCase() + (d.plan || 'free').slice(1);
+    document.getElementById('settings-since').value = new Date(d.created_at).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+
+    // Highlight current plan
+    var monthlyCard = document.getElementById('plan-monthly');
+    var annualCard = document.getElementById('plan-annual');
+    monthlyCard.classList.remove('active');
+    annualCard.classList.remove('active');
+    if (d.plan === 'annual') annualCard.classList.add('active');
+    else if (d.plan !== 'free') monthlyCard.classList.add('active');
+  });
+}
+
+function saveAccount() {
+  var email = document.getElementById('settings-email').value;
+  var currentPw = document.getElementById('settings-current-pw').value;
+  var newPw = document.getElementById('settings-new-pw').value;
+
+  var body = {};
+  if (email && email !== userData.email) body.email = email;
+  if (newPw) {
+    if (!currentPw) { showToast('Current password required to change password', 'error'); return; }
+    body.currentPassword = currentPw;
+    body.newPassword = newPw;
   }
 
-  function downloadCard() {
-    alert('Card image download coming soon.');
+  if (Object.keys(body).length === 0) { showToast('No changes to save', 'error'); return; }
+
+  api('/api/dashboard/account', { method: 'PUT', body: body }).then(function(d) {
+    if (d.error) { showToast(d.error, 'error'); return; }
+    showToast('Account updated successfully', 'success');
+    document.getElementById('settings-current-pw').value = '';
+    document.getElementById('settings-new-pw').value = '';
+    loadAccount();
+  }).catch(function() {
+    showToast('Failed to update account', 'error');
+  });
+}
+
+function cancelSubscription() {
+  if (!confirm('Are you sure you want to cancel your subscription? You will be downgraded to the free plan.')) return;
+
+  api('/api/dashboard/cancel-subscription', { method: 'POST', body: {} }).then(function(d) {
+    showToast(d.message || 'Subscription cancelled', 'success');
+    loadAccount();
+  });
+}
+
+// --- Tab Navigation ---
+function switchTab(name) {
+  var tabs = document.querySelectorAll('.nav-tab');
+  var panels = document.querySelectorAll('.tab-panel');
+
+  tabs.forEach(function(t) { t.classList.remove('active'); });
+  panels.forEach(function(p) { p.classList.remove('active'); });
+
+  // Find and activate the clicked tab
+  tabs.forEach(function(t) {
+    if (t.textContent.toLowerCase().replace(/\s+/g, '').indexOf(name) > -1 ||
+        t.onclick.toString().indexOf(name) > -1) {
+      t.classList.add('active');
+    }
+  });
+
+  var panel = document.getElementById('panel-' + name);
+  if (panel) panel.classList.add('active');
+}
+
+// Fix tab activation to use event
+document.querySelectorAll('.nav-tab').forEach(function(tab) {
+  tab.addEventListener('click', function() {
+    document.querySelectorAll('.nav-tab').forEach(function(t) { t.classList.remove('active'); });
+    tab.classList.add('active');
+  });
+});
+
+// --- Helpers ---
+function escHtml(str) {
+  var div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+function animateValue(id, end) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  var start = 0;
+  var duration = 1200;
+  var startTime = null;
+
+  function step(ts) {
+    if (!startTime) startTime = ts;
+    var progress = Math.min((ts - startTime) / duration, 1);
+    var eased = 1 - Math.pow(1 - progress, 3);
+    el.textContent = Math.round(start + (end - start) * eased).toLocaleString();
+    if (progress < 1) requestAnimationFrame(step);
   }
+  requestAnimationFrame(step);
+}
+
+function showToast(msg, type) {
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast ' + (type || 'success') + ' show';
+  setTimeout(function() { t.classList.remove('show'); }, 3000);
+}
 </script>
 
 </body>

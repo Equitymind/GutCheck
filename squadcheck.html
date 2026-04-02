@@ -99,16 +99,40 @@
     }
 
     .hero-badge {
-      display: inline-block;
-      background: rgba(20, 184, 166, 0.15);
-      color: var(--teal);
-      padding: 8px 20px;
-      border-radius: 100px;
-      font-size: 0.85rem;
-      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
       margin-bottom: 24px;
-      letter-spacing: 0.05em;
+      flex-wrap: wrap;
+    }
+
+    .squadcheck-text {
+      font-size: 3rem;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: baseline;
+      gap: 4px;
+    }
+
+    .squadcheck-text span:first-child {
+      color: var(--white);
+    }
+
+    .squadcheck-text span:last-child {
+      color: var(--teal);
+    }
+
+    .new-badge-badge {
+      background: #D4AF37;
+      color: #fff;
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-size: 0.7rem;
+      font-weight: 700;
       text-transform: uppercase;
+      letter-spacing: 0.04em;
     }
 
     h1 {
@@ -390,7 +414,12 @@
 <!-- HERO -->
 <section class="hero">
   <div class="container">
-    <div class="hero-badge">New — SquadCheck</div>
+    <div class="hero-badge">
+      <div class="squadcheck-text">
+        <span>Squad</span><span>Check</span>
+      </div>
+      <div class="new-badge-badge">NEW!</div>
+    </div>
     <h1>Don't decide alone<br/>on a video call</h1>
     <p>If something feels off, send it to your friends and see if they catch the same thing.</p>
     <div class="cta-buttons">

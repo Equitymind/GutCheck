@@ -309,30 +309,41 @@
       pointer-events: none;
     }
 
-    .squadcheck-badge {
-      display: inline-block;
-      font-size: 0.75rem;
-      font-weight: 700;
-      color: #fff;
-      background: #D4AF37;
-      padding: 5px 14px;
-      border-radius: 100px;
-      letter-spacing: 0.04em;
+    .squadcheck-hero {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
       margin-bottom: 20px;
+      flex-wrap: wrap;
     }
 
-    .coming-soon-badge {
-      display: inline-block;
+    .squadcheck-hero-text {
+      font-size: 2.5rem;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: baseline;
+      gap: 4px;
+    }
+
+    .squadcheck-hero-text span:first-child {
+      color: var(--text);
+    }
+
+    .squadcheck-hero-text span:last-child {
+      color: var(--accent);
+    }
+
+    .squadcheck-hero-badge {
+      background: #D4AF37;
+      color: #fff;
+      padding: 4px 10px;
+      border-radius: 4px;
       font-size: 0.7rem;
       font-weight: 700;
-      color: var(--yellow);
-      background: rgba(234, 179, 8, 0.1);
-      border: 1px solid rgba(234, 179, 8, 0.25);
-      padding: 4px 12px;
-      border-radius: 100px;
+      text-transform: uppercase;
       letter-spacing: 0.04em;
-      margin-left: 10px;
-      vertical-align: middle;
     }
 
     .squadcheck-content {
@@ -934,9 +945,11 @@
   <section class="squadcheck-feature" id="squadcheck">
     <div class="container">
       <div class="squadcheck-content">
-        <div>
-          <span class="squadcheck-badge">NEW, SQUAD<span class="teal">CHECK</span>&trade;</span>
-          <span class="coming-soon-badge">COMING SOON</span>
+        <div class="squadcheck-hero">
+          <div class="squadcheck-hero-text">
+            <span>Squad</span><span>Check</span><span style="font-size: 0.8em; color: #888; margin-left: 4px;">&trade;</span>
+          </div>
+          <div class="squadcheck-hero-badge">NEW!</div>
         </div>
         <h2 class="section-title">See if your friends noticed the same thing</h2>
         <div class="squadcheck-body">

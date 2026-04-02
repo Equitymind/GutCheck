@@ -6,12 +6,15 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const Database = require('better-sqlite3');
 const multer = require('multer');
+const cors = require('cors');
 
 const app = express();
 const PORT = process.env.PORT || 10000;
 const JWT_SECRET = process.env.JWT_SECRET || 'gutcheck-dev-secret';
 
 // --------------- Middleware ---------------
+app.use(cors());
+
 // Skip JSON parsing for Stripe webhook (needs raw body for signature verification)
 app.use((req, res, next) => {
   if (req.originalUrl === '/api/stripe-webhook') return next();
@@ -52,6 +55,17 @@ db.exec(`
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (session_id) REFERENCES squad_sessions(id),
     FOREIGN KEY (user_id) REFERENCES users(id)
+  );
+  CREATE TABLE IF NOT EXISTS analytics_events (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    event TEXT NOT NULL,
+    page TEXT,
+    referrer TEXT,
+    user_agent TEXT,
+    session_id TEXT,
+    user_id INTEGER,
+    meta TEXT,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
   );
 `);
 
@@ -258,6 +272,33 @@ app.get('/api/squadcheck/:sessionId/results', authenticateToken, (req, res) => {
 app.post('/api/upload', authenticateToken, upload.single('video'), (req, res) => {
   if (!req.file) return res.status(400).json({ error: 'No video file provided' });
   res.json({ url: `/uploads/${req.file.filename}`, originalName: req.file.originalname });
+});
+
+// --------------- Analytics ---------------
+app.post('/api/analytics/event', (req, res) => {
+  const { event, page, referrer, sessionId, meta } = req.body;
+  if (!event) return res.status(400).json({ error: 'Event name required' });
+
+  db.prepare(
+    'INSERT INTO analytics_events (event, page, referrer, user_agent, session_id, meta) VALUES (?, ?, ?, ?, ?, ?)'
+  ).run(event, page || null, referrer || null, req.headers['user-agent'] || null, sessionId || null, meta ? JSON.stringify(meta) : null);
+
+  res.json({ success: true });
+});
+
+app.get('/api/analytics/dashboard', authenticateToken, (req, res) => {
+  const days = parseInt(req.query.days) || 30;
+  const since = new Date(Date.now() - days * 86400000).toISOString();
+
+  const totalEvents = db.prepare('SELECT COUNT(*) as count FROM analytics_events WHERE created_at >= ?').get(since);
+  const uniqueSessions = db.prepare('SELECT COUNT(DISTINCT session_id) as count FROM analytics_events WHERE created_at >= ?').get(since);
+  const topPages = db.prepare('SELECT page, COUNT(*) as views FROM analytics_events WHERE page IS NOT NULL AND created_at >= ? GROUP BY page ORDER BY views DESC LIMIT 10').all(since);
+  const topEvents = db.prepare('SELECT event, COUNT(*) as count FROM analytics_events WHERE created_at >= ? GROUP BY event ORDER BY count DESC LIMIT 10').all(since);
+  const dailyCounts = db.prepare("SELECT DATE(created_at) as date, COUNT(*) as count FROM analytics_events WHERE created_at >= ? GROUP BY DATE(created_at) ORDER BY date").all(since);
+  const totalUsers = db.prepare('SELECT COUNT(*) as count FROM users').get();
+  const planBreakdown = db.prepare('SELECT plan, COUNT(*) as count FROM users GROUP BY plan').all();
+
+  res.json({ totalEvents: totalEvents.count, uniqueSessions: uniqueSessions.count, topPages, topEvents, dailyCounts, totalUsers: totalUsers.count, planBreakdown });
 });
 
 // --------------- HTML fallback ---------------

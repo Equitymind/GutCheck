@@ -18,9 +18,12 @@
       --surface-border: #1e1a2e;
       --accent: #6366f1;
       --accent-hover: #818cf8;
+      --accent-glow: rgba(99, 102, 241, 0.15);
+      --accent-glow-border: rgba(99, 102, 241, 0.4);
       --text: #e8e6f0;
       --text-muted: #9b97a8;
-      --radius: 12px;
+      --text-dim: #6b6880;
+      --radius: 16px;
     }
 
     body {
@@ -50,100 +53,175 @@
       color: var(--accent);
     }
 
-    h1 {
+    .blog-hero {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+
+    .blog-hero h1 {
       font-size: clamp(2.5rem, 6vw, 3.5rem);
-      font-weight: 800;
-      line-height: 1.15;
-      letter-spacing: -0.02em;
+      font-weight: 900;
+      letter-spacing: -0.03em;
       margin-bottom: 16px;
       color: #fff;
     }
 
-    .page-lead {
-      font-size: 1.15rem;
+    .blog-hero h1 span {
+      background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .blog-hero p {
       color: var(--text-muted);
-      margin-bottom: 60px;
-      line-height: 1.7;
+      font-size: 1.05rem;
+      max-width: 540px;
+      margin: 0 auto;
+    }
+
+    .blog-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+      gap: 24px;
     }
 
     .post-card {
       background: var(--surface);
-      border: 1px solid var(--surface-border);
+      border: 1px solid rgba(255,255,255,0.07);
       border-radius: var(--radius);
-      padding: 32px;
-      margin-bottom: 24px;
-      transition: border-color 0.2s;
-      text-decoration: none;
-      display: block;
+      overflow: hidden;
+      transition: transform 0.2s, border-color 0.2s;
     }
 
     .post-card:hover {
-      border-color: var(--accent);
+      transform: translateY(-4px);
+      border-color: var(--accent-glow-border);
     }
 
-    .post-meta {
-      color: var(--text-muted);
-      font-size: 0.85rem;
-      margin-bottom: 12px;
+    .post-card a {
+      display: block;
+      height: 100%;
+      text-decoration: none;
+      color: inherit;
     }
 
-    .post-card h2 {
-      font-size: 1.75rem;
+    .post-thumb {
+      height: 160px;
+      background: linear-gradient(135deg, #12101A, #1C1926);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .post-body {
+      padding: 22px 24px 26px;
+    }
+
+    .post-tag {
+      display: inline-block;
+      background: var(--accent-glow);
+      color: var(--accent-hover);
+      font-size: 0.68rem;
       font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 20px;
       margin-bottom: 12px;
-      color: #fff;
-      transition: color 0.2s;
+      box-shadow: 0 0 16px rgba(99, 102, 241, 0.4), 0 0 4px rgba(99, 102, 241, 0.2);
     }
 
-    .post-card:hover h2 {
-      color: var(--accent);
+    .post-title {
+      font-size: 1.15rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 1.35;
+      margin-bottom: 10px;
+      color: #fff;
     }
 
     .post-excerpt {
-      font-size: 1rem;
       color: var(--text-muted);
+      font-size: 0.85rem;
       line-height: 1.6;
       margin-bottom: 16px;
     }
 
-    .read-more {
-      color: var(--accent);
-      font-size: 0.9rem;
+    .post-meta {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--text-dim);
+      font-size: 0.72rem;
       font-weight: 600;
     }
 
-    .post-card:hover .read-more {
-      text-decoration: underline;
+    .post-read-more {
+      color: var(--accent-hover);
+      font-size: 0.78rem;
+      font-weight: 700;
+      margin-left: auto;
     }
   </style>
 </head>
 <body>
   <div class="container">
     <a href="/" class="back-link">← Back to GutCheck</a>
-    
-    <h1>Blog</h1>
-    <p class="page-lead">The story behind GutCheck and why authenticity detection matters now.</p>
 
-    <a href="/blog-verify-real-person.html" class="post-card">
-      <p class="post-meta">April 1, 2026</p>
-      <h2>How to Verify Someone Is Real Before Meeting IRL</h2>
-      <p class="post-excerpt">7 practical steps to confirm your online match is who they claim to be. Protect yourself from catfishing and romance scams before meeting in person.</p>
-      <span class="read-more">Read more →</span>
-    </a>
+    <div class="blog-hero">
+      <h1>The GutCheck <span>Blog</span></h1>
+      <p>The story behind GutCheck and why authenticity detection matters now.</p>
+    </div>
 
-    <a href="/blog-romance-scams.html" class="post-card">
-      <p class="post-meta">March 31, 2026</p>
-      <h2>Why We're Starting with Romance Scams</h2>
-      <p class="post-excerpt">Romance scams are the fastest-growing fraud category. Real-time face-swap on video calls is here. Why GutCheck is focusing on dating safety first.</p>
-      <span class="read-more">Read more →</span>
-    </a>
+    <div class="blog-grid">
+      <article class="post-card">
+        <a href="/blog-verify-real-person.html">
+          <div class="post-thumb">🛡️</div>
+          <div class="post-body">
+            <span class="post-tag">Safety</span>
+            <h2 class="post-title">How to Verify Someone Is Real Before Meeting IRL</h2>
+            <p class="post-excerpt">7 practical steps to confirm your online match is who they claim to be. Protect yourself from catfishing and romance scams before meeting in person.</p>
+            <div class="post-meta">
+              <span>April 1, 2026 · 6 min read</span>
+              <span class="post-read-more">Read More →</span>
+            </div>
+          </div>
+        </a>
+      </article>
 
-    <a href="/blog-origin-story.html" class="post-card">
-      <p class="post-meta">March 31, 2026</p>
-      <h2>How We Built GutCheck: From Movie Studios to Authenticity Detection</h2>
-      <p class="post-excerpt">The technology behind GutCheck started in screening rooms, not security labs. Here's how analyzing authentic human reactions led to a breakthrough in video authenticity detection.</p>
-      <span class="read-more">Read more →</span>
-    </a>
+      <article class="post-card">
+        <a href="/blog-romance-scams.html">
+          <div class="post-thumb">🚨</div>
+          <div class="post-body">
+            <span class="post-tag">Deep Dive</span>
+            <h2 class="post-title">Why We're Starting with Romance Scams</h2>
+            <p class="post-excerpt">Romance scams are the fastest-growing fraud category. Real-time face-swap on video calls is here. Why GutCheck is focusing on dating safety first.</p>
+            <div class="post-meta">
+              <span>March 31, 2026 · 8 min read</span>
+              <span class="post-read-more">Read More →</span>
+            </div>
+          </div>
+        </a>
+      </article>
+
+      <article class="post-card">
+        <a href="/blog-origin-story.html">
+          <div class="post-thumb">🎬</div>
+          <div class="post-body">
+            <span class="post-tag">Origin Story</span>
+            <h2 class="post-title">How We Built GutCheck: From Movie Studios to Authenticity Detection</h2>
+            <p class="post-excerpt">The technology behind GutCheck started in screening rooms, not security labs. Here's how analyzing authentic human reactions led to a breakthrough.</p>
+            <div class="post-meta">
+              <span>March 31, 2026 · 7 min read</span>
+              <span class="post-read-more">Read More →</span>
+            </div>
+          </div>
+        </a>
+      </article>
+    </div>
   </div>
 </body>
 </html>

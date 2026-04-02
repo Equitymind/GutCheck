@@ -214,6 +214,51 @@
       color: var(--accent);
       text-decoration: none;
     }
+
+    .post-emoji {
+      font-size: 3.5rem;
+      text-align: center;
+      margin-bottom: 24px;
+      line-height: 1;
+    }
+
+    .post-tag {
+      display: inline-block;
+      background: rgba(99, 102, 241, 0.15);
+      color: var(--accent-hover);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 5px 12px;
+      border-radius: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 0 16px rgba(99, 102, 241, 0.4), 0 0 4px rgba(99, 102, 241, 0.2);
+    }
+
+    .post-bottom-meta {
+      display: flex;
+      align-items: center;
+      padding-top: 32px;
+      margin-top: 48px;
+      border-top: 1px solid var(--surface-border);
+      color: var(--text-muted);
+      font-size: 0.82rem;
+      font-weight: 600;
+    }
+
+    .post-bottom-meta .meta-read-more {
+      color: var(--accent-hover);
+      font-weight: 700;
+      margin-left: auto;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .post-bottom-meta .meta-read-more:hover {
+      color: #fff;
+      text-decoration: none;
+    }
   </style>
 </head>
 <body>
@@ -221,7 +266,8 @@
     <a href="/blog.html" class="back-link">← Back to Blog</a>
 
     <article>
-      <p class="post-meta">April 1, 2026 · The GutCheck Team · 6 min read</p>
+      <div class="post-emoji">🛡️</div>
+      <span class="post-tag">Safety</span>
 
       <h1>How to Verify Someone Is Real Before Meeting IRL</h1>
 
@@ -320,6 +366,11 @@
       </div>
 
       <p><em>The GutCheck Team builds tools that help you verify the people you meet online. Our technology measures biometric authenticity signals that scammers can't fake.</em></p>
+
+      <div class="post-bottom-meta">
+        <span>April 1, 2026 · The GutCheck Team · 6 min read</span>
+        <a href="/blog.html" class="meta-read-more">Read More →</a>
+      </div>
     </article>
   </div>
 </body>

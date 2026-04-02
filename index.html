@@ -868,7 +868,7 @@
       font-size: 1rem;
       font-weight: 600;
       color: #fff;
-      background: #D4AF37;
+      background: var(--accent);
       padding: 14px 32px;
       border-radius: 10px;
       text-decoration: none;
@@ -876,8 +876,12 @@
     }
 
     .btn-squadcheck:hover {
-      background: #E0C04A;
+      background: var(--accent-hover);
       transform: translateY(-1px);
+    }
+
+    .btn-squadcheck .teal {
+      color: #14B8A6;
     }
 
     /* RESPONSIVE */
@@ -961,7 +965,7 @@
           <p class="callout-stat">&#9888;&#65039; 4 out of 5 friends flagged this as suspicious</p>
           <p class="callout-detail">All reactions spiked at 0:42</p>
         </div>
-        <a href="/squadcheck.html" class="btn-squadcheck">Try SquadCheck</a>
+        <a href="/squadcheck.html" class="btn-squadcheck">Try <span>Squad</span><span class="teal">Check</span></a>
       </div>
     </div>
   </section>

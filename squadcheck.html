@@ -381,7 +381,53 @@
       margin-right: auto;
     }
 
+    /* FOOTER */
+    footer {
+      border-top: 1px solid var(--surface-border);
+      padding: 48px 0;
+    }
+
+    .footer-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .footer-brand p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 24px;
+      align-items: center;
+    }
+
+    .footer-links a {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover {
+      color: var(--text);
+    }
+
     @media (max-width: 768px) {
+      .footer-inner {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .footer-links {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
       .instinct-grid {
         grid-template-columns: 1fr;
       }
@@ -415,10 +461,10 @@
 <section class="hero">
   <div class="container">
     <div class="hero-badge">
+      <div class="new-badge-badge">NEW!</div>
       <div class="squadcheck-text">
         <span>Squad</span><span>Check</span>
       </div>
-      <div class="new-badge-badge">NEW!</div>
     </div>
     <h1>Don't decide alone<br/>on a video call</h1>
     <p>If something feels off, send it to your friends and see if they catch the same thing.</p>
@@ -581,6 +627,25 @@
     <a href="/upgrade" class="btn btn-primary">Try SquadCheck Free</a>
   </div>
 </section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <a href="/" class="logo">Gut<span>Check</span></a>
+        <p>Authenticity Detection. A product of Equitymind Ventures.</p>
+      </div>
+      <div class="footer-links">
+        <a href="/how-it-works.html">How It Works</a>
+        <a href="/squadcheck.html"><span style="background:#D4AF37;color:#fff;padding:2px 6px;border-radius:3px;font-size:0.65rem;font-weight:700;margin-right:4px;">NEW!</span> Squad<span style="color: var(--teal);">Check</span></a>
+        <a href="/blog.html">Blog</a>
+        <a href="/privacy.html">Privacy</a>
+        <a href="/contact.html">Contact</a>
+      </div>
+    </div>
+  </div>
+</footer>
 
 </body>
 </html>

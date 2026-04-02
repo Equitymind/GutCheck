@@ -844,7 +844,36 @@
 
     .teal { color: var(--accent); }
 
+    .gold { color: #D4AF37; }
+
     .btn-primary .teal {
+      color: #fff;
+    }
+
+    .btn-squadcheck {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      color: #fff;
+      background: #D4AF37;
+      padding: 14px 32px;
+      border-radius: 10px;
+      text-decoration: none;
+      transition: background 0.2s, transform 0.15s;
+    }
+
+    .btn-squadcheck:hover {
+      background: #E5C158;
+      transform: translateY(-1px);
+    }
+
+    .btn-squadcheck .teal {
+      color: #fff;
+    }
+
+    .btn-squadcheck .gold {
       color: #fff;
     }
 
@@ -914,7 +943,7 @@
     <div class="container">
       <div class="squadcheck-content">
         <div>
-          <span class="squadcheck-badge">NEW, SQUAD<span class="teal">CHECK</span>&trade;</span>
+          <span class="squadcheck-badge">NEW, SQUAD<span class="gold">CHECK</span>&trade;</span>
           <span class="coming-soon-badge">COMING SOON</span>
         </div>
         <h2 class="section-title">See if your friends noticed the same thing</h2>
@@ -927,7 +956,7 @@
           <p class="callout-stat">&#9888;&#65039; 4 out of 5 friends flagged this as suspicious</p>
           <p class="callout-detail">All reactions spiked at 0:42</p>
         </div>
-        <a href="/squadcheck.html" class="btn-primary">Try Squad<span class="teal">Check</span></a>
+        <a href="/squadcheck.html" class="btn-squadcheck">Try Squad<span class="teal">Check</span></a>
       </div>
     </div>
   </section>

@@ -1,0 +1,1465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>God Mode Analytics - GutCheck</title>
+<meta name="robots" content="noindex, nofollow">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #08060F;
+    --surface: #13131F;
+    --surface-alt: #1a1a2e;
+    --accent: #6366f1;
+    --accent-glow: rgba(99, 102, 241, 0.4);
+    --green: #22c55e;
+    --yellow: #eab308;
+    --red: #ef4444;
+    --teal: #14B8A6;
+    --pink: #ec4899;
+    --orange: #f97316;
+    --text: #e2e8f0;
+    --text-dim: #94a3b8;
+    --text-muted: #64748b;
+    --border: rgba(99, 102, 241, 0.15);
+    --mono: 'JetBrains Mono', monospace;
+    --sans: 'Inter', system-ui, sans-serif;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Password Gate */
+  #password-gate {
+    position: fixed;
+    inset: 0;
+    background: var(--bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+  }
+
+  .gate-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 48px;
+    text-align: center;
+    max-width: 420px;
+    width: 90%;
+  }
+
+  .gate-logo {
+    font-family: var(--mono);
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+
+  .gate-logo span { color: var(--accent); }
+
+  .gate-subtitle {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--red);
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    margin-bottom: 32px;
+  }
+
+  .gate-input {
+    width: 100%;
+    padding: 14px 18px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 14px;
+    margin-bottom: 16px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .gate-input:focus {
+    border-color: var(--accent);
+  }
+
+  .gate-input.error {
+    border-color: var(--red);
+    animation: shake 0.4s ease;
+  }
+
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-8px); }
+    75% { transform: translateX(8px); }
+  }
+
+  .gate-btn {
+    width: 100%;
+    padding: 14px;
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-family: var(--mono);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  .gate-btn:hover { background: #818cf8; }
+
+  .gate-error {
+    color: var(--red);
+    font-size: 13px;
+    margin-top: 12px;
+    display: none;
+  }
+
+  /* Dashboard Layout */
+  #dashboard {
+    display: none;
+  }
+
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 32px;
+    border-bottom: 1px solid var(--border);
+    background: linear-gradient(180deg, rgba(239,68,68,0.04) 0%, transparent 100%);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(12px);
+  }
+
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .logo-mark {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, var(--red), var(--orange));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--mono);
+    font-weight: 700;
+    font-size: 14px;
+    color: white;
+  }
+
+  .header-title {
+    font-family: var(--mono);
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+
+  .header-title span { color: var(--red); }
+
+  .god-badge {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    padding: 4px 10px;
+    border-radius: 4px;
+    background: rgba(239, 68, 68, 0.15);
+    color: var(--red);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+  }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .live-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--green);
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  .header-meta {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  .btn-export {
+    padding: 8px 16px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text-dim);
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .btn-export:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  /* Main Layout */
+  .main {
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 24px 32px;
+  }
+
+  /* Section */
+  .section {
+    margin-bottom: 32px;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+
+  .section-title {
+    font-family: var(--mono);
+    font-size: 16px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .section-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+  }
+
+  /* Grid */
+  .grid {
+    display: grid;
+    gap: 20px;
+  }
+
+  .grid-4 { grid-template-columns: repeat(4, 1fr); }
+  .grid-3 { grid-template-columns: repeat(3, 1fr); }
+  .grid-2 { grid-template-columns: repeat(2, 1fr); }
+  .grid-2-1 { grid-template-columns: 2fr 1fr; }
+  .grid-1-2 { grid-template-columns: 1fr 2fr; }
+
+  /* Card */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+  }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+  }
+
+  .card-title {
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .card-badge {
+    font-family: var(--mono);
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-weight: 600;
+  }
+
+  /* KPI Cards */
+  .kpi {
+    text-align: center;
+    padding: 28px 20px;
+  }
+
+  .kpi-value {
+    font-family: var(--mono);
+    font-size: 36px;
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+
+  .kpi-label {
+    font-size: 13px;
+    color: var(--text-dim);
+    margin-bottom: 8px;
+  }
+
+  .kpi-change {
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 8px;
+    border-radius: 4px;
+  }
+
+  .kpi-change.up {
+    color: var(--green);
+    background: rgba(34, 197, 94, 0.1);
+  }
+
+  .kpi-change.down {
+    color: var(--red);
+    background: rgba(239, 68, 68, 0.1);
+  }
+
+  /* Chart Container */
+  .chart-wrap {
+    position: relative;
+    height: 260px;
+  }
+
+  .chart-wrap-sm {
+    position: relative;
+    height: 200px;
+  }
+
+  /* Metric Row */
+  .metric-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+
+  .metric-row:last-child { border-bottom: none; }
+
+  .metric-label {
+    font-size: 13px;
+    color: var(--text-dim);
+  }
+
+  .metric-value {
+    font-family: var(--mono);
+    font-size: 15px;
+    font-weight: 600;
+  }
+
+  /* Geo Map (simplified) */
+  .geo-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+
+  .geo-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 12px;
+    background: rgba(255,255,255,0.02);
+    border-radius: 6px;
+    font-size: 13px;
+  }
+
+  .geo-bar {
+    height: 4px;
+    border-radius: 2px;
+    margin-top: 4px;
+  }
+
+  .geo-country {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .geo-flag {
+    font-size: 18px;
+    line-height: 1;
+  }
+
+  .geo-pct {
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--accent);
+  }
+
+  /* Promo table */
+  .promo-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+
+  .promo-table th {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    text-align: left;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    font-weight: 600;
+  }
+
+  .promo-table td {
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+    color: var(--text-dim);
+  }
+
+  .promo-code {
+    font-family: var(--mono);
+    font-weight: 600;
+    color: var(--accent);
+  }
+
+  /* Progress ring small */
+  .ring-sm {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .ring-sm-value {
+    font-family: var(--mono);
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  /* Tab buttons for time range */
+  .time-tabs {
+    display: flex;
+    gap: 4px;
+    background: rgba(255,255,255,0.03);
+    border-radius: 6px;
+    padding: 3px;
+  }
+
+  .time-tab {
+    padding: 5px 12px;
+    border-radius: 4px;
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-muted);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .time-tab.active {
+    background: var(--accent);
+    color: white;
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.1);
+    border-radius: 3px;
+  }
+
+  @media (max-width: 1024px) {
+    .grid-4 { grid-template-columns: repeat(2, 1fr); }
+    .grid-3 { grid-template-columns: 1fr; }
+    .grid-2, .grid-2-1, .grid-1-2 { grid-template-columns: 1fr; }
+  }
+
+  @media (max-width: 768px) {
+    .grid-4 { grid-template-columns: 1fr; }
+    .header { padding: 16px; }
+    .main { padding: 16px; }
+    .geo-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Password Gate -->
+<div id="password-gate">
+  <div class="gate-box">
+    <div class="gate-logo">Gut<span>Check</span></div>
+    <div class="gate-subtitle">God Mode Analytics</div>
+    <input type="password" id="gate-password" class="gate-input" placeholder="Enter access code" autofocus>
+    <button class="gate-btn" onclick="authenticate()">Access Dashboard</button>
+    <div class="gate-error" id="gate-error">Invalid access code. Try again.</div>
+  </div>
+</div>
+
+<!-- Dashboard -->
+<div id="dashboard">
+
+  <div class="header">
+    <div class="header-left">
+      <div class="logo-mark">GC</div>
+      <div class="header-title">Gut<span>Check</span></div>
+      <div class="god-badge">GOD MODE</div>
+    </div>
+    <div class="header-right">
+      <div class="live-dot"></div>
+      <span class="header-meta">LIVE</span>
+      <span class="header-meta" id="header-time"></span>
+      <button class="btn-export" onclick="exportReport()">Export CSV</button>
+      <button class="btn-export" onclick="exportPDF()">Export PDF</button>
+    </div>
+  </div>
+
+  <div class="main">
+
+    <!-- Top KPIs -->
+    <div class="section">
+      <div class="grid grid-4">
+        <div class="card kpi">
+          <div class="kpi-value" style="color: var(--accent);" id="kpi-users">1,247</div>
+          <div class="kpi-label">Total Users</div>
+          <span class="kpi-change up">+12.3% this month</span>
+        </div>
+        <div class="card kpi">
+          <div class="kpi-value" style="color: var(--teal);" id="kpi-analyses">8,934</div>
+          <div class="kpi-label">Total Analyses</div>
+          <span class="kpi-change up">+18.7% this month</span>
+        </div>
+        <div class="card kpi">
+          <div class="kpi-value" style="color: var(--green);" id="kpi-mrr">$4,280</div>
+          <div class="kpi-label">Monthly Recurring Revenue</div>
+          <span class="kpi-change up">+8.1% MoM</span>
+        </div>
+        <div class="card kpi">
+          <div class="kpi-value" style="color: var(--yellow);" id="kpi-churn">3.2%</div>
+          <div class="kpi-label">Monthly Churn Rate</div>
+          <span class="kpi-change down">-0.4% improvement</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- User Behavior -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-title">
+          <div class="section-icon" style="background: rgba(99,102,241,0.15); color: var(--accent);">U</div>
+          User Behavior
+        </div>
+        <div class="time-tabs">
+          <button class="time-tab active">7D</button>
+          <button class="time-tab">30D</button>
+          <button class="time-tab">90D</button>
+          <button class="time-tab">ALL</button>
+        </div>
+      </div>
+
+      <div class="grid grid-2-1">
+        <!-- Geo Map -->
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">Geographic Distribution</span>
+            <span class="card-badge" style="background: rgba(99,102,241,0.1); color: var(--accent);">12 Countries</span>
+          </div>
+          <div class="geo-grid">
+            <div class="geo-row">
+              <div class="geo-country"><span class="geo-flag">&#127482;&#127480;</span> United States</div>
+              <span class="geo-pct">42%</span>
+            </div>
+            <div class="geo-row">
+              <div class="geo-country"><span class="geo-flag">&#127468;&#127463;</span> United Kingdom</div>
+              <span class="geo-pct">18%</span>
+            </div>
+            <div class="geo-row">
+              <div class="geo-country"><span class="geo-flag">&#127464;&#127462;</span> Canada</div>
+              <span class="geo-pct">14%</span>
+            </div>
+            <div class="geo-row">
+              <div class="geo-country"><span class="geo-flag">&#127462;&#127482;</span> Australia</div>
+              <span class="geo-pct">9%</span>
+            </div>
+            <div class="geo-row">
+              <div class="geo-country"><span class="geo-flag">&#127465;&#127466;</span> Germany</div>
+              <span class="geo-pct">6%</span>
+            </div>
+            <div class="geo-row">
+              <div class="geo-country"><span class="geo-flag">&#127467;&#127479;</span> France</div>
+              <span class="geo-pct">4%</span>
+            </div>
+            <div class="geo-row">
+              <div class="geo-country"><span class="geo-flag">&#127463;&#127479;</span> Brazil</div>
+              <span class="geo-pct">3%</span>
+            </div>
+            <div class="geo-row">
+              <div class="geo-country"><span class="geo-flag">&#127470;&#127475;</span> India</div>
+              <span class="geo-pct">2%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Gender & Device -->
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">Demographics</span>
+          </div>
+          <div class="chart-wrap-sm">
+            <canvas id="chart-gender"></canvas>
+          </div>
+          <div style="margin-top: 20px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.05);">
+            <span class="card-title">Device Breakdown</span>
+            <div style="margin-top: 12px;">
+              <div class="metric-row">
+                <span class="metric-label">Mobile (iOS)</span>
+                <span class="metric-value" style="color: var(--accent);">38%</span>
+              </div>
+              <div class="metric-row">
+                <span class="metric-label">Mobile (Android)</span>
+                <span class="metric-value" style="color: var(--teal);">24%</span>
+              </div>
+              <div class="metric-row">
+                <span class="metric-label">Desktop</span>
+                <span class="metric-value" style="color: var(--yellow);">31%</span>
+              </div>
+              <div class="metric-row">
+                <span class="metric-label">Tablet</span>
+                <span class="metric-value" style="color: var(--pink);">7%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Time Patterns -->
+      <div class="grid grid-2" style="margin-top: 20px;">
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">Usage by Hour (UTC)</span>
+          </div>
+          <div class="chart-wrap">
+            <canvas id="chart-hourly"></canvas>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">Usage by Day of Week</span>
+          </div>
+          <div class="chart-wrap">
+            <canvas id="chart-daily"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Analysis Patterns -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-title">
+          <div class="section-icon" style="background: rgba(20,184,166,0.15); color: var(--teal);">A</div>
+          Analysis Patterns
+        </div>
+      </div>
+
+      <div class="grid grid-2">
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">Verdict Distribution</span>
+            <span class="card-badge" style="background: rgba(34,197,94,0.1); color: var(--green);">8,934 total</span>
+          </div>
+          <div class="chart-wrap">
+            <canvas id="chart-verdicts"></canvas>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">Confidence Score Distribution</span>
+          </div>
+          <div class="chart-wrap">
+            <canvas id="chart-confidence"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-3" style="margin-top: 20px;">
+        <div class="card kpi">
+          <div class="kpi-value" style="color: var(--green);">67%</div>
+          <div class="kpi-label">Authentic Verdicts</div>
+        </div>
+        <div class="card kpi">
+          <div class="kpi-value" style="color: var(--yellow);">21%</div>
+          <div class="kpi-label">Uncertain Verdicts</div>
+        </div>
+        <div class="card kpi">
+          <div class="kpi-value" style="color: var(--red);">12%</div>
+          <div class="kpi-label">Inauthentic Verdicts</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Emotion Analytics -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-title">
+          <div class="section-icon" style="background: rgba(236,72,153,0.15); color: var(--pink);">E</div>
+          Emotion Analytics
+        </div>
+      </div>
+
+      <div class="grid grid-2">
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">7-Emotion Distribution (All Users)</span>
+          </div>
+          <div class="chart-wrap">
+            <canvas id="chart-emotions"></canvas>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">Emotion Trends (30 Days)</span>
+          </div>
+          <div class="chart-wrap">
+            <canvas id="chart-emotion-trends"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Engagement -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-title">
+          <div class="section-icon" style="background: rgba(249,115,22,0.15); color: var(--orange);">G</div>
+          Engagement Metrics
+        </div>
+      </div>
+
+      <div class="grid grid-4">
+        <div class="card kpi">
+          <div class="kpi-value" style="color: var(--accent);">3,412</div>
+          <div class="kpi-label">Dashboard Visits</div>
+          <span class="kpi-change up">+22% WoW</span>
+        </div>
+        <div class="card kpi">
+          <div class="kpi-value" style="color: var(--teal);">891</div>
+          <div class="kpi-label">PDF Downloads</div>
+          <span class="kpi-change up">+15% WoW</span>
+        </div>
+        <div class="card kpi">
+          <div class="kpi-value" style="color: var(--pink);">2.4</div>
+          <div class="kpi-label">Avg Sessions / User</div>
+          <span class="kpi-change up">+0.3 WoW</span>
+        </div>
+        <div class="card kpi">
+          <div class="kpi-value" style="color: var(--orange);">4:32</div>
+          <div class="kpi-label">Avg Session Duration</div>
+          <span class="kpi-change up">+18s WoW</span>
+        </div>
+      </div>
+
+      <div class="grid grid-2" style="margin-top: 20px;">
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">Daily Active Users (30D)</span>
+          </div>
+          <div class="chart-wrap">
+            <canvas id="chart-dau"></canvas>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">Feature Usage</span>
+          </div>
+          <div class="metric-row">
+            <span class="metric-label">Video Analysis</span>
+            <span class="metric-value" style="color: var(--accent);">100%</span>
+          </div>
+          <div class="metric-row">
+            <span class="metric-label">Dashboard View</span>
+            <span class="metric-value" style="color: var(--accent);">94%</span>
+          </div>
+          <div class="metric-row">
+            <span class="metric-label">SquadCheck Shared</span>
+            <span class="metric-value" style="color: var(--teal);">47%</span>
+          </div>
+          <div class="metric-row">
+            <span class="metric-label">PDF Download</span>
+            <span class="metric-value" style="color: var(--teal);">38%</span>
+          </div>
+          <div class="metric-row">
+            <span class="metric-label">Share Result Card</span>
+            <span class="metric-value" style="color: var(--yellow);">29%</span>
+          </div>
+          <div class="metric-row">
+            <span class="metric-label">Repeat Analysis</span>
+            <span class="metric-value" style="color: var(--yellow);">22%</span>
+          </div>
+          <div class="metric-row">
+            <span class="metric-label">Referral Link Used</span>
+            <span class="metric-value" style="color: var(--pink);">14%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Technical Metrics -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-title">
+          <div class="section-icon" style="background: rgba(234,179,8,0.15); color: var(--yellow);">T</div>
+          Technical Performance
+        </div>
+      </div>
+
+      <div class="grid grid-4">
+        <div class="card kpi">
+          <div class="kpi-value" style="color: var(--green);">720p</div>
+          <div class="kpi-label">Median Camera Quality</div>
+        </div>
+        <div class="card kpi">
+          <div class="kpi-value" style="color: var(--accent);">1.2s</div>
+          <div class="kpi-label">Avg Processing Time</div>
+        </div>
+        <div class="card kpi">
+          <div class="kpi-value" style="color: var(--teal);">99.4%</div>
+          <div class="kpi-label">Face Detection Rate</div>
+        </div>
+        <div class="card kpi">
+          <div class="kpi-value" style="color: var(--green);">99.8%</div>
+          <div class="kpi-label">Uptime (30D)</div>
+        </div>
+      </div>
+
+      <div class="grid grid-2" style="margin-top: 20px;">
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">Camera Resolution Distribution</span>
+          </div>
+          <div class="chart-wrap-sm">
+            <canvas id="chart-camera"></canvas>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">Processing Time Histogram</span>
+          </div>
+          <div class="chart-wrap-sm">
+            <canvas id="chart-processing"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Revenue -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-title">
+          <div class="section-icon" style="background: rgba(34,197,94,0.15); color: var(--green);">$</div>
+          Revenue Analytics
+        </div>
+      </div>
+
+      <div class="grid grid-4">
+        <div class="card kpi">
+          <div class="kpi-value" style="color: var(--green);">$4,280</div>
+          <div class="kpi-label">MRR</div>
+          <span class="kpi-change up">+8.1%</span>
+        </div>
+        <div class="card kpi">
+          <div class="kpi-value" style="color: var(--green);">$51,360</div>
+          <div class="kpi-label">ARR</div>
+          <span class="kpi-change up">+8.1%</span>
+        </div>
+        <div class="card kpi">
+          <div class="kpi-value" style="color: var(--accent);">$187</div>
+          <div class="kpi-label">Customer LTV</div>
+          <span class="kpi-change up">+12%</span>
+        </div>
+        <div class="card kpi">
+          <div class="kpi-value" style="color: var(--yellow);">3.2%</div>
+          <div class="kpi-label">Monthly Churn</div>
+          <span class="kpi-change down">-0.4% improved</span>
+        </div>
+      </div>
+
+      <div class="grid grid-2" style="margin-top: 20px;">
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">MRR Growth (6 Months)</span>
+          </div>
+          <div class="chart-wrap">
+            <canvas id="chart-mrr"></canvas>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">Plan Distribution</span>
+          </div>
+          <div class="chart-wrap-sm">
+            <canvas id="chart-plans"></canvas>
+          </div>
+          <div style="margin-top: 16px;">
+            <div class="metric-row">
+              <span class="metric-label">Monthly ($19.99)</span>
+              <span class="metric-value" style="color: var(--accent);">142 subs</span>
+            </div>
+            <div class="metric-row">
+              <span class="metric-label">Annual ($149/yr)</span>
+              <span class="metric-value" style="color: var(--teal);">72 subs</span>
+            </div>
+            <div class="metric-row">
+              <span class="metric-label">Free Tier</span>
+              <span class="metric-value" style="color: var(--text-muted);">1,033 users</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Promo Usage -->
+      <div class="grid grid-2" style="margin-top: 20px;">
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">Promo Code Usage</span>
+          </div>
+          <table class="promo-table">
+            <thead>
+              <tr>
+                <th>Code</th>
+                <th>Uses</th>
+                <th>Revenue</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="promo-code">LAUNCH50</span></td>
+                <td>89</td>
+                <td>$890</td>
+                <td style="color: var(--green);">Active</td>
+              </tr>
+              <tr>
+                <td><span class="promo-code">SQUAD20</span></td>
+                <td>47</td>
+                <td>$752</td>
+                <td style="color: var(--green);">Active</td>
+              </tr>
+              <tr>
+                <td><span class="promo-code">DATING25</span></td>
+                <td>32</td>
+                <td>$480</td>
+                <td style="color: var(--green);">Active</td>
+              </tr>
+              <tr>
+                <td><span class="promo-code">EARLY100</span></td>
+                <td>12</td>
+                <td>$0</td>
+                <td style="color: var(--red);">Expired</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">Revenue by Channel</span>
+          </div>
+          <div class="chart-wrap-sm">
+            <canvas id="chart-channels"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  // Password Authentication
+  var CORRECT_HASH = 'Reactr-studio-2026';
+
+  document.getElementById('gate-password').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') authenticate();
+  });
+
+  function authenticate() {
+    var input = document.getElementById('gate-password');
+    if (input.value === CORRECT_HASH) {
+      document.getElementById('password-gate').style.display = 'none';
+      document.getElementById('dashboard').style.display = 'block';
+      initDashboard();
+    } else {
+      input.classList.add('error');
+      document.getElementById('gate-error').style.display = 'block';
+      setTimeout(function() {
+        input.classList.remove('error');
+      }, 400);
+    }
+  }
+
+  function initDashboard() {
+    updateClock();
+    setInterval(updateClock, 1000);
+    renderCharts();
+    animateKPIs();
+  }
+
+  function updateClock() {
+    document.getElementById('header-time').textContent = new Date().toLocaleString();
+  }
+
+  // Chart.js defaults
+  Chart.defaults.color = '#94a3b8';
+  Chart.defaults.borderColor = 'rgba(255,255,255,0.04)';
+  Chart.defaults.font.family = "'JetBrains Mono', monospace";
+  Chart.defaults.font.size = 11;
+  Chart.defaults.plugins.legend.labels.usePointStyle = true;
+  Chart.defaults.plugins.legend.labels.pointStyleWidth = 8;
+
+  function renderCharts() {
+    // Gender Chart
+    new Chart(document.getElementById('chart-gender'), {
+      type: 'doughnut',
+      data: {
+        labels: ['Female', 'Male', 'Non-binary', 'Undisclosed'],
+        datasets: [{
+          data: [62, 28, 6, 4],
+          backgroundColor: ['#ec4899', '#6366f1', '#14B8A6', '#64748b'],
+          borderWidth: 0,
+          spacing: 3
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        cutout: '65%',
+        plugins: {
+          legend: { position: 'bottom', labels: { padding: 12 } }
+        }
+      }
+    });
+
+    // Hourly Usage
+    new Chart(document.getElementById('chart-hourly'), {
+      type: 'bar',
+      data: {
+        labels: Array.from({length: 24}, function(_, i) { return i + ':00'; }),
+        datasets: [{
+          label: 'Analyses',
+          data: [12, 8, 5, 3, 2, 4, 15, 38, 52, 67, 74, 82, 78, 65, 58, 72, 89, 95, 102, 98, 87, 64, 42, 28],
+          backgroundColor: 'rgba(99, 102, 241, 0.6)',
+          borderRadius: 3
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { grid: { display: false }, ticks: { maxTicksLimit: 12 } },
+          y: { beginAtZero: true }
+        }
+      }
+    });
+
+    // Daily Usage
+    new Chart(document.getElementById('chart-daily'), {
+      type: 'bar',
+      data: {
+        labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+        datasets: [{
+          label: 'Analyses',
+          data: [980, 1120, 1050, 1180, 1340, 1680, 1590],
+          backgroundColor: ['rgba(99,102,241,0.5)', 'rgba(99,102,241,0.5)', 'rgba(99,102,241,0.5)', 'rgba(99,102,241,0.5)', 'rgba(99,102,241,0.6)', 'rgba(20,184,166,0.7)', 'rgba(20,184,166,0.6)'],
+          borderRadius: 6
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { grid: { display: false } },
+          y: { beginAtZero: true }
+        }
+      }
+    });
+
+    // Verdict Distribution
+    new Chart(document.getElementById('chart-verdicts'), {
+      type: 'doughnut',
+      data: {
+        labels: ['Authentic', 'Uncertain', 'Inauthentic'],
+        datasets: [{
+          data: [67, 21, 12],
+          backgroundColor: ['#22c55e', '#eab308', '#ef4444'],
+          borderWidth: 0,
+          spacing: 4
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        cutout: '60%',
+        plugins: {
+          legend: { position: 'bottom', labels: { padding: 16 } }
+        }
+      }
+    });
+
+    // Confidence Distribution
+    new Chart(document.getElementById('chart-confidence'), {
+      type: 'bar',
+      data: {
+        labels: ['0-20', '20-40', '40-60', '60-80', '80-100'],
+        datasets: [{
+          label: 'Analyses',
+          data: [142, 389, 1247, 3856, 3300],
+          backgroundColor: ['rgba(239,68,68,0.6)', 'rgba(234,179,8,0.5)', 'rgba(234,179,8,0.6)', 'rgba(34,197,94,0.5)', 'rgba(34,197,94,0.7)'],
+          borderRadius: 6
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { grid: { display: false }, title: { display: true, text: 'Confidence %' } },
+          y: { beginAtZero: true, title: { display: true, text: 'Count' } }
+        }
+      }
+    });
+
+    // Emotion Distribution (Radar)
+    new Chart(document.getElementById('chart-emotions'), {
+      type: 'radar',
+      data: {
+        labels: ['Neutral', 'Happy', 'Surprised', 'Sad', 'Disgust', 'Angry', 'Fearful'],
+        datasets: [{
+          label: 'Avg Distribution',
+          data: [38, 22, 14, 9, 5, 4, 8],
+          backgroundColor: 'rgba(99, 102, 241, 0.15)',
+          borderColor: '#6366f1',
+          pointBackgroundColor: '#6366f1',
+          pointBorderColor: '#6366f1',
+          borderWidth: 2
+        }, {
+          label: 'Authentic Users',
+          data: [35, 28, 16, 7, 3, 2, 9],
+          backgroundColor: 'rgba(34, 197, 94, 0.1)',
+          borderColor: '#22c55e',
+          pointBackgroundColor: '#22c55e',
+          pointBorderColor: '#22c55e',
+          borderWidth: 2
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { position: 'bottom' } },
+        scales: {
+          r: {
+            beginAtZero: true,
+            grid: { color: 'rgba(255,255,255,0.05)' },
+            angleLines: { color: 'rgba(255,255,255,0.05)' },
+            pointLabels: { font: { size: 11 } }
+          }
+        }
+      }
+    });
+
+    // Emotion Trends
+    var eDays = Array.from({length: 30}, function(_, i) { return 'D' + (i + 1); });
+    new Chart(document.getElementById('chart-emotion-trends'), {
+      type: 'line',
+      data: {
+        labels: eDays,
+        datasets: [
+          { label: 'Happy', data: genTrend(22, 3, 30), borderColor: '#22c55e', borderWidth: 2, pointRadius: 0, tension: 0.4 },
+          { label: 'Neutral', data: genTrend(38, 4, 30), borderColor: '#6366f1', borderWidth: 2, pointRadius: 0, tension: 0.4 },
+          { label: 'Fearful', data: genTrend(8, 2, 30), borderColor: '#ef4444', borderWidth: 2, pointRadius: 0, tension: 0.4 },
+          { label: 'Surprised', data: genTrend(14, 3, 30), borderColor: '#eab308', borderWidth: 2, pointRadius: 0, tension: 0.4 }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { position: 'bottom' } },
+        scales: {
+          x: { grid: { display: false }, ticks: { maxTicksLimit: 10 } },
+          y: { beginAtZero: true, title: { display: true, text: '%' } }
+        }
+      }
+    });
+
+    // DAU
+    var dauDays = Array.from({length: 30}, function(_, i) { return 'Mar ' + (i + 1); });
+    new Chart(document.getElementById('chart-dau'), {
+      type: 'line',
+      data: {
+        labels: dauDays,
+        datasets: [{
+          label: 'DAU',
+          data: genTrend(85, 15, 30),
+          backgroundColor: 'rgba(99, 102, 241, 0.1)',
+          borderColor: '#6366f1',
+          borderWidth: 2,
+          pointRadius: 0,
+          tension: 0.4,
+          fill: true
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { grid: { display: false }, ticks: { maxTicksLimit: 10 } },
+          y: { beginAtZero: true }
+        }
+      }
+    });
+
+    // Camera Quality
+    new Chart(document.getElementById('chart-camera'), {
+      type: 'doughnut',
+      data: {
+        labels: ['1080p', '720p', '480p', '360p'],
+        datasets: [{
+          data: [32, 41, 19, 8],
+          backgroundColor: ['#22c55e', '#6366f1', '#eab308', '#ef4444'],
+          borderWidth: 0,
+          spacing: 3
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        cutout: '60%',
+        plugins: { legend: { position: 'bottom', labels: { padding: 12 } } }
+      }
+    });
+
+    // Processing Time
+    new Chart(document.getElementById('chart-processing'), {
+      type: 'bar',
+      data: {
+        labels: ['<0.5s', '0.5-1s', '1-1.5s', '1.5-2s', '2-3s', '3s+'],
+        datasets: [{
+          label: 'Sessions',
+          data: [340, 1890, 3200, 2100, 980, 424],
+          backgroundColor: ['rgba(34,197,94,0.7)', 'rgba(34,197,94,0.6)', 'rgba(99,102,241,0.6)', 'rgba(234,179,8,0.5)', 'rgba(234,179,8,0.6)', 'rgba(239,68,68,0.5)'],
+          borderRadius: 4
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { grid: { display: false } },
+          y: { beginAtZero: true }
+        }
+      }
+    });
+
+    // MRR Growth
+    new Chart(document.getElementById('chart-mrr'), {
+      type: 'line',
+      data: {
+        labels: ['Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar'],
+        datasets: [{
+          label: 'MRR',
+          data: [1200, 1890, 2340, 3100, 3960, 4280],
+          backgroundColor: 'rgba(34, 197, 94, 0.1)',
+          borderColor: '#22c55e',
+          borderWidth: 3,
+          pointBackgroundColor: '#22c55e',
+          pointRadius: 5,
+          tension: 0.3,
+          fill: true
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { grid: { display: false } },
+          y: {
+            beginAtZero: true,
+            ticks: { callback: function(v) { return '$' + v.toLocaleString(); } }
+          }
+        }
+      }
+    });
+
+    // Plans
+    new Chart(document.getElementById('chart-plans'), {
+      type: 'doughnut',
+      data: {
+        labels: ['Monthly', 'Annual', 'Free'],
+        datasets: [{
+          data: [142, 72, 1033],
+          backgroundColor: ['#6366f1', '#14B8A6', 'rgba(100,116,139,0.4)'],
+          borderWidth: 0,
+          spacing: 3
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        cutout: '60%',
+        plugins: { legend: { position: 'bottom', labels: { padding: 12 } } }
+      }
+    });
+
+    // Revenue by Channel
+    new Chart(document.getElementById('chart-channels'), {
+      type: 'bar',
+      data: {
+        labels: ['Organic', 'Referral', 'Social', 'Blog', 'Direct', 'Promo'],
+        datasets: [{
+          label: 'Revenue',
+          data: [1420, 980, 720, 540, 380, 240],
+          backgroundColor: ['rgba(99,102,241,0.7)', 'rgba(20,184,166,0.7)', 'rgba(236,72,153,0.6)', 'rgba(249,115,22,0.6)', 'rgba(234,179,8,0.5)', 'rgba(34,197,94,0.5)'],
+          borderRadius: 6
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { grid: { display: false } },
+          y: {
+            beginAtZero: true,
+            ticks: { callback: function(v) { return '$' + v; } }
+          }
+        }
+      }
+    });
+  }
+
+  // Helper to generate trend data
+  function genTrend(base, variance, count) {
+    var arr = [];
+    for (var i = 0; i < count; i++) {
+      arr.push(Math.round(base + (Math.random() - 0.5) * variance * 2));
+    }
+    return arr;
+  }
+
+  // Animate KPIs
+  function animateKPIs() {
+    animateValue('kpi-users', 0, 1247, '$0');
+    animateValue('kpi-analyses', 0, 8934, '$0');
+    animateValue('kpi-mrr', 0, 4280, '$');
+    animateValue('kpi-churn', 0, 3.2, '%');
+  }
+
+  function animateValue(id, start, end, prefix) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    var duration = 1500;
+    var startTime = null;
+    var isDecimal = end % 1 !== 0;
+
+    function step(ts) {
+      if (!startTime) startTime = ts;
+      var progress = Math.min((ts - startTime) / duration, 1);
+      var eased = 1 - Math.pow(1 - progress, 3);
+      var current = start + (end - start) * eased;
+
+      if (prefix === '$') {
+        el.textContent = '$' + Math.round(current).toLocaleString();
+      } else if (prefix === '%') {
+        el.textContent = current.toFixed(1) + '%';
+      } else {
+        el.textContent = Math.round(current).toLocaleString();
+      }
+
+      if (progress < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+
+  // Export functions
+  function exportReport() {
+    var csv = 'Metric,Value\n';
+    csv += 'Total Users,1247\n';
+    csv += 'Total Analyses,8934\n';
+    csv += 'MRR,$4280\n';
+    csv += 'ARR,$51360\n';
+    csv += 'Monthly Churn,3.2%\n';
+    csv += 'Customer LTV,$187\n';
+    csv += 'Dashboard Visits,3412\n';
+    csv += 'PDF Downloads,891\n';
+    csv += 'Avg Sessions/User,2.4\n';
+    csv += 'Avg Session Duration,4:32\n';
+    csv += 'Authentic Verdicts,67%\n';
+    csv += 'Uncertain Verdicts,21%\n';
+    csv += 'Inauthentic Verdicts,12%\n';
+    csv += 'Face Detection Rate,99.4%\n';
+    csv += 'Avg Processing Time,1.2s\n';
+    csv += 'Uptime,99.8%\n';
+
+    var blob = new Blob([csv], { type: 'text/csv' });
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'gutcheck-analytics-' + new Date().toISOString().split('T')[0] + '.csv';
+    a.click();
+  }
+
+  function exportPDF() {
+    alert('PDF export: Use Ctrl/Cmd+P to print this page as PDF with background graphics enabled.');
+  }
+</script>
+
+</body>
+</html>

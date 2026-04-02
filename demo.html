@@ -18,6 +18,7 @@
     --green: #22c55e;
     --yellow: #eab308;
     --red: #ef4444;
+    --teal: #14B8A6;
     --text: #e2e8f0;
     --text-dim: #94a3b8;
     --text-muted: #64748b;
@@ -34,7 +35,6 @@
     overflow-x: hidden;
   }
 
-  /* Header */
   .header {
     display: flex;
     align-items: center;
@@ -71,9 +71,7 @@
     letter-spacing: -0.02em;
   }
 
-  .header-title span {
-    color: var(--accent);
-  }
+  .header-title span { color: var(--accent); }
 
   .badge {
     font-family: var(--mono);
@@ -96,14 +94,12 @@
     color: var(--text-muted);
   }
 
-  /* Main Container */
   .container {
     max-width: 1400px;
     margin: 0 auto;
     padding: 32px;
   }
 
-  /* Back Link */
   .back-link {
     display: inline-flex;
     align-items: center;
@@ -115,11 +111,8 @@
     transition: color 0.2s;
   }
 
-  .back-link:hover {
-    color: var(--accent);
-  }
+  .back-link:hover { color: var(--accent); }
 
-  /* Grid Layout */
   .grid {
     display: grid;
     gap: 24px;
@@ -131,7 +124,6 @@
   .col-4 { grid-column: span 4; }
   .col-3 { grid-column: span 3; }
 
-  /* Card */
   .card {
     background: var(--surface);
     border: 1px solid var(--border);
@@ -139,9 +131,7 @@
     padding: 24px;
   }
 
-  .card-header {
-    margin-bottom: 20px;
-  }
+  .card-header { margin-bottom: 20px; }
 
   .card-title {
     font-family: var(--mono);
@@ -152,7 +142,6 @@
     letter-spacing: 0.1em;
   }
 
-  /* Hero Score */
   .hero-score {
     display: flex;
     flex-direction: column;
@@ -205,7 +194,6 @@
     max-width: 400px;
   }
 
-  /* Metric Row */
   .metric-row {
     display: flex;
     justify-content: space-between;
@@ -214,9 +202,7 @@
     border-bottom: 1px solid rgba(255,255,255,0.05);
   }
 
-  .metric-row:last-child {
-    border-bottom: none;
-  }
+  .metric-row:last-child { border-bottom: none; }
 
   .metric-label {
     font-size: 14px;
@@ -233,7 +219,6 @@
   .metric-value.warning { color: var(--yellow); }
   .metric-value.bad { color: var(--red); }
 
-  /* Progress Bar */
   .progress-bar {
     width: 100%;
     height: 8px;
@@ -254,7 +239,6 @@
   .progress-fill.warning { background: var(--yellow); }
   .progress-fill.bad { background: var(--red); }
 
-  /* Timestamp */
   .timestamp {
     font-family: var(--mono);
     font-size: 12px;
@@ -264,7 +248,6 @@
     border-top: 1px solid rgba(255,255,255,0.05);
   }
 
-  /* Download Button */
   .btn-download {
     display: inline-flex;
     align-items: center;
@@ -281,11 +264,8 @@
     transition: background 0.2s;
   }
 
-  .btn-download:hover {
-    background: #818cf8;
-  }
+  .btn-download:hover { background: #818cf8; }
 
-  /* Notice */
   .notice {
     background: rgba(99, 102, 241, 0.06);
     border: 1px solid rgba(99, 102, 241, 0.15);
@@ -296,9 +276,416 @@
     line-height: 1.6;
   }
 
+  /* SquadCheck Section */
+  .squadcheck-section {
+    border: 1px solid rgba(20, 184, 166, 0.3);
+    background: linear-gradient(135deg, rgba(20, 184, 166, 0.06) 0%, rgba(99, 102, 241, 0.04) 100%);
+  }
+
+  .squadcheck-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+  }
+
+  .squadcheck-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .squadcheck-title h3 {
+    font-family: var(--mono);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--teal);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .squad-badge {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 4px;
+    background: rgba(20, 184, 166, 0.15);
+    color: var(--teal);
+    border: 1px solid rgba(20, 184, 166, 0.3);
+  }
+
+  .squad-consensus-score {
+    text-align: center;
+    padding: 20px 0;
+    margin-bottom: 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+
+  .consensus-value {
+    font-family: var(--mono);
+    font-size: 48px;
+    font-weight: 700;
+    color: var(--green);
+    line-height: 1;
+  }
+
+  .consensus-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    margin-top: 8px;
+  }
+
+  .squad-members {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+
+  .squad-member {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 10px;
+    padding: 16px;
+    text-align: center;
+    transition: border-color 0.2s;
+  }
+
+  .squad-member:hover { border-color: rgba(20, 184, 166, 0.3); }
+
+  .member-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    margin: 0 auto 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--mono);
+    font-weight: 700;
+    font-size: 16px;
+    color: white;
+  }
+
+  .member-name {
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+
+  .member-score {
+    font-family: var(--mono);
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 2px;
+  }
+
+  .member-verdict {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .member-time {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 6px;
+  }
+
+  .consensus-bar { margin-top: 16px; }
+
+  .consensus-bar-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: var(--text-dim);
+    margin-bottom: 6px;
+  }
+
+  .consensus-bar-track {
+    width: 100%;
+    height: 10px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 5px;
+    overflow: hidden;
+    display: flex;
+  }
+
+  .consensus-bar-fill {
+    height: 100%;
+    transition: width 0.5s ease;
+  }
+
+  .consensus-note {
+    text-align: center;
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 16px;
+    font-style: italic;
+  }
+
+  .impact-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+
+  .impact-stat {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+  }
+
+  .impact-number {
+    font-family: var(--mono);
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--teal);
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+
+  .impact-label {
+    font-size: 13px;
+    color: var(--text-dim);
+    line-height: 1.4;
+  }
+
+  .timeline-container {
+    position: relative;
+    padding: 20px 0;
+  }
+
+  .timeline-track {
+    position: relative;
+    height: 60px;
+    background: rgba(255,255,255,0.03);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 16px;
+  }
+
+  .timeline-line {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: rgba(255,255,255,0.1);
+  }
+
+  .timeline-point {
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 2px solid;
+    cursor: pointer;
+    transition: transform 0.2s;
+    z-index: 2;
+  }
+
+  .timeline-point:hover { transform: translate(-50%, -50%) scale(1.4); }
+
+  .timeline-point.green { border-color: var(--green); background: rgba(34, 197, 94, 0.3); }
+  .timeline-point.yellow { border-color: var(--yellow); background: rgba(234, 179, 8, 0.3); }
+  .timeline-point.red { border-color: var(--red); background: rgba(239, 68, 68, 0.3); }
+
+  .timeline-wave {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    opacity: 0.4;
+  }
+
+  .timeline-labels {
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-muted);
+  }
+
+  .timeline-events {
+    margin-top: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .timeline-event {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    background: rgba(255,255,255,0.02);
+    border-radius: 6px;
+    font-size: 13px;
+    color: var(--text-dim);
+  }
+
+  .event-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .event-time {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-left: auto;
+    flex-shrink: 0;
+  }
+
+  .share-card-preview {
+    background: linear-gradient(135deg, #13131F 0%, #1a1a2e 100%);
+    border: 1px solid rgba(99, 102, 241, 0.25);
+    border-radius: 16px;
+    padding: 32px;
+    text-align: center;
+    max-width: 400px;
+    margin: 0 auto;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .share-card-preview::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at 30% 20%, rgba(99,102,241,0.08) 0%, transparent 50%),
+                radial-gradient(circle at 70% 80%, rgba(20,184,166,0.06) 0%, transparent 50%);
+    pointer-events: none;
+  }
+
+  .share-card-logo {
+    font-family: var(--mono);
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    position: relative;
+  }
+
+  .share-card-logo span { color: var(--accent); }
+
+  .share-card-score {
+    font-family: var(--mono);
+    font-size: 64px;
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 8px;
+    position: relative;
+  }
+
+  .share-card-verdict {
+    font-family: var(--mono);
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    position: relative;
+  }
+
+  .share-card-meta {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-bottom: 16px;
+    position: relative;
+  }
+
+  .share-card-squad {
+    font-size: 12px;
+    color: var(--teal);
+    font-family: var(--mono);
+    position: relative;
+  }
+
+  .share-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin-top: 24px;
+  }
+
+  .btn-share {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: none;
+  }
+
+  .btn-share.primary {
+    background: var(--accent);
+    color: white;
+  }
+
+  .btn-share.primary:hover { background: #818cf8; }
+
+  .btn-share.ghost {
+    background: transparent;
+    color: var(--text-dim);
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .btn-share.ghost:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .sample-banner {
+    background: rgba(99, 102, 241, 0.1);
+    border: 1px solid rgba(99, 102, 241, 0.3);
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 24px;
+    text-align: center;
+  }
+
+  .sample-banner p {
+    font-family: var(--mono);
+    font-size: 14px;
+    color: var(--accent);
+    margin: 0;
+  }
+
   @media (max-width: 768px) {
     .col-6, .col-4, .col-3 {
       grid-column: span 12;
+    }
+    .squad-members {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .impact-grid {
+      grid-template-columns: 1fr;
+    }
+    .share-actions {
+      flex-direction: column;
     }
   }
 </style>
@@ -317,16 +704,14 @@
 </div>
 
 <div class="container">
-  <a href="/" class="back-link">← Back to Home</a>
-  
-  <div style="background: rgba(99, 102, 241, 0.1); border: 1px solid rgba(99, 102, 241, 0.3); border-radius: 8px; padding: 16px; margin-bottom: 24px; text-align: center;">
-    <p style="font-family: var(--mono); font-size: 14px; color: var(--accent); margin: 0;">
-      <strong>SAMPLE DASHBOARD</strong> - This is what you get with GutCheck Premium
-    </p>
+  <a href="/" class="back-link">&larr; Back to Home</a>
+
+  <div class="sample-banner">
+    <p><strong>SAMPLE DASHBOARD</strong> - This is what you get with GutCheck Premium</p>
   </div>
 
   <div class="grid">
-    
+
     <!-- Hero Score -->
     <div class="col-12">
       <div class="card hero-score">
@@ -350,7 +735,7 @@
         <div class="card-header">
           <h3 class="card-title">Viewer Biometrics</h3>
         </div>
-        
+
         <div class="metric-row">
           <span class="metric-label">Emotional Engagement</span>
           <span class="metric-value good" id="engagement-score">82</span>
@@ -382,7 +767,7 @@
         <div class="card-header">
           <h3 class="card-title">Expression Analysis</h3>
         </div>
-        
+
         <div class="metric-row">
           <span class="metric-label">Neutral</span>
           <span class="metric-value">42%</span>
@@ -438,6 +823,179 @@
       </div>
     </div>
 
+    <!-- SquadCheck Group Consensus -->
+    <div class="col-12">
+      <div class="card squadcheck-section">
+        <div class="squadcheck-header">
+          <div class="squadcheck-title">
+            <h3>SquadCheck&trade; Group Consensus</h3>
+            <span class="squad-badge">4 OF 4 ANALYZED</span>
+          </div>
+        </div>
+
+        <div class="squad-consensus-score">
+          <div class="consensus-value">82</div>
+          <div class="consensus-label">Squad Consensus Score</div>
+        </div>
+
+        <div class="squad-members">
+          <div class="squad-member">
+            <div class="member-avatar" style="background: linear-gradient(135deg, #6366f1, #818cf8);">S</div>
+            <div class="member-name">Sarah</div>
+            <div class="member-score good">78</div>
+            <div class="member-verdict" style="color: var(--green);">Authentic</div>
+            <div class="member-time">Analyzed 2m ago</div>
+          </div>
+          <div class="squad-member">
+            <div class="member-avatar" style="background: linear-gradient(135deg, #14B8A6, #2DD4BF);">J</div>
+            <div class="member-name">Jessica</div>
+            <div class="member-score good">85</div>
+            <div class="member-verdict" style="color: var(--green);">Authentic</div>
+            <div class="member-time">Analyzed 5m ago</div>
+          </div>
+          <div class="squad-member">
+            <div class="member-avatar" style="background: linear-gradient(135deg, #f59e0b, #fbbf24);">A</div>
+            <div class="member-name">Amanda</div>
+            <div class="member-score warning">62</div>
+            <div class="member-verdict" style="color: var(--yellow);">Uncertain</div>
+            <div class="member-time">Analyzed 8m ago</div>
+          </div>
+          <div class="squad-member">
+            <div class="member-avatar" style="background: linear-gradient(135deg, #ec4899, #f472b6);">K</div>
+            <div class="member-name">Katie</div>
+            <div class="member-score good">91</div>
+            <div class="member-verdict" style="color: var(--green);">Authentic</div>
+            <div class="member-time">Analyzed 12m ago</div>
+          </div>
+        </div>
+
+        <div class="consensus-bar">
+          <div class="consensus-bar-label">
+            <span>Authentic (3)</span>
+            <span>Uncertain (1)</span>
+            <span>Inauthentic (0)</span>
+          </div>
+          <div class="consensus-bar-track">
+            <div class="consensus-bar-fill" style="width: 75%; background: var(--green); border-radius: 5px 0 0 5px;"></div>
+            <div class="consensus-bar-fill" style="width: 25%; background: var(--yellow); border-radius: 0 5px 5px 0;"></div>
+          </div>
+        </div>
+
+        <div class="consensus-note">"When everyone feels the same thing, trust it."</div>
+      </div>
+    </div>
+
+    <!-- Squad Impact -->
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title" style="color: var(--teal);">Squad Impact</h3>
+        </div>
+        <div class="impact-grid">
+          <div class="impact-stat">
+            <div class="impact-number">23</div>
+            <div class="impact-label">Friends Protected</div>
+          </div>
+          <div class="impact-stat">
+            <div class="impact-number">47</div>
+            <div class="impact-label">SquadChecks Shared</div>
+          </div>
+          <div class="impact-stat">
+            <div class="impact-number">6</div>
+            <div class="impact-label">Flags Raised by Squad</div>
+          </div>
+        </div>
+        <div style="text-align: center; margin-top: 16px; font-size: 13px; color: var(--text-dim);">
+          You've protected <strong style="color: var(--teal);">23 friends</strong> with GutCheck. Your squad is stronger together.
+        </div>
+      </div>
+    </div>
+
+    <!-- Inflection Point Timeline -->
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Inflection Point Timeline</h3>
+        </div>
+        <div class="timeline-container">
+          <div class="timeline-track">
+            <svg class="timeline-wave" viewBox="0 0 800 60" preserveAspectRatio="none">
+              <path d="M0,30 Q50,10 100,30 Q150,50 200,30 Q250,10 300,25 Q350,45 400,35 Q450,15 500,28 Q550,48 600,20 Q650,8 700,30 Q750,45 800,30"
+                fill="none" stroke="rgba(99,102,241,0.3)" stroke-width="1.5"/>
+              <path d="M0,32 Q50,22 100,32 Q150,42 200,28 Q250,18 300,35 Q350,42 400,22 Q450,12 500,30 Q550,40 600,25 Q650,15 700,35 Q750,38 800,30"
+                fill="none" stroke="rgba(20,184,166,0.25)" stroke-width="1.5"/>
+            </svg>
+            <div class="timeline-line"></div>
+            <div class="timeline-point green" style="left: 12%;" title="Natural smile response"></div>
+            <div class="timeline-point green" style="left: 28%;" title="Emotional mirroring detected"></div>
+            <div class="timeline-point yellow" style="left: 45%;" title="Micro-hesitation detected"></div>
+            <div class="timeline-point green" style="left: 62%;" title="Genuine surprise reaction"></div>
+            <div class="timeline-point red" style="left: 73%;" title="Expression-audio mismatch"></div>
+            <div class="timeline-point green" style="left: 88%;" title="Recovery to baseline"></div>
+          </div>
+          <div class="timeline-labels">
+            <span>0:00</span>
+            <span>0:08</span>
+            <span>0:16</span>
+            <span>0:24</span>
+            <span>0:32</span>
+          </div>
+          <div class="timeline-events">
+            <div class="timeline-event">
+              <div class="event-dot" style="background: var(--green);"></div>
+              Natural smile response, emotional mirroring detected
+              <span class="event-time">0:04 - 0:09</span>
+            </div>
+            <div class="timeline-event">
+              <div class="event-dot" style="background: var(--yellow);"></div>
+              Micro-hesitation: brief cognitive load spike
+              <span class="event-time">0:14</span>
+            </div>
+            <div class="timeline-event">
+              <div class="event-dot" style="background: var(--green);"></div>
+              Genuine surprise reaction with authentic temporal delay
+              <span class="event-time">0:20</span>
+            </div>
+            <div class="timeline-event">
+              <div class="event-dot" style="background: var(--red);"></div>
+              Expression-audio mismatch: smile during negative statement
+              <span class="event-time">0:23</span>
+            </div>
+            <div class="timeline-event">
+              <div class="event-dot" style="background: var(--green);"></div>
+              Recovery to emotional baseline, natural exit pattern
+              <span class="event-time">0:28</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Shareable Result Card -->
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Shareable Result Card</h3>
+        </div>
+        <div class="share-card-preview">
+          <div class="share-card-logo">Gut<span>Check</span></div>
+          <div class="share-card-score" style="color: var(--green);">75</div>
+          <div class="share-card-verdict" style="color: var(--green);">LIKELY AUTHENTIC</div>
+          <div class="share-card-meta">
+            <span>Confidence: 87%</span>
+            <span>Squad: 4/4</span>
+            <span>32s analyzed</span>
+          </div>
+          <div class="share-card-squad">Squad Consensus: 82 / 100</div>
+        </div>
+        <div class="share-actions">
+          <button class="btn-share primary" onclick="shareResult()">Share with Squad</button>
+          <button class="btn-share ghost" onclick="copyLink()">Copy Link</button>
+          <button class="btn-share ghost" onclick="downloadCard()">Save Image</button>
+        </div>
+      </div>
+    </div>
+
     <!-- Notice -->
     <div class="col-12">
       <div class="notice">
@@ -448,7 +1006,7 @@
     <!-- Download -->
     <div class="col-12" style="text-align: center;">
       <button class="btn-download" onclick="downloadReport()">
-        <span>↓</span> Download Full Report (PDF)
+        <span>&darr;</span> Download Full Report (PDF)
       </button>
     </div>
 
@@ -456,11 +1014,34 @@
 </div>
 
 <script>
-  // Set timestamp
   document.getElementById('timestamp').textContent = new Date().toLocaleString();
 
   function downloadReport() {
     alert('PDF download will be implemented with premium tier.');
+  }
+
+  function shareResult() {
+    if (navigator.share) {
+      navigator.share({
+        title: 'GutCheck Analysis Result',
+        text: 'Score: 75/100 - LIKELY AUTHENTIC. Squad consensus: 82/100.',
+        url: window.location.href
+      });
+    } else {
+      copyLink();
+    }
+  }
+
+  function copyLink() {
+    navigator.clipboard.writeText(window.location.href).then(function() {
+      var btn = event.target;
+      btn.textContent = 'Copied!';
+      setTimeout(function() { btn.textContent = 'Copy Link'; }, 2000);
+    });
+  }
+
+  function downloadCard() {
+    alert('Card image download coming soon.');
   }
 </script>
 

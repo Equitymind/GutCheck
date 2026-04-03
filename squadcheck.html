@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SquadCheck - Don't Decide Alone on a Video Call | GutCheck</title>
-  <meta name="description" content="If something feels off, send it to your friends and see if they catch the same thing. SquadCheck reveals shared patterns in real-time reactions.">
+  <title>SquadCheck - Get Your Squad's Opinion on Any Video | GutCheck</title>
+  <meta name="description" content="Check a dating profile, verify a video call, or vet a new connection — with your friends. Create a session, invite your squad, see consensus.">
   <link rel="icon" type="image/png" href="assets/favicon.png">
-  
+
   <style>
     *, *::before, *::after {
       margin: 0;
@@ -20,15 +20,20 @@
       --surface-border: #1e1a2e;
       --teal: #14B8A6;
       --teal-hover: #2DD4BF;
+      --purple: #6366f1;
       --white: #ffffff;
       --text: #e8e6f0;
       --text-muted: #9b97a8;
       --red: #ef4444;
+      --green: #22c55e;
+      --yellow: #eab308;
       --radius: 12px;
+      --mono: 'JetBrains Mono', 'SF Mono', monospace;
+      --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-family: var(--sans);
       background: var(--bg);
       color: var(--text);
       line-height: 1.6;
@@ -64,9 +69,7 @@
       text-decoration: none;
     }
 
-    .logo span {
-      color: var(--teal);
-    }
+    .logo span { color: var(--teal); }
 
     .nav-links a {
       color: var(--text);
@@ -76,21 +79,7 @@
       transition: color 0.2s;
     }
 
-    .nav-links a:hover {
-      color: var(--teal);
-    }
-
-    .new-badge {
-      display: inline-block;
-      background: #D4AF37;
-      color: #fff;
-      padding: 2px 8px;
-      border-radius: 4px;
-      font-size: 0.7rem;
-      font-weight: 700;
-      margin-left: 6px;
-      text-transform: uppercase;
-    }
+    .nav-links a:hover { color: var(--teal); }
 
     /* HERO */
     .hero {
@@ -99,40 +88,32 @@
     }
 
     .hero-badge {
-      display: flex;
+      display: inline-flex;
       align-items: center;
-      justify-content: center;
-      gap: 12px;
-      margin-bottom: 24px;
-      flex-wrap: wrap;
-    }
-
-    .squadcheck-text {
-      font-size: 3rem;
-      font-weight: 900;
-      letter-spacing: -0.02em;
-      display: flex;
-      align-items: baseline;
-      gap: 4px;
-    }
-
-    .squadcheck-text span:first-child {
-      color: var(--white);
-    }
-
-    .squadcheck-text span:last-child {
+      gap: 10px;
+      background: rgba(20, 184, 166, 0.1);
+      border: 1px solid rgba(20, 184, 166, 0.25);
+      border-radius: 24px;
+      padding: 8px 20px;
+      margin-bottom: 28px;
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      font-weight: 600;
       color: var(--teal);
+      letter-spacing: 0.04em;
     }
 
-    .new-badge-badge {
-      background: #D4AF37;
-      color: #fff;
-      padding: 4px 10px;
-      border-radius: 4px;
-      font-size: 0.7rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
+    .hero-badge .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--teal);
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
     }
 
     h1 {
@@ -143,10 +124,12 @@
       margin-bottom: 24px;
     }
 
+    h1 .accent { color: var(--teal); }
+
     .hero p {
       font-size: 1.25rem;
       color: var(--text-muted);
-      max-width: 700px;
+      max-width: 650px;
       margin: 0 auto 40px;
       line-height: 1.7;
     }
@@ -166,6 +149,8 @@
       text-decoration: none;
       transition: all 0.2s;
       display: inline-block;
+      border: none;
+      cursor: pointer;
     }
 
     .btn-primary {
@@ -184,18 +169,11 @@
       border: 1px solid var(--surface-border);
     }
 
-    .btn-secondary:hover {
-      border-color: var(--teal);
-    }
+    .btn-secondary:hover { border-color: var(--teal); }
 
     /* SECTION */
-    section {
-      padding: 80px 0;
-    }
-
-    section.alt {
-      background: var(--surface);
-    }
+    section { padding: 80px 0; }
+    section.alt { background: var(--surface); }
 
     h2 {
       font-size: clamp(2rem, 4vw, 2.75rem);
@@ -205,7 +183,7 @@
     }
 
     h3 {
-      font-size: 1.5rem;
+      font-size: 1.35rem;
       font-weight: 700;
       margin-bottom: 12px;
       color: var(--white);
@@ -226,159 +204,355 @@
       margin-bottom: 20px;
     }
 
-    /* VIRAL HOOK */
-    .viral-hook {
-      background: linear-gradient(135deg, rgba(20, 184, 166, 0.1), rgba(45, 212, 191, 0.05));
-      text-align: center;
-    }
-
-    .callout-box {
-      background: var(--surface);
-      border-left: 4px solid var(--red);
-      padding: 24px 32px;
-      margin: 32px auto;
-      max-width: 600px;
-      text-align: left;
-    }
-
-    .callout-box strong {
-      color: var(--red);
-      font-size: 1.1rem;
-      display: block;
-      margin-bottom: 8px;
-    }
-
-    .callout-box p {
-      margin: 0;
-      font-size: 1rem;
-    }
-
-    /* STEPS */
-    .steps {
+    /* HOW IT WORKS - SESSION FLOW */
+    .session-flow {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 40px;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
       margin-top: 60px;
     }
 
-    .step {
+    .flow-step {
       text-align: center;
+      position: relative;
     }
 
-    .step-number {
-      width: 60px;
-      height: 60px;
-      background: rgba(20, 184, 166, 0.15);
+    .flow-step::after {
+      content: '';
+      position: absolute;
+      top: 30px;
+      right: -12px;
+      width: 24px;
+      height: 2px;
+      background: rgba(20, 184, 166, 0.3);
+    }
+
+    .flow-step:last-child::after { display: none; }
+
+    .flow-number {
+      width: 56px;
+      height: 56px;
+      background: linear-gradient(135deg, rgba(20, 184, 166, 0.15), rgba(99, 102, 241, 0.1));
       border: 2px solid var(--teal);
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.5rem;
+      font-family: var(--mono);
+      font-size: 1.25rem;
       font-weight: 800;
       color: var(--teal);
-      margin: 0 auto 20px;
+      margin: 0 auto 16px;
     }
 
-    /* USE CASES */
-    .use-case {
+    .flow-step h3 {
+      font-size: 1.1rem;
+      margin-bottom: 8px;
+    }
+
+    .flow-step p {
+      font-size: 0.95rem;
+      margin-bottom: 0;
+    }
+
+    /* CONSENSUS DEMO */
+    .consensus-demo {
+      max-width: 600px;
+      margin: 48px auto 0;
       background: var(--surface);
-      border: 1px solid var(--surface-border);
-      border-radius: var(--radius);
-      padding: 40px;
-      margin-bottom: 32px;
-    }
-
-    .use-case-icon {
-      font-size: 3rem;
-      margin-bottom: 20px;
-    }
-
-    .quote {
-      font-style: italic;
-      color: var(--text-muted);
-      line-height: 1.8;
-      margin-bottom: 20px;
-      font-size: 1.05rem;
-      border-left: 3px solid var(--teal);
-      padding-left: 20px;
-    }
-
-    .use-cases-list {
-      list-style: none;
-      padding-left: 0;
-    }
-
-    .use-cases-list li {
-      padding-left: 28px;
-      margin-bottom: 12px;
-      position: relative;
-      color: var(--text-muted);
-    }
-
-    .use-cases-list li::before {
-      content: "•";
-      position: absolute;
-      left: 0;
-      color: var(--teal);
-      font-weight: 700;
-      font-size: 1.5rem;
-      line-height: 1;
-    }
-
-    /* INSTINCT SECTION */
-    .instinct-section {
-      background: var(--surface);
-    }
-
-    .instinct-section h2 {
-      text-align: center;
-      margin-bottom: 24px;
-    }
-
-    .instinct-section p {
-      max-width: 800px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-
-    .instinct-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-      gap: 40px;
-      margin-top: 60px;
-    }
-
-    .instinct-card {
-      background: var(--bg);
       border: 1px solid var(--surface-border);
       border-radius: var(--radius);
       padding: 32px;
     }
 
-    .instinct-card h3 {
-      color: var(--teal);
-      margin-bottom: 16px;
-    }
-
-    /* FINAL CTA */
-    .final-cta {
-      text-align: center;
-      padding: 80px 0;
-      background: linear-gradient(135deg, rgba(20, 184, 166, 0.1), rgba(45, 212, 191, 0.05));
-    }
-
-    .final-cta h2 {
+    .demo-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       margin-bottom: 20px;
     }
 
-    .final-cta p {
-      font-size: 1.15rem;
+    .demo-title {
+      font-family: var(--mono);
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--teal);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .demo-badge {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 4px;
+      background: rgba(239, 68, 68, 0.15);
+      color: var(--red);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
+    .demo-consensus {
+      font-family: var(--mono);
+      font-size: 1.5rem;
+      font-weight: 800;
+      text-align: center;
+      margin-bottom: 20px;
+      color: var(--white);
+    }
+
+    .demo-consensus strong { color: var(--red); }
+
+    .demo-bar {
+      height: 12px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 6px;
+      overflow: hidden;
+      display: flex;
+      margin-bottom: 12px;
+    }
+
+    .demo-bar-fill {
+      height: 100%;
+      transition: width 1s ease;
+    }
+
+    .demo-legend {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      font-family: var(--mono);
+      font-size: 0.75rem;
       color: var(--text-muted);
+    }
+
+    .demo-dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      margin-right: 6px;
+    }
+
+    .demo-participants {
+      margin-top: 24px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      padding-top: 20px;
+    }
+
+    .demo-person {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 0;
+    }
+
+    .demo-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: white;
+    }
+
+    .demo-person-name {
+      flex: 1;
+      font-size: 0.9rem;
+    }
+
+    .demo-verdict {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 4px;
+      text-transform: uppercase;
+    }
+
+    .demo-verdict.red { background: rgba(239,68,68,0.15); color: var(--red); }
+    .demo-verdict.green { background: rgba(34,197,94,0.15); color: var(--green); }
+
+    /* USE CASES */
+    .use-cases-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+      margin-top: 48px;
+    }
+
+    .use-case-card {
+      background: var(--surface);
+      border: 1px solid var(--surface-border);
+      border-radius: var(--radius);
+      padding: 32px;
+      transition: border-color 0.2s;
+    }
+
+    .use-case-card:hover { border-color: rgba(20,184,166,0.3); }
+
+    .use-case-icon {
+      font-size: 2rem;
+      margin-bottom: 16px;
+    }
+
+    .use-case-card h3 {
+      font-size: 1.15rem;
+      margin-bottom: 8px;
+    }
+
+    .use-case-card p {
+      font-size: 0.95rem;
+      margin-bottom: 0;
+    }
+
+    /* PRICING CALLOUT */
+    .pricing-callout {
+      background: linear-gradient(135deg, rgba(20, 184, 166, 0.08), rgba(99, 102, 241, 0.05));
+      border: 1px solid rgba(20, 184, 166, 0.2);
+      border-radius: var(--radius);
+      padding: 40px;
+      text-align: center;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .pricing-callout h3 {
+      font-size: 1.5rem;
+      color: var(--teal);
+      margin-bottom: 12px;
+    }
+
+    .pricing-detail {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+      margin-top: 28px;
+    }
+
+    .pricing-item {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 8px;
+      padding: 20px;
+    }
+
+    .pricing-item-label {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 4px;
+    }
+
+    .pricing-item-value {
+      font-family: var(--mono);
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--teal);
+    }
+
+    /* SESSION JOIN PAGE (shown when ?invite= or ?session= param) */
+    .join-view {
+      display: none;
+      min-height: 80vh;
+      padding: 40px 0;
+    }
+
+    .join-card {
+      max-width: 560px;
+      margin: 0 auto;
+      background: var(--surface);
+      border: 1px solid var(--surface-border);
+      border-radius: 16px;
+      padding: 40px;
+    }
+
+    .join-header {
+      text-align: center;
       margin-bottom: 32px;
-      max-width: 600px;
-      margin-left: auto;
-      margin-right: auto;
+    }
+
+    .join-header h2 {
+      font-size: 1.75rem;
+      margin-bottom: 8px;
+    }
+
+    .join-header p {
+      font-size: 1rem;
+      margin-bottom: 0;
+    }
+
+    .join-video-name {
+      font-family: var(--mono);
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--teal);
+      text-align: center;
+      padding: 16px;
+      background: rgba(20,184,166,0.08);
+      border-radius: 8px;
+      margin-bottom: 24px;
+    }
+
+    .join-form-group {
+      margin-bottom: 16px;
+    }
+
+    .join-form-group label {
+      display: block;
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 8px;
+    }
+
+    .join-input {
+      width: 100%;
+      padding: 14px 18px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--surface-border);
+      border-radius: 8px;
+      color: var(--text);
+      font-size: 1rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .join-input:focus { border-color: var(--teal); }
+
+    .join-status {
+      text-align: center;
+      margin-top: 12px;
+      font-family: var(--mono);
+      font-size: 0.85rem;
+    }
+
+    .join-expired {
+      text-align: center;
+      padding: 48px 24px;
+    }
+
+    .join-expired h3 { color: var(--red); margin-bottom: 8px; }
+
+    /* SESSION RESULTS VIEW */
+    .results-view {
+      display: none;
+      padding: 40px 0;
+    }
+
+    .results-card {
+      max-width: 640px;
+      margin: 0 auto;
     }
 
     /* FOOTER */
@@ -414,31 +588,20 @@
       transition: color 0.2s;
     }
 
-    .footer-links a:hover {
-      color: var(--text);
-    }
+    .footer-links a:hover { color: var(--text); }
 
     @media (max-width: 768px) {
-      .footer-inner {
-        flex-direction: column;
-        text-align: center;
-      }
+      .session-flow { grid-template-columns: 1fr 1fr; }
+      .flow-step::after { display: none; }
+      .use-cases-grid { grid-template-columns: 1fr; }
+      .pricing-detail { grid-template-columns: 1fr; }
+      .footer-inner { flex-direction: column; text-align: center; }
+      .footer-links { flex-wrap: wrap; justify-content: center; }
+      .nav-links { display: none; }
+    }
 
-      .footer-links {
-        flex-wrap: wrap;
-        justify-content: center;
-      }
-      .instinct-grid {
-        grid-template-columns: 1fr;
-      }
-      
-      .nav-links {
-        display: none;
-      }
-
-      .steps {
-        grid-template-columns: 1fr;
-      }
+    @media (max-width: 480px) {
+      .session-flow { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -451,182 +614,229 @@
     <div class="nav-links">
       <a href="/">Home</a>
       <a href="/how-it-works.html">How It Works</a>
-      <a href="/squadcheck.html">SquadCheck <span class="new-badge">New</span></a>
+      <a href="/squadcheck.html">SquadCheck</a>
       <a href="/upgrade">Upgrade</a>
     </div>
   </div>
 </nav>
 
+<!-- MARKETING VIEW (default) -->
+<div id="marketing-view">
+
 <!-- HERO -->
 <section class="hero">
   <div class="container">
-    <div class="hero-badge">
-      <div class="new-badge-badge">NEW!</div>
-      <div class="squadcheck-text">
-        <span>Squad</span><span>Check</span>
-      </div>
-    </div>
-    <h1>Don't decide alone<br/>on a video call</h1>
-    <p>If something feels off, send it to your friends and see if they catch the same thing.</p>
+    <div class="hero-badge"><span class="dot"></span> Session-Based Group Verification</div>
+    <h1>Check this profile<br/>with <span class="accent">your friends</span></h1>
+    <p>Create a session, invite up to 4 friends, and see if everyone catches the same thing. One video, multiple perspectives, clear consensus.</p>
     <div class="cta-buttons">
-      <a href="/upgrade" class="btn btn-primary">Send Your First Check — Free</a>
+      <a href="/upgrade" class="btn btn-primary">Start a SquadCheck Session</a>
       <a href="#how-it-works" class="btn btn-secondary">See How It Works</a>
     </div>
   </div>
 </section>
 
-<!-- VIRAL HOOK -->
-<section class="viral-hook">
+<!-- CONSENSUS DEMO -->
+<section style="padding-top: 0;">
   <div class="container">
-    <h2>Everyone noticed it<br/>at the same moment</h2>
-    <p style="text-align: center; max-width: 700px; margin: 0 auto 40px;">Not just you. Not just one friend. The whole group reacted at the exact same second.</p>
-    
-    <div class="callout-box">
-      <strong>⚠️ 4 out of 5 friends flagged this as suspicious</strong>
-      <p>All reactions spiked at 0:42</p>
+    <div class="consensus-demo">
+      <div class="demo-header">
+        <span class="demo-title">SquadCheck Session</span>
+        <span class="demo-badge">4 of 5 FLAGGED</span>
+      </div>
+      <div class="demo-consensus"><strong>4</strong> out of <strong>5</strong> flagged INAUTHENTIC</div>
+      <div class="demo-bar">
+        <div class="demo-bar-fill" style="width:20%;background:var(--green);border-radius:6px 0 0 6px;"></div>
+        <div class="demo-bar-fill" style="width:80%;background:var(--red);border-radius:0 6px 6px 0;"></div>
+      </div>
+      <div class="demo-legend">
+        <span><span class="demo-dot" style="background:var(--green);"></span> Authentic (1)</span>
+        <span><span class="demo-dot" style="background:var(--red);"></span> Inauthentic (4)</span>
+      </div>
+      <div class="demo-participants">
+        <div class="demo-person">
+          <div class="demo-avatar" style="background:linear-gradient(135deg,var(--teal),var(--purple));">Y</div>
+          <span class="demo-person-name">You (Creator)</span>
+          <span class="demo-verdict red">Inauthentic</span>
+        </div>
+        <div class="demo-person">
+          <div class="demo-avatar" style="background:linear-gradient(135deg,#ec4899,var(--purple));">S</div>
+          <span class="demo-person-name">Sarah</span>
+          <span class="demo-verdict red">Inauthentic</span>
+        </div>
+        <div class="demo-person">
+          <div class="demo-avatar" style="background:linear-gradient(135deg,var(--yellow),#f97316);">M</div>
+          <span class="demo-person-name">Mike</span>
+          <span class="demo-verdict green">Authentic</span>
+        </div>
+        <div class="demo-person">
+          <div class="demo-avatar" style="background:linear-gradient(135deg,var(--green),var(--teal));">J</div>
+          <span class="demo-person-name">Jess</span>
+          <span class="demo-verdict red">Inauthentic</span>
+        </div>
+        <div class="demo-person">
+          <div class="demo-avatar" style="background:linear-gradient(135deg,var(--red),#ec4899);">D</div>
+          <span class="demo-person-name">Dan</span>
+          <span class="demo-verdict red">Inauthentic</span>
+        </div>
+      </div>
     </div>
   </div>
 </section>
 
 <!-- HOW IT WORKS -->
-<section id="how-it-works">
+<section id="how-it-works" class="alt">
   <div class="container">
-    <h2 style="text-align: center;">How SquadCheck Works</h2>
-    <p class="section-intro">Three simple steps to get a second opinion</p>
-    
-    <div class="steps">
-      <div class="step">
-        <div class="step-number">1</div>
-        <h3>Send the video</h3>
-        <p>Something feels off. Share a short clip with your friends.</p>
+    <h2 style="text-align: center;">How SquadCheck Sessions Work</h2>
+    <p class="section-intro">Event-driven verification. One video per session. Up to 5 opinions.</p>
+
+    <div class="session-flow">
+      <div class="flow-step">
+        <div class="flow-number">1</div>
+        <h3>You analyze a video</h3>
+        <p>Run your GutCheck analysis on a dating profile, video call, or any clip.</p>
       </div>
-      
-      <div class="step">
-        <div class="step-number">2</div>
-        <h3>They react independently</h3>
-        <p>Each friend watches and runs their own check. No signup needed.</p>
+      <div class="flow-step">
+        <div class="flow-number">2</div>
+        <h3>Create a session</h3>
+        <p>Click "Get Squad Opinion" and create a 7-day session for that video.</p>
       </div>
-      
-      <div class="step">
-        <div class="step-number">3</div>
-        <h3>See what everyone noticed</h3>
-        <p>View all reactions side by side and see if your instincts match.</p>
+      <div class="flow-step">
+        <div class="flow-number">3</div>
+        <h3>Invite your squad</h3>
+        <p>Share a link or enter emails. Up to 4 friends can join for free.</p>
+      </div>
+      <div class="flow-step">
+        <div class="flow-number">4</div>
+        <h3>See consensus</h3>
+        <p>Your dashboard shows the group verdict: who flagged what and why.</p>
       </div>
     </div>
-  </div>
-</section>
-
-<!-- CONSENSUS -->
-<section class="alt">
-  <div class="container">
-    <h2 style="text-align: center;">When everyone feels the same thing,<br/>trust it</h2>
-    <p style="text-align: center; max-width: 700px; margin: 20px auto 0;">If your whole group catches the same red flag, it's probably not in your head.</p>
-  </div>
-</section>
-
-<!-- INSTINCT SECTION -->
-<section class="instinct-section">
-  <div class="container">
-    <h2>Your body notices<br/>before your brain does</h2>
-    <p style="text-align: center;">Long before you can explain it, your body is already reacting.</p>
-    <p style="text-align: center;">Subtle changes in eye movement. Timing that feels slightly off. Expressions that don't quite match the moment.</p>
-    <p style="text-align: center; margin-bottom: 60px;">You might not consciously catch it—but your nervous system does.</p>
-
-    <div class="instinct-grid">
-      <div class="instinct-card">
-        <h3>You're wired to detect what doesn't feel right</h3>
-        <p>For thousands of years, humans have relied on instinct to read people quickly.</p>
-        <p>We're constantly scanning for patterns—tone, rhythm, micro-expressions—and detecting when something doesn't line up.</p>
-        <p style="margin-bottom: 0;">That's what "something feels off" actually is.</p>
-      </div>
-
-      <div class="instinct-card">
-        <h3>We don't replace your instincts—we make them visible</h3>
-        <p>GutCheck captures those subtle reactions while you watch and turns them into a signal you can actually see.</p>
-        <p>And when multiple people react at the same moment, it becomes even clearer.</p>
-        <p style="margin-bottom: 0;"><strong style="color: var(--white);">Not just a feeling—a shared pattern.</strong></p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- WHY GROUPS WIN -->
-<section>
-  <div class="container">
-    <h2 style="text-align: center;">One reaction is a feeling.<br/>Multiple reactions at the same moment<br/>is a signal.</h2>
-    <p style="text-align: center; max-width: 700px; margin: 20px auto 40px;">Everyone notices different things.</p>
-    <p style="text-align: center; max-width: 700px; margin: 0 auto 60px;">But when several people independently react at the same point in a video, that's where something changed.</p>
-    
-    <div class="instinct-grid">
-      <div class="instinct-card">
-        <h3>Multiple Perspectives</h3>
-        <p style="margin-bottom: 0;">Different people pick up on different signals. Together, it becomes clear.</p>
-      </div>
-
-      <div class="instinct-card">
-        <h3>Shared Moments</h3>
-        <p style="margin-bottom: 0;">When reactions spike at the same point, that's where something changed.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- FREE FOR FRIENDS -->
-<section class="alt">
-  <div class="container">
-    <h2 style="text-align: center;">Free for Friends*</h2>
-    <p style="text-align: center; max-width: 700px; margin: 20px auto 0;">Anyone you send a video to can check it for free. No signup. No friction. Just click and react.</p>
-    <p style="text-align: center; font-size: 0.9rem; color: var(--text-muted); margin-top: 16px;">*With a Premium membership</p>
   </div>
 </section>
 
 <!-- USE CASES -->
 <section>
   <div class="container">
-    <h2 style="text-align: center; margin-bottom: 60px;">Who Uses SquadCheck</h2>
-    
-    <div class="use-case">
-      <div class="use-case-icon">👩</div>
-      <h3>Women & Dating Safety</h3>
-      <p class="quote">"I sent his video to my friends. All of us reacted at the same moment. That told me everything."</p>
-      <ul class="use-cases-list">
-        <li>Verify matches before meeting</li>
-        <li>Catch subtle red flags</li>
-        <li>Get a second opinion instantly</li>
-        <li>Avoid scams and unsafe situations</li>
-      </ul>
-    </div>
+    <h2 style="text-align: center;">When to Start a Session</h2>
+    <p class="section-intro">SquadCheck works best when you want multiple perspectives on a specific moment.</p>
 
-    <div class="use-case">
-      <div class="use-case-icon">👨</div>
-      <h3>Men & Catfish Prevention</h3>
-      <p class="quote">"Something felt off. My friend checked it too — same reaction. That confirmed it."</p>
-      <ul class="use-cases-list">
-        <li>Verify the person is real</li>
-        <li>Catch scripted or unnatural behavior</li>
-        <li>Confirm video matches profile</li>
-        <li>Avoid wasted time and money</li>
-      </ul>
+    <div class="use-cases-grid">
+      <div class="use-case-card">
+        <div class="use-case-icon">&#128149;</div>
+        <h3>Dating Profile Verification</h3>
+        <p>Matched with someone on Hinge or Bumble? Send their video intro to your friends before the first date.</p>
+      </div>
+      <div class="use-case-card">
+        <div class="use-case-icon">&#128247;</div>
+        <h3>Catfish Detection</h3>
+        <p>Got a video call that felt scripted? Have your squad analyze the same clip independently.</p>
+      </div>
+      <div class="use-case-card">
+        <div class="use-case-icon">&#128188;</div>
+        <h3>Business Due Diligence</h3>
+        <p>Evaluating a potential partner or investor? Get your team's independent read on the video call.</p>
+      </div>
+      <div class="use-case-card">
+        <div class="use-case-icon">&#128640;</div>
+        <h3>Content Authenticity</h3>
+        <p>Verify whether a viral video or testimonial feels genuine before sharing or acting on it.</p>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- DECISION MOMENT -->
+<!-- PRICING -->
 <section class="alt">
   <div class="container">
-    <h2 style="text-align: center;">Better decisions, faster</h2>
-    <p style="text-align: center; max-width: 700px; margin: 20px auto 0;">When something feels off but you can't explain why, don't guess. Get your squad's take before you move forward.</p>
+    <h2 style="text-align: center; margin-bottom: 16px;">Premium Creates. Friends Join Free.</h2>
+    <p style="text-align: center; max-width: 600px; margin: 0 auto 40px;">Only the session creator needs a premium account. Everyone they invite can analyze for free.</p>
+
+    <div class="pricing-callout">
+      <h3>SquadCheck Sessions</h3>
+      <p style="font-size: 1rem; margin-bottom: 0;">Included with every GutCheck Premium plan</p>
+      <div class="pricing-detail">
+        <div class="pricing-item">
+          <div class="pricing-item-label">Sessions</div>
+          <div class="pricing-item-value">Unlimited</div>
+        </div>
+        <div class="pricing-item">
+          <div class="pricing-item-label">Friends per session</div>
+          <div class="pricing-item-value">Up to 4</div>
+        </div>
+        <div class="pricing-item">
+          <div class="pricing-item-label">Session duration</div>
+          <div class="pricing-item-value">7 days</div>
+        </div>
+        <div class="pricing-item">
+          <div class="pricing-item-label">Friend access</div>
+          <div class="pricing-item-value">Always free</div>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 
 <!-- FINAL CTA -->
-<section class="final-cta">
+<section style="text-align: center; background: linear-gradient(135deg, rgba(20, 184, 166, 0.1), rgba(99, 102, 241, 0.05));">
   <div class="container">
-    <h2>Stop guessing on video calls</h2>
-    <p>Send it to your friends and see what they notice.</p>
-    <a href="/upgrade" class="btn btn-primary">Try SquadCheck Free</a>
+    <h2>Don't guess alone</h2>
+    <p style="font-size: 1.15rem; max-width: 550px; margin: 0 auto 32px;">Create a session, invite your friends, and see if your gut was right.</p>
+    <a href="/upgrade" class="btn btn-primary">Get Premium &mdash; Start SquadChecking</a>
   </div>
 </section>
+
+</div><!-- /marketing-view -->
+
+<!-- JOIN SESSION VIEW (shown when invited) -->
+<div id="join-view" class="join-view">
+  <div class="container">
+    <div class="join-card">
+      <div class="join-header">
+        <h2>You've been invited to a <span style="color:var(--teal);">SquadCheck</span></h2>
+        <p>Someone wants your opinion on a video. Analyze it and share your verdict.</p>
+      </div>
+
+      <div id="join-loading" style="text-align:center;padding:24px;font-family:var(--mono);font-size:0.85rem;color:var(--text-muted);">Loading session...</div>
+
+      <div id="join-content" style="display:none;">
+        <div class="join-video-name" id="join-video-name"></div>
+        <div style="display:flex;gap:16px;margin-bottom:24px;font-family:var(--mono);font-size:0.8rem;color:var(--text-muted);justify-content:center;">
+          <span id="join-participants"></span>
+          <span id="join-expires"></span>
+        </div>
+
+        <div class="join-form-group">
+          <label>Your Name</label>
+          <input type="text" class="join-input" id="join-name" placeholder="How should we identify you?">
+        </div>
+        <div class="join-form-group">
+          <label>Your Email (optional)</label>
+          <input type="email" class="join-input" id="join-email" placeholder="your@email.com">
+        </div>
+
+        <div style="text-align:center;margin-top:24px;">
+          <p style="font-size:0.95rem;margin-bottom:16px;">After entering your name, you'll analyze the video with GutCheck's face detection tool. Your webcam processes everything locally &mdash; nothing is uploaded.</p>
+          <a id="join-analyze-btn" class="btn btn-primary" style="width:100%;text-align:center;display:block;">Analyze Video Now</a>
+        </div>
+
+        <div class="join-status" id="join-status"></div>
+      </div>
+
+      <div id="join-expired" class="join-expired" style="display:none;">
+        <h3>Session Expired</h3>
+        <p>This SquadCheck session has ended. Ask the creator to start a new one.</p>
+        <a href="/squadcheck" class="btn btn-secondary" style="margin-top:16px;">Learn About SquadCheck</a>
+      </div>
+
+      <div id="join-error" style="display:none;text-align:center;padding:24px;">
+        <h3 style="color:var(--red);margin-bottom:8px;">Invalid Invite</h3>
+        <p>This invite link is invalid or has already been used.</p>
+        <a href="/squadcheck" class="btn btn-secondary" style="margin-top:16px;">Learn About SquadCheck</a>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- FOOTER -->
 <footer>
@@ -638,7 +848,7 @@
       </div>
       <div class="footer-links">
         <a href="/how-it-works.html">How It Works</a>
-        <a href="/squadcheck.html"><span style="background:#D4AF37;color:#fff;padding:2px 6px;border-radius:3px;font-size:0.65rem;font-weight:700;margin-right:4px;">NEW!</span> Squad<span style="color: var(--teal);">Check</span></a>
+        <a href="/squadcheck.html">SquadCheck</a>
         <a href="/blog.html">Blog</a>
         <a href="/privacy.html">Privacy</a>
         <a href="/contact.html">Contact</a>
@@ -646,6 +856,87 @@
     </div>
   </div>
 </footer>
+
+<script>
+// Check URL params for session/invite flow
+(function() {
+  var params = new URLSearchParams(window.location.search);
+  var inviteCode = params.get('invite');
+  var sessionId = params.get('session');
+
+  if (inviteCode) {
+    showJoinView();
+    loadInvite(inviteCode);
+  } else if (sessionId) {
+    // If user has token, show results; otherwise show join
+    var token = localStorage.getItem('gc_token');
+    if (token) {
+      showJoinView();
+      loadSessionForAuth(sessionId);
+    }
+  }
+})();
+
+function showJoinView() {
+  document.getElementById('marketing-view').style.display = 'none';
+  document.getElementById('join-view').style.display = 'block';
+}
+
+function loadInvite(inviteCode) {
+  fetch('/api/squadcheck-sessions/resolve-invite/' + encodeURIComponent(inviteCode))
+    .then(function(r) { return r.json().then(function(d) { return { ok: r.ok, status: r.status, data: d }; }); })
+    .then(function(res) {
+      document.getElementById('join-loading').style.display = 'none';
+
+      if (!res.ok) {
+        if (res.status === 410) {
+          document.getElementById('join-expired').style.display = 'block';
+        } else {
+          document.getElementById('join-error').style.display = 'block';
+        }
+        return;
+      }
+
+      var d = res.data;
+      document.getElementById('join-content').style.display = 'block';
+      document.getElementById('join-video-name').textContent = d.videoName || 'Video Check Session';
+      document.getElementById('join-participants').textContent = d.participantCount + '/5 have analyzed';
+      document.getElementById('join-expires').textContent = 'Expires ' + new Date(d.expiresAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+
+      // Set up analyze button
+      document.getElementById('join-analyze-btn').href = '/analyze.html?squadcheck=' + d.sessionId + '&invite=' + inviteCode;
+    })
+    .catch(function() {
+      document.getElementById('join-loading').style.display = 'none';
+      document.getElementById('join-error').style.display = 'block';
+    });
+}
+
+function loadSessionForAuth(sessionId) {
+  var token = localStorage.getItem('gc_token');
+  fetch('/api/squadcheck-sessions/' + sessionId + '/info')
+    .then(function(r) { return r.json().then(function(d) { return { ok: r.ok, data: d }; }); })
+    .then(function(res) {
+      document.getElementById('join-loading').style.display = 'none';
+
+      if (!res.ok || res.data.status === 'expired') {
+        document.getElementById('join-expired').style.display = 'block';
+        return;
+      }
+
+      var d = res.data;
+      document.getElementById('join-content').style.display = 'block';
+      document.getElementById('join-video-name').textContent = d.videoName || 'Video Check Session';
+      document.getElementById('join-participants').textContent = d.participantCount + '/5 have analyzed';
+      document.getElementById('join-expires').textContent = 'Expires ' + new Date(d.expiresAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+      document.getElementById('join-analyze-btn').href = '/analyze.html?squadcheck=' + sessionId;
+    })
+    .catch(function() {
+      document.getElementById('join-loading').style.display = 'none';
+      document.getElementById('join-error').style.display = 'block';
+    });
+}
+</script>
 
 </body>
 </html>

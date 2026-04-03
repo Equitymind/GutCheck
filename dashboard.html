@@ -475,6 +475,256 @@
     margin-right: 6px;
   }
 
+  /* Session cards */
+  .session-card {
+    border: 1px solid rgba(20,184,166,0.2);
+    background: linear-gradient(135deg, rgba(20,184,166,0.03) 0%, rgba(99,102,241,0.02) 100%);
+    margin-bottom: 16px;
+    cursor: pointer;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+
+  .session-card:hover {
+    border-color: var(--teal);
+    transform: translateY(-1px);
+  }
+
+  .session-status {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .session-status.active { background: rgba(34,197,94,0.15); color: var(--green); border: 1px solid rgba(34,197,94,0.3); }
+  .session-status.expired { background: rgba(239,68,68,0.1); color: var(--text-muted); border: 1px solid rgba(255,255,255,0.08); }
+
+  .session-meta {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-top: 12px;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  .session-meta-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .consensus-summary {
+    font-family: var(--mono);
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--teal);
+    margin-top: 12px;
+    padding: 10px 16px;
+    background: rgba(20,184,166,0.08);
+    border-radius: 8px;
+    text-align: center;
+  }
+
+  /* Session detail view */
+  .session-detail-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  .btn-back {
+    padding: 8px 16px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text-dim);
+    font-family: var(--mono);
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .btn-back:hover { border-color: var(--teal); color: var(--teal); }
+
+  .participant-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+
+  .participant-row:last-child { border-bottom: none; }
+
+  .participant-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--teal), var(--accent));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 700;
+    color: white;
+    flex-shrink: 0;
+  }
+
+  .participant-info { flex: 1; }
+
+  .participant-name {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text);
+  }
+
+  .participant-time {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-muted);
+  }
+
+  .invite-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 8px;
+    margin-bottom: 8px;
+  }
+
+  .invite-status {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 4px;
+    text-transform: uppercase;
+  }
+
+  .invite-status.pending { background: rgba(234,179,8,0.15); color: var(--yellow); }
+  .invite-status.accepted { background: rgba(34,197,94,0.15); color: var(--green); }
+
+  .session-filter-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+
+  .filter-tab {
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-muted);
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .filter-tab.active {
+    background: rgba(20,184,166,0.15);
+    color: var(--teal);
+    border-color: rgba(20,184,166,0.3);
+  }
+
+  .filter-tab:hover:not(.active) { border-color: rgba(255,255,255,0.15); color: var(--text-dim); }
+
+  .btn-squad-action {
+    padding: 10px 20px;
+    background: linear-gradient(135deg, var(--teal), #0d9488);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+
+  .btn-squad-action:hover { opacity: 0.9; }
+
+  /* Invite modal */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    backdrop-filter: blur(4px);
+  }
+
+  .modal-overlay.hidden { display: none; }
+
+  .modal-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 32px;
+    max-width: 480px;
+    width: 90%;
+  }
+
+  .modal-title {
+    font-family: var(--mono);
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: var(--teal);
+  }
+
+  .modal-subtitle {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-bottom: 24px;
+  }
+
+  .share-link-box {
+    display: flex;
+    gap: 8px;
+    margin: 16px 0;
+  }
+
+  .share-link-input {
+    flex: 1;
+    padding: 10px 14px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--teal);
+    font-family: var(--mono);
+    font-size: 12px;
+    outline: none;
+  }
+
+  .btn-modal-close {
+    padding: 10px 20px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text-dim);
+    font-family: var(--mono);
+    font-size: 12px;
+    cursor: pointer;
+    margin-top: 16px;
+  }
+
+  .btn-modal-close:hover { border-color: var(--text-muted); }
+
   /* Impact Stats */
   .impact-grid {
     display: grid;
@@ -860,7 +1110,7 @@
     <div class="nav-tabs">
       <button class="nav-tab active" onclick="switchTab('overview')">Overview</button>
       <button class="nav-tab" onclick="switchTab('scans')">My Scans</button>
-      <button class="nav-tab" onclick="switchTab('squad')">SquadCheck</button>
+      <button class="nav-tab" onclick="switchTab('sessions')">SquadCheck Sessions</button>
       <button class="nav-tab" onclick="switchTab('impact')">Squad Impact</button>
       <button class="nav-tab" onclick="switchTab('codes')">Invite Codes</button>
       <button class="nav-tab" onclick="switchTab('settings')">Account</button>
@@ -946,22 +1196,98 @@
       </div>
     </div>
 
-    <!-- SQUADCHECK TAB -->
-    <div class="tab-panel" id="panel-squad">
-      <div class="section">
-        <div class="section-header">
+    <!-- SQUADCHECK SESSIONS TAB -->
+    <div class="tab-panel" id="panel-sessions">
+      <!-- Session List View -->
+      <div id="sessions-list-view">
+        <div class="section">
+          <div class="section-header">
+            <div class="section-title">
+              <div class="section-icon" style="background: rgba(20,184,166,0.15); color: var(--teal);">S</div>
+              SquadCheck Sessions
+            </div>
+          </div>
+
+          <div class="session-filter-tabs">
+            <button class="filter-tab active" onclick="filterSessions('all')">All Sessions</button>
+            <button class="filter-tab" onclick="filterSessions('active')">Active</button>
+            <button class="filter-tab" onclick="filterSessions('expired')">Past</button>
+          </div>
+
+          <div id="sessions-container">
+            <div class="empty-state">
+              <div class="empty-icon">&#128101;</div>
+              <div class="empty-title">No SquadCheck sessions yet</div>
+              <div class="empty-desc">After analyzing a video, click "Get Squad Opinion" to create a session and invite up to 4 friends to verify.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Session Detail View (hidden by default) -->
+      <div id="session-detail-view" style="display:none;">
+        <div class="session-detail-header">
+          <button class="btn-back" onclick="showSessionsList()">Back</button>
           <div class="section-title">
-            <div class="section-icon" style="background: rgba(20,184,166,0.15); color: var(--teal);">Q</div>
-            SquadCheck Results
+            <div class="section-icon" style="background: rgba(20,184,166,0.15); color: var(--teal);">S</div>
+            <span id="detail-session-title">Session Details</span>
           </div>
         </div>
-        <div id="squad-results">
-          <div class="empty-state">
-            <div class="empty-icon">&#128101;</div>
-            <div class="empty-title">No SquadCheck sessions yet</div>
-            <div class="empty-desc">Share a video with your squad to see group verdicts and consensus view here.</div>
+
+        <!-- Session info card -->
+        <div class="card squad-card" style="margin-bottom: 20px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+            <div>
+              <div style="font-family:var(--mono);font-size:16px;font-weight:700;color:var(--text);" id="detail-video-name">Video</div>
+              <div style="font-family:var(--mono);font-size:11px;color:var(--text-muted);margin-top:4px;" id="detail-created-at"></div>
+            </div>
+            <span id="detail-status-badge"></span>
+          </div>
+          <div id="detail-expires" style="font-family:var(--mono);font-size:11px;color:var(--text-muted);margin-bottom:16px;"></div>
+
+          <!-- Consensus -->
+          <div id="detail-consensus" class="consensus-summary"></div>
+          <div class="consensus-bar-track" style="margin-top:12px;" id="detail-consensus-bar"></div>
+          <div class="consensus-legend" id="detail-consensus-legend"></div>
+        </div>
+
+        <!-- Participants -->
+        <div class="card" style="margin-bottom: 20px;">
+          <div class="card-header">
+            <span class="card-title">Participants</span>
+            <span class="card-badge" style="background:rgba(20,184,166,0.1);color:var(--teal);" id="detail-participant-count">0</span>
+          </div>
+          <div id="detail-participants"></div>
+        </div>
+
+        <!-- Invites -->
+        <div class="card" style="margin-bottom: 20px;">
+          <div class="card-header">
+            <span class="card-title">Invites</span>
+          </div>
+          <div id="detail-invites"></div>
+          <div style="margin-top:16px;" id="detail-invite-actions">
+            <button class="btn-squad-action" id="btn-invite-more" onclick="openInviteModal()">Invite Friends</button>
           </div>
         </div>
+      </div>
+    </div>
+
+    <!-- Invite Modal -->
+    <div class="modal-overlay hidden" id="invite-modal">
+      <div class="modal-box">
+        <div class="modal-title">Invite Friends to SquadCheck</div>
+        <div class="modal-subtitle">Share this link with up to 4 friends. They can analyze the video for free.</div>
+        <div class="share-link-box">
+          <input type="text" class="share-link-input" id="invite-share-link" readonly>
+          <button class="btn-copy" onclick="copyInviteLink()">Copy</button>
+        </div>
+        <div style="margin-top:20px;">
+          <label class="form-label">Or enter friend emails (comma separated)</label>
+          <input type="text" class="form-input" id="invite-emails" placeholder="friend1@email.com, friend2@email.com">
+          <button class="btn-squad-action" style="margin-top:12px;width:100%;" onclick="sendEmailInvites()">Send Invites</button>
+        </div>
+        <button class="btn-modal-close" onclick="closeInviteModal()">Close</button>
       </div>
     </div>
 
@@ -1183,12 +1509,15 @@ function api(path, opts) {
   });
 }
 
+var currentSessionFilter = 'all';
+var currentDetailSessionId = null;
+
 function loadAllData() {
   loadAccount();
   loadStats();
   loadActivity();
   loadScans();
-  loadSquadResults();
+  loadSquadSessions();
   loadSquadImpact();
   loadInviteCodes();
 }
@@ -1262,45 +1591,180 @@ function loadScans() {
   });
 }
 
-// --- SquadCheck Results ---
-function loadSquadResults() {
-  api('/api/dashboard/squad-results').then(function(d) {
-    var container = document.getElementById('squad-results');
-    if (!d.results || d.results.length === 0) return;
+// --- SquadCheck Sessions ---
+function loadSquadSessions() {
+  api('/api/squadcheck-sessions?filter=' + currentSessionFilter).then(function(d) {
+    var container = document.getElementById('sessions-container');
+    if (!d.sessions || d.sessions.length === 0) {
+      container.innerHTML = '<div class="empty-state">' +
+        '<div class="empty-icon">&#128101;</div>' +
+        '<div class="empty-title">No SquadCheck sessions' + (currentSessionFilter !== 'all' ? ' (' + currentSessionFilter + ')' : '') + '</div>' +
+        '<div class="empty-desc">After analyzing a video, click "Get Squad Opinion" to create a session and invite up to 4 friends to verify.</div>' +
+      '</div>';
+      return;
+    }
 
     var html = '';
-    d.results.forEach(function(r) {
-      var totalVotes = r.friendVerdicts.length;
-      var authCount = r.friendVerdicts.filter(function(v) { return v.verdict === 'authentic'; }).length;
-      var uncCount = r.friendVerdicts.filter(function(v) { return v.verdict === 'uncertain'; }).length;
-      var inaCount = totalVotes - authCount - uncCount;
-      var authPct = totalVotes > 0 ? Math.round(authCount / totalVotes * 100) : 0;
-      var uncPct = totalVotes > 0 ? Math.round(uncCount / totalVotes * 100) : 0;
-      var inaPct = totalVotes > 0 ? 100 - authPct - uncPct : 0;
-      var dateStr = new Date(r.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    d.sessions.forEach(function(s) {
+      var isActive = s.status === 'active' && new Date(s.expires_at) > new Date();
+      var dateStr = new Date(s.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+      var expiresStr = new Date(s.expires_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+      var consensusText = s.analyzed_count > 0
+        ? s.inauthentic_count + ' of ' + s.analyzed_count + ' flagged INAUTHENTIC'
+        : 'Waiting for responses';
 
-      html += '<div class="card squad-card" style="margin-bottom: 16px;">' +
-        '<div class="card-header">' +
-          '<span class="card-title" style="color: var(--teal);">' + escHtml(r.video_name || 'Shared Video') + '</span>' +
-          '<span class="card-badge" style="background: rgba(20,184,166,0.1); color: var(--teal);">' + totalVotes + ' verdict' + (totalVotes !== 1 ? 's' : '') + '</span>' +
+      html += '<div class="card session-card" onclick="viewSessionDetail(\'' + s.id + '\')">' +
+        '<div style="display:flex;justify-content:space-between;align-items:flex-start;">' +
+          '<div>' +
+            '<div style="font-family:var(--mono);font-size:15px;font-weight:700;color:var(--text);margin-bottom:4px;">' + escHtml(s.video_name || 'Video Check') + '</div>' +
+            '<div class="session-meta">' +
+              '<span class="session-meta-item">Created ' + dateStr + '</span>' +
+              '<span class="session-meta-item">' + (isActive ? 'Expires ' + expiresStr : 'Expired') + '</span>' +
+              '<span class="session-meta-item">' + s.participant_count + '/5 participants</span>' +
+            '</div>' +
+          '</div>' +
+          '<span class="session-status ' + (isActive ? 'active' : 'expired') + '">' + (isActive ? 'Active' : 'Expired') + '</span>' +
         '</div>' +
-        '<div style="display: flex; gap: 24px; margin-bottom: 16px;">' +
-          '<div><span style="font-size:12px;color:var(--text-muted);">Your verdict:</span> <span class="verdict-badge ' + (r.original_verdict === 'authentic' ? 'authentic' : r.original_verdict === 'uncertain' ? 'uncertain' : 'inauthentic') + '">' + r.original_verdict + '</span></div>' +
-          '<div style="font-family:var(--mono);font-size:12px;color:var(--text-muted);">' + dateStr + '</div>' +
-        '</div>' +
-        '<div class="consensus-bar-track">' +
-          '<div class="consensus-fill" style="width:' + authPct + '%;background:var(--green);border-radius:5px 0 0 5px;"></div>' +
-          '<div class="consensus-fill" style="width:' + uncPct + '%;background:var(--yellow);"></div>' +
-          '<div class="consensus-fill" style="width:' + inaPct + '%;background:var(--red);border-radius:0 5px 5px 0;"></div>' +
-        '</div>' +
-        '<div class="consensus-legend">' +
-          '<span><span class="legend-dot" style="background:var(--green);"></span>Authentic (' + authCount + ')</span>' +
-          '<span><span class="legend-dot" style="background:var(--yellow);"></span>Uncertain (' + uncCount + ')</span>' +
-          '<span><span class="legend-dot" style="background:var(--red);"></span>Inauthentic (' + inaCount + ')</span>' +
-        '</div>' +
+        (s.analyzed_count > 0 ? '<div class="consensus-summary">' + consensusText + '</div>' : '<div style="font-family:var(--mono);font-size:12px;color:var(--text-muted);margin-top:12px;text-align:center;">Waiting for squad to analyze...</div>') +
       '</div>';
     });
     container.innerHTML = html;
+  });
+}
+
+function filterSessions(filter) {
+  currentSessionFilter = filter;
+  document.querySelectorAll('.filter-tab').forEach(function(t) { t.classList.remove('active'); });
+  event.target.classList.add('active');
+  loadSquadSessions();
+}
+
+function viewSessionDetail(sessionId) {
+  currentDetailSessionId = sessionId;
+  document.getElementById('sessions-list-view').style.display = 'none';
+  document.getElementById('session-detail-view').style.display = 'block';
+
+  api('/api/squadcheck-sessions/' + sessionId + '/results').then(function(d) {
+    var s = d.session;
+    var isActive = s.status === 'active' && new Date(s.expiresAt) > new Date();
+
+    document.getElementById('detail-session-title').textContent = escHtml(s.videoName || 'Session Details');
+    document.getElementById('detail-video-name').textContent = escHtml(s.videoName || 'Video Check');
+    document.getElementById('detail-created-at').textContent = 'Created ' + new Date(s.createdAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+    document.getElementById('detail-status-badge').innerHTML = '<span class="session-status ' + (isActive ? 'active' : 'expired') + '">' + (isActive ? 'Active' : 'Expired') + '</span>';
+    document.getElementById('detail-expires').textContent = isActive ? 'Expires ' + new Date(s.expiresAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : 'Session expired';
+
+    // Consensus
+    var c = d.consensus;
+    document.getElementById('detail-consensus').textContent = c.summary;
+
+    if (c.total > 0) {
+      var authPct = Math.round(c.authentic / c.total * 100);
+      var uncPct = Math.round(c.uncertain / c.total * 100);
+      var inaPct = 100 - authPct - uncPct;
+      document.getElementById('detail-consensus-bar').innerHTML =
+        '<div class="consensus-fill" style="width:' + authPct + '%;background:var(--green);border-radius:5px 0 0 5px;"></div>' +
+        '<div class="consensus-fill" style="width:' + uncPct + '%;background:var(--yellow);"></div>' +
+        '<div class="consensus-fill" style="width:' + inaPct + '%;background:var(--red);border-radius:0 5px 5px 0;"></div>';
+      document.getElementById('detail-consensus-legend').innerHTML =
+        '<span><span class="legend-dot" style="background:var(--green);"></span>Authentic (' + c.authentic + ')</span>' +
+        '<span><span class="legend-dot" style="background:var(--yellow);"></span>Uncertain (' + c.uncertain + ')</span>' +
+        '<span><span class="legend-dot" style="background:var(--red);"></span>Inauthentic (' + c.inauthentic + ')</span>';
+    } else {
+      document.getElementById('detail-consensus-bar').innerHTML = '';
+      document.getElementById('detail-consensus-legend').innerHTML = '';
+    }
+
+    // Participants
+    document.getElementById('detail-participant-count').textContent = d.participants.length + '/5';
+    var pHtml = '';
+    if (d.participants.length === 0) {
+      pHtml = '<div style="text-align:center;padding:20px;color:var(--text-muted);font-size:13px;">No one has analyzed yet</div>';
+    } else {
+      d.participants.forEach(function(p) {
+        var initial = (p.display_name || p.email || '?').charAt(0).toUpperCase();
+        var name = escHtml(p.display_name || p.email || 'Anonymous');
+        var verdictClass = p.verdict === 'authentic' ? 'authentic' : p.verdict === 'uncertain' ? 'uncertain' : 'inauthentic';
+        var timeStr = p.analyzed_at ? new Date(p.analyzed_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : 'Pending';
+
+        pHtml += '<div class="participant-row">' +
+          '<div class="participant-avatar">' + initial + '</div>' +
+          '<div class="participant-info">' +
+            '<div class="participant-name">' + name + '</div>' +
+            '<div class="participant-time">' + timeStr + '</div>' +
+          '</div>' +
+          (p.verdict ? '<span class="verdict-badge ' + verdictClass + '">' + p.verdict + '</span>' : '<span style="font-family:var(--mono);font-size:11px;color:var(--text-muted);">PENDING</span>') +
+          (p.score != null ? '<div style="font-family:var(--mono);font-size:16px;font-weight:700;color:' + (p.verdict === 'authentic' ? 'var(--green)' : p.verdict === 'uncertain' ? 'var(--yellow)' : 'var(--red)') + ';width:40px;text-align:right;">' + p.score + '</div>' : '') +
+        '</div>';
+      });
+    }
+    document.getElementById('detail-participants').innerHTML = pHtml;
+
+    // Invites
+    var iHtml = '';
+    if (d.invites && d.invites.length > 0) {
+      d.invites.forEach(function(inv) {
+        iHtml += '<div class="invite-row">' +
+          '<span style="font-family:var(--mono);font-size:12px;color:var(--text-dim);">' + escHtml(inv.email || 'Shareable link') + '</span>' +
+          '<span class="invite-status ' + inv.status + '">' + inv.status + '</span>' +
+        '</div>';
+      });
+    } else {
+      iHtml = '<div style="text-align:center;padding:16px;color:var(--text-muted);font-size:13px;">No invites sent yet</div>';
+    }
+    document.getElementById('detail-invites').innerHTML = iHtml;
+
+    // Hide invite button for expired sessions
+    document.getElementById('btn-invite-more').style.display = isActive ? 'inline-block' : 'none';
+  });
+}
+
+function showSessionsList() {
+  document.getElementById('sessions-list-view').style.display = 'block';
+  document.getElementById('session-detail-view').style.display = 'none';
+  currentDetailSessionId = null;
+}
+
+function openInviteModal() {
+  if (!currentDetailSessionId) return;
+  document.getElementById('invite-modal').classList.remove('hidden');
+  // Generate a fresh invite link
+  api('/api/squadcheck-sessions/' + currentDetailSessionId + '/invite', {
+    method: 'POST',
+    body: {}
+  }).then(function(d) {
+    var link = window.location.origin + (d.shareLink || d.invites[0].link);
+    document.getElementById('invite-share-link').value = link;
+  });
+}
+
+function closeInviteModal() {
+  document.getElementById('invite-modal').classList.add('hidden');
+  document.getElementById('invite-emails').value = '';
+}
+
+function copyInviteLink() {
+  var input = document.getElementById('invite-share-link');
+  navigator.clipboard.writeText(input.value).then(function() {
+    showToast('Invite link copied!', 'success');
+  });
+}
+
+function sendEmailInvites() {
+  var emailsStr = document.getElementById('invite-emails').value.trim();
+  if (!emailsStr) { showToast('Enter at least one email', 'error'); return; }
+  var emails = emailsStr.split(',').map(function(e) { return e.trim(); }).filter(function(e) { return e; });
+  if (emails.length === 0) { showToast('Enter valid emails', 'error'); return; }
+
+  api('/api/squadcheck-sessions/' + currentDetailSessionId + '/invite', {
+    method: 'POST',
+    body: { emails: emails }
+  }).then(function(d) {
+    showToast(d.invites.length + ' invite(s) created', 'success');
+    document.getElementById('invite-emails').value = '';
+    viewSessionDetail(currentDetailSessionId);
+  }).catch(function() {
+    showToast('Failed to send invites', 'error');
   });
 }
 

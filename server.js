@@ -56,6 +56,42 @@ db.exec(`
     FOREIGN KEY (session_id) REFERENCES squad_sessions(id),
     FOREIGN KEY (user_id) REFERENCES users(id)
   );
+  CREATE TABLE IF NOT EXISTS squadcheck_sessions (
+    id TEXT PRIMARY KEY,
+    creator_user_id INTEGER NOT NULL,
+    video_url TEXT,
+    video_hash TEXT,
+    video_name TEXT,
+    scan_id INTEGER,
+    expires_at DATETIME NOT NULL,
+    status TEXT DEFAULT 'active',
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (creator_user_id) REFERENCES users(id),
+    FOREIGN KEY (scan_id) REFERENCES user_scans(id)
+  );
+  CREATE TABLE IF NOT EXISTS session_participants (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    session_id TEXT NOT NULL,
+    user_id INTEGER,
+    email TEXT,
+    display_name TEXT,
+    verdict TEXT,
+    confidence REAL,
+    score INTEGER,
+    analyzed_at DATETIME,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (session_id) REFERENCES squadcheck_sessions(id),
+    FOREIGN KEY (user_id) REFERENCES users(id)
+  );
+  CREATE TABLE IF NOT EXISTS session_invites (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    session_id TEXT NOT NULL,
+    email TEXT,
+    invite_code TEXT UNIQUE NOT NULL,
+    status TEXT DEFAULT 'pending',
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (session_id) REFERENCES squadcheck_sessions(id)
+  );
   CREATE TABLE IF NOT EXISTS analytics_events (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     event TEXT NOT NULL,
@@ -284,7 +320,7 @@ app.post('/api/stripe-webhook', express.raw({ type: 'application/json' }), (req,
   res.json({ received: true });
 });
 
-// --------------- SquadCheck ---------------
+// --------------- SquadCheck (Legacy) ---------------
 app.post('/api/squadcheck/create', authenticateToken, (req, res) => {
   const { videoUrl } = req.body;
   const sessionId = require('crypto').randomUUID();
@@ -317,6 +353,282 @@ app.get('/api/squadcheck/:sessionId/results', authenticateToken, (req, res) => {
   const responses = db.prepare('SELECT sr.*, u.email FROM squad_responses sr JOIN users u ON sr.user_id = u.id WHERE sr.session_id = ?').all(sessionId);
 
   res.json({ session, responses });
+});
+
+// --------------- SquadCheck Sessions (New) ---------------
+const crypto = require('crypto');
+
+// Helper: check if user is premium
+function isPremium(userId) {
+  const user = db.prepare('SELECT plan FROM users WHERE id = ?').get(userId);
+  return user && user.plan !== 'free';
+}
+
+// Create a SquadCheck session (premium only)
+app.post('/api/squadcheck-sessions', authenticateToken, (req, res) => {
+  if (!isPremium(req.user.id)) {
+    return res.status(403).json({ error: 'Premium subscription required to create SquadCheck sessions' });
+  }
+
+  const { videoUrl, videoName, scanId, verdict, confidence, score } = req.body;
+  const sessionId = crypto.randomUUID();
+  const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString();
+
+  db.prepare(
+    'INSERT INTO squadcheck_sessions (id, creator_user_id, video_url, video_name, scan_id, expires_at) VALUES (?, ?, ?, ?, ?, ?)'
+  ).run(sessionId, req.user.id, videoUrl || null, videoName || null, scanId || null, expiresAt);
+
+  // Add creator as first participant with their analysis
+  if (verdict) {
+    db.prepare(
+      'INSERT INTO session_participants (session_id, user_id, email, verdict, confidence, score, analyzed_at) VALUES (?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)'
+    ).run(sessionId, req.user.id, req.user.email, verdict, confidence || null, score || null);
+  }
+
+  res.json({
+    sessionId,
+    expiresAt,
+    shareLink: `/squadcheck?session=${sessionId}`
+  });
+});
+
+// Generate invite link for a session
+app.post('/api/squadcheck-sessions/:sessionId/invite', authenticateToken, (req, res) => {
+  const { sessionId } = req.params;
+  const { emails } = req.body; // optional array of emails
+
+  const session = db.prepare('SELECT * FROM squadcheck_sessions WHERE id = ?').get(sessionId);
+  if (!session) return res.status(404).json({ error: 'Session not found' });
+  if (session.creator_user_id !== req.user.id) return res.status(403).json({ error: 'Only session creator can invite' });
+  if (session.status !== 'active') return res.status(400).json({ error: 'Session is no longer active' });
+
+  // Check participant limit (4 friends + creator = 5 max)
+  const participantCount = db.prepare('SELECT COUNT(*) as count FROM session_participants WHERE session_id = ?').get(sessionId).count;
+  const inviteCount = db.prepare("SELECT COUNT(*) as count FROM session_invites WHERE session_id = ? AND status = 'pending'").get(sessionId).count;
+
+  const invites = [];
+
+  if (emails && Array.isArray(emails)) {
+    for (const email of emails.slice(0, 4)) {
+      if (participantCount + inviteCount + invites.length >= 5) break;
+      const inviteCode = crypto.randomBytes(6).toString('hex');
+      db.prepare('INSERT INTO session_invites (session_id, email, invite_code) VALUES (?, ?, ?)')
+        .run(sessionId, email, inviteCode);
+      invites.push({ email, inviteCode, link: `/squadcheck?invite=${inviteCode}` });
+    }
+  } else {
+    // Generate a generic shareable link
+    const inviteCode = crypto.randomBytes(6).toString('hex');
+    db.prepare('INSERT INTO session_invites (session_id, invite_code) VALUES (?, ?)')
+      .run(sessionId, inviteCode);
+    invites.push({ inviteCode, link: `/squadcheck?invite=${inviteCode}` });
+  }
+
+  res.json({ invites, shareLink: invites[0]?.link || `/squadcheck?session=${sessionId}` });
+});
+
+// Get session info (for invite page - no auth required)
+app.get('/api/squadcheck-sessions/:sessionId/info', (req, res) => {
+  const { sessionId } = req.params;
+
+  const session = db.prepare(
+    'SELECT sc.id, sc.video_url, sc.video_name, sc.expires_at, sc.status, sc.created_at, u.email as creator_email FROM squadcheck_sessions sc JOIN users u ON sc.creator_user_id = u.id WHERE sc.id = ?'
+  ).get(sessionId);
+
+  if (!session) return res.status(404).json({ error: 'Session not found' });
+
+  // Check expiry
+  if (new Date(session.expires_at) < new Date()) {
+    db.prepare("UPDATE squadcheck_sessions SET status = 'expired' WHERE id = ?").run(sessionId);
+    session.status = 'expired';
+  }
+
+  const participantCount = db.prepare('SELECT COUNT(*) as count FROM session_participants WHERE session_id = ?').get(sessionId).count;
+
+  res.json({
+    id: session.id,
+    videoName: session.video_name,
+    creatorEmail: session.creator_email,
+    expiresAt: session.expires_at,
+    status: session.status,
+    participantCount,
+    createdAt: session.created_at
+  });
+});
+
+// Resolve invite code to session
+app.get('/api/squadcheck-sessions/resolve-invite/:inviteCode', (req, res) => {
+  const { inviteCode } = req.params;
+
+  const invite = db.prepare(
+    "SELECT si.*, sc.id as session_id, sc.video_url, sc.video_name, sc.expires_at, sc.status FROM session_invites si JOIN squadcheck_sessions sc ON si.session_id = sc.id WHERE si.invite_code = ?"
+  ).get(inviteCode);
+
+  if (!invite) return res.status(404).json({ error: 'Invalid invite code' });
+  if (invite.status === 'expired' || new Date(invite.expires_at) < new Date()) {
+    return res.status(410).json({ error: 'This session has expired' });
+  }
+
+  const participantCount = db.prepare('SELECT COUNT(*) as count FROM session_participants WHERE session_id = ?').get(invite.session_id).count;
+
+  res.json({
+    sessionId: invite.session_id,
+    videoName: invite.video_name,
+    videoUrl: invite.video_url,
+    expiresAt: invite.expires_at,
+    participantCount,
+    status: invite.status === 'active' ? 'active' : invite.status
+  });
+});
+
+// Submit analysis to a session (friends - no auth required, uses invite code)
+app.post('/api/squadcheck-sessions/:sessionId/analyze', (req, res) => {
+  const { sessionId } = req.params;
+  const { inviteCode, displayName, email, verdict, confidence, score } = req.body;
+
+  if (!verdict) return res.status(400).json({ error: 'Verdict required' });
+
+  const session = db.prepare('SELECT * FROM squadcheck_sessions WHERE id = ?').get(sessionId);
+  if (!session) return res.status(404).json({ error: 'Session not found' });
+  if (session.status !== 'active') return res.status(400).json({ error: 'Session is no longer active' });
+  if (new Date(session.expires_at) < new Date()) {
+    db.prepare("UPDATE squadcheck_sessions SET status = 'expired' WHERE id = ?").run(sessionId);
+    return res.status(410).json({ error: 'Session has expired' });
+  }
+
+  // Validate invite code if provided
+  if (inviteCode) {
+    const invite = db.prepare("SELECT * FROM session_invites WHERE invite_code = ? AND session_id = ?").get(inviteCode, sessionId);
+    if (!invite) return res.status(403).json({ error: 'Invalid invite code' });
+    // Mark invite as accepted
+    db.prepare("UPDATE session_invites SET status = 'accepted' WHERE id = ?").run(invite.id);
+  }
+
+  // Check participant limit
+  const participantCount = db.prepare('SELECT COUNT(*) as count FROM session_participants WHERE session_id = ?').get(sessionId).count;
+  if (participantCount >= 5) return res.status(400).json({ error: 'Session is full (max 5 participants)' });
+
+  // Check for duplicate by email
+  if (email) {
+    const existing = db.prepare('SELECT id FROM session_participants WHERE session_id = ? AND email = ?').get(sessionId, email);
+    if (existing) return res.status(409).json({ error: 'You have already analyzed this video' });
+  }
+
+  db.prepare(
+    'INSERT INTO session_participants (session_id, email, display_name, verdict, confidence, score, analyzed_at) VALUES (?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)'
+  ).run(sessionId, email || null, displayName || null, verdict, confidence || null, score || null);
+
+  res.json({ success: true });
+});
+
+// Submit analysis as authenticated user
+app.post('/api/squadcheck-sessions/:sessionId/analyze-auth', authenticateToken, (req, res) => {
+  const { sessionId } = req.params;
+  const { verdict, confidence, score } = req.body;
+
+  if (!verdict) return res.status(400).json({ error: 'Verdict required' });
+
+  const session = db.prepare('SELECT * FROM squadcheck_sessions WHERE id = ?').get(sessionId);
+  if (!session) return res.status(404).json({ error: 'Session not found' });
+  if (session.status !== 'active') return res.status(400).json({ error: 'Session is no longer active' });
+  if (new Date(session.expires_at) < new Date()) {
+    db.prepare("UPDATE squadcheck_sessions SET status = 'expired' WHERE id = ?").run(sessionId);
+    return res.status(410).json({ error: 'Session has expired' });
+  }
+
+  // Check for duplicate
+  const existing = db.prepare('SELECT id FROM session_participants WHERE session_id = ? AND user_id = ?').get(sessionId, req.user.id);
+  if (existing) return res.status(409).json({ error: 'You have already analyzed this video' });
+
+  const participantCount = db.prepare('SELECT COUNT(*) as count FROM session_participants WHERE session_id = ?').get(sessionId).count;
+  if (participantCount >= 5) return res.status(400).json({ error: 'Session is full (max 5 participants)' });
+
+  db.prepare(
+    'INSERT INTO session_participants (session_id, user_id, email, verdict, confidence, score, analyzed_at) VALUES (?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)'
+  ).run(sessionId, req.user.id, req.user.email, verdict, confidence || null, score || null);
+
+  res.json({ success: true });
+});
+
+// Get full session results (auth required - creator or participant)
+app.get('/api/squadcheck-sessions/:sessionId/results', authenticateToken, (req, res) => {
+  const { sessionId } = req.params;
+
+  const session = db.prepare(
+    'SELECT sc.*, u.email as creator_email FROM squadcheck_sessions sc JOIN users u ON sc.creator_user_id = u.id WHERE sc.id = ?'
+  ).get(sessionId);
+  if (!session) return res.status(404).json({ error: 'Session not found' });
+
+  const participants = db.prepare(
+    'SELECT sp.display_name, sp.email, sp.verdict, sp.confidence, sp.score, sp.analyzed_at FROM session_participants sp WHERE sp.session_id = ? ORDER BY sp.analyzed_at ASC'
+  ).all(sessionId);
+
+  const invites = db.prepare(
+    'SELECT email, status, created_at FROM session_invites WHERE session_id = ?'
+  ).all(sessionId);
+
+  // Calculate consensus
+  const analyzed = participants.filter(p => p.verdict);
+  const totalAnalyzed = analyzed.length;
+  const inauthenticCount = analyzed.filter(p => p.verdict === 'inauthentic').length;
+  const authenticCount = analyzed.filter(p => p.verdict === 'authentic').length;
+  const uncertainCount = analyzed.filter(p => p.verdict === 'uncertain').length;
+
+  res.json({
+    session: {
+      id: session.id,
+      videoUrl: session.video_url,
+      videoName: session.video_name,
+      creatorEmail: session.creator_email,
+      expiresAt: session.expires_at,
+      status: session.status,
+      createdAt: session.created_at
+    },
+    participants,
+    invites,
+    consensus: {
+      total: totalAnalyzed,
+      authentic: authenticCount,
+      uncertain: uncertainCount,
+      inauthentic: inauthenticCount,
+      summary: totalAnalyzed > 0
+        ? `${inauthenticCount} of ${totalAnalyzed} flagged INAUTHENTIC`
+        : 'Waiting for responses'
+    }
+  });
+});
+
+// List user's SquadCheck sessions (dashboard)
+app.get('/api/squadcheck-sessions', authenticateToken, (req, res) => {
+  const userId = req.user.id;
+  const filter = req.query.filter || 'all'; // 'active', 'expired', 'all'
+
+  let query = `
+    SELECT sc.*, u.email as creator_email,
+      (SELECT COUNT(*) FROM session_participants sp WHERE sp.session_id = sc.id) as participant_count,
+      (SELECT COUNT(*) FROM session_participants sp WHERE sp.session_id = sc.id AND sp.verdict IS NOT NULL) as analyzed_count,
+      (SELECT COUNT(*) FROM session_participants sp WHERE sp.session_id = sc.id AND sp.verdict = 'inauthentic') as inauthentic_count
+    FROM squadcheck_sessions sc
+    JOIN users u ON sc.creator_user_id = u.id
+    WHERE sc.creator_user_id = ?
+  `;
+
+  if (filter === 'active') query += " AND sc.status = 'active' AND sc.expires_at > datetime('now')";
+  else if (filter === 'expired') query += " AND (sc.status = 'expired' OR sc.expires_at <= datetime('now'))";
+
+  query += ' ORDER BY sc.created_at DESC LIMIT 50';
+
+  const sessions = db.prepare(query).all(userId);
+
+  // Auto-expire stale sessions
+  sessions.forEach(s => {
+    if (s.status === 'active' && new Date(s.expires_at) < new Date()) {
+      db.prepare("UPDATE squadcheck_sessions SET status = 'expired' WHERE id = ?").run(s.id);
+      s.status = 'expired';
+    }
+  });
+
+  res.json({ sessions });
 });
 
 // --------------- Video Upload ---------------

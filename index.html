@@ -21,14 +21,18 @@
       --bg: #08060F;
       --surface: #110e1a;
       --surface-border: #1e1a2e;
-      --accent: #14B8A6;
-      --accent-hover: #2DD4BF;
+      --teal: #14B8A6;
+      --teal-hover: #2DD4BF;
+      --purple: #6366f1;
+      --white: #ffffff;
       --text: #e8e6f0;
       --text-muted: #9b97a8;
       --green: #22c55e;
       --yellow: #eab308;
       --red: #ef4444;
       --radius: 12px;
+      --mono: 'JetBrains Mono', 'SF Mono', monospace;
+      --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     }
 
     html {
@@ -36,7 +40,7 @@
     }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      font-family: var(--sans);
       background: var(--bg);
       color: var(--text);
       line-height: 1.6;
@@ -51,33 +55,31 @@
 
     /* NAV */
     nav {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      z-index: 100;
-      background: rgba(8, 6, 15, 0.85);
-      backdrop-filter: blur(12px);
+      background: var(--bg);
       border-bottom: 1px solid var(--surface-border);
+      padding: 20px 0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(12px);
     }
 
     nav .container {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      height: 64px;
     }
 
     .logo {
-      font-size: 1.25rem;
-      font-weight: 700;
-      color: var(--text);
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--white);
       text-decoration: none;
       letter-spacing: -0.02em;
     }
 
     .logo span {
-      color: var(--accent);
+      color: var(--teal);
     }
 
     .nav-right {
@@ -105,23 +107,24 @@
     }
 
     nav a.nav-cta {
-      font-size: 0.875rem;
-      font-weight: 600;
-      color: #fff;
-      background: var(--accent);
-      padding: 8px 20px;
-      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--bg);
+      background: var(--teal);
+      padding: 14px 24px;
+      border-radius: 10px;
       text-decoration: none;
-      transition: background 0.2s;
+      transition: all 0.2s;
     }
 
     nav a.nav-cta:hover {
-      background: var(--accent-hover);
+      background: var(--teal-hover);
+      transform: translateY(-2px);
     }
 
     /* HERO */
     .hero {
-      padding: 160px 0 40px;
+      padding: 80px 0 60px;
       text-align: center;
       position: relative;
       overflow: hidden;
@@ -146,42 +149,50 @@
     }
 
     .hero-badge {
-      display: inline-block;
-      font-size: 0.8rem;
-      font-weight: 600;
-      color: var(--accent);
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
       background: rgba(20, 184, 166, 0.1);
       border: 1px solid rgba(20, 184, 166, 0.25);
-      padding: 6px 16px;
-      border-radius: 100px;
-      margin-bottom: 32px;
+      border-radius: 24px;
+      padding: 8px 20px;
+      margin-bottom: 28px;
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--teal);
       letter-spacing: 0.04em;
     }
 
-    .site-logo {
-      width: 420px;
-      max-width: 85vw;
-      height: auto;
-      display: block;
-      margin: 20px auto 32px auto;
+    .hero-badge .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--teal);
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
     }
 
     .hero h1 {
       font-size: clamp(2.5rem, 6vw, 4rem);
-      font-weight: 800;
+      font-weight: 900;
       line-height: 1.1;
-      letter-spacing: -0.03em;
+      letter-spacing: -0.02em;
       max-width: 720px;
-      margin: 0 auto 16px;
+      margin: 0 auto 24px;
     }
 
     .hero h2 {
-      font-size: 1.35rem;
+      font-size: 1.25rem;
       font-weight: 400;
       color: var(--text-muted);
-      max-width: 600px;
+      max-width: 650px;
       margin: 0 auto 24px;
-      line-height: 1.5;
+      line-height: 1.7;
     }
 
     .hero p {
@@ -204,18 +215,18 @@
       align-items: center;
       gap: 8px;
       font-size: 1rem;
-      font-weight: 600;
-      color: #fff;
-      background: var(--accent);
-      padding: 14px 32px;
+      font-weight: 700;
+      color: var(--bg);
+      background: var(--teal);
+      padding: 16px 32px;
       border-radius: 10px;
       text-decoration: none;
-      transition: background 0.2s, transform 0.15s;
+      transition: all 0.2s;
     }
 
     .btn-primary:hover {
-      background: var(--accent-hover);
-      transform: translateY(-1px);
+      background: var(--teal-hover);
+      transform: translateY(-2px);
     }
 
     .btn-ghost {
@@ -223,19 +234,19 @@
       align-items: center;
       gap: 8px;
       font-size: 1rem;
-      font-weight: 600;
-      color: var(--text);
-      background: transparent;
+      font-weight: 700;
+      color: var(--white);
+      background: var(--surface);
       border: 1px solid var(--surface-border);
-      padding: 14px 32px;
+      padding: 16px 32px;
       border-radius: 10px;
       text-decoration: none;
-      transition: border-color 0.2s, transform 0.15s;
+      transition: all 0.2s;
     }
 
     .btn-ghost:hover {
-      border-color: var(--accent);
-      transform: translateY(-1px);
+      border-color: var(--teal);
+      transform: translateY(-2px);
     }
 
     /* SECTIONS */
@@ -246,7 +257,7 @@
     .section-label {
       font-size: 0.8rem;
       font-weight: 700;
-      color: var(--accent);
+      color: var(--teal);
       text-transform: uppercase;
       letter-spacing: 0.1em;
       margin-bottom: 12px;
@@ -318,7 +329,7 @@
     }
 
     .squadcheck-hero-text span:nth-child(2) {
-      color: var(--accent);
+      color: var(--teal);
     }
 
     .squadcheck-hero-text span:last-child {
@@ -474,7 +485,7 @@
     .step-num {
       font-size: 0.75rem;
       font-weight: 700;
-      color: var(--accent);
+      color: var(--teal);
       text-transform: uppercase;
       letter-spacing: 0.1em;
       margin-bottom: 8px;
@@ -505,7 +516,7 @@
     }
 
     .how-bridge a {
-      color: var(--accent);
+      color: var(--teal);
       text-decoration: none;
       font-weight: 600;
     }
@@ -535,7 +546,7 @@
     .consensus-callout {
       background: var(--surface);
       border: 1px solid rgba(20, 184, 166, 0.2);
-      border-left: 3px solid var(--accent);
+      border-left: 3px solid var(--teal);
       border-radius: var(--radius);
       padding: 20px 28px;
       margin-bottom: 28px;
@@ -544,7 +555,7 @@
 
     .consensus-callout .callout-stat {
       font-weight: 700;
-      color: var(--accent);
+      color: var(--teal);
       margin-bottom: 4px;
       font-size: 0.95rem;
     }
@@ -642,7 +653,7 @@
     }
 
     .price-card.featured {
-      border-color: var(--accent);
+      border-color: var(--teal);
       position: relative;
     }
 
@@ -655,7 +666,7 @@
       font-size: 0.75rem;
       font-weight: 700;
       color: #fff;
-      background: var(--accent);
+      background: var(--teal);
       padding: 4px 16px;
       border-radius: 100px;
       letter-spacing: 0.04em;
@@ -701,7 +712,7 @@
 
     .price-features li::before {
       content: '\2713';
-      color: var(--accent);
+      color: var(--teal);
       font-weight: 700;
       font-size: 0.85rem;
     }
@@ -752,7 +763,7 @@
       line-height: 1.6;
       margin-bottom: 20px;
       padding-left: 16px;
-      border-left: 2px solid var(--accent);
+      border-left: 2px solid var(--teal);
     }
 
     .use-case-card ul {
@@ -770,7 +781,7 @@
 
     .use-case-card ul li::before {
       content: '\2713';
-      color: var(--accent);
+      color: var(--teal);
       font-weight: 700;
       font-size: 0.8rem;
     }
@@ -843,7 +854,7 @@
       color: var(--text);
     }
 
-    .teal { color: var(--accent); }
+    .teal { color: var(--teal); }
 
     .gold { color: #D4AF37; }
 
@@ -858,7 +869,7 @@
       font-size: 1rem;
       font-weight: 600;
       color: #fff;
-      background: var(--accent);
+      background: var(--teal);
       padding: 14px 32px;
       border-radius: 10px;
       text-decoration: none;
@@ -866,7 +877,7 @@
     }
 
     .btn-squadcheck:hover {
-      background: var(--accent-hover);
+      background: var(--teal-hover);
       transform: translateY(-1px);
     }
 
@@ -881,7 +892,7 @@
       }
 
       .hero {
-        padding: 120px 0 32px;
+        padding: 72px 0 48px;
       }
 
       .stat-grid,
@@ -922,11 +933,10 @@
   <!-- HERO -->
   <section class="hero">
     <div class="container">
-      <img src="logo-new-2026.png" alt="GutCheck logo" class="site-logo">
-      <div class="hero-badge">🔒 PRIVATE BETA, Dating Safety Edition</div>
-      <h1>Verify Video Call Authenticity in Real Time</h1>
-      <h2>Know when something feels off, and see if others caught it too</h2>
-      <p>Gut<span class="teal">Check</span> analyzes your biometric response and video behavior to detect manipulation during live calls. Then use <a href="/squadcheck.html" style="color:var(--accent);text-decoration:none;">Squad<span class="teal">Check</span>&trade;</a> to share it with friends and see if they noticed the same moment.</p>
+      <div class="hero-badge"><span class="dot"></span> Private Beta · Dating Safety Edition</div>
+      <h1>Verify video calls with <span class="teal">your gut</span> and your friends</h1>
+      <h2>Know when something feels off, and see if others caught it too.</h2>
+      <p>Gut<span class="teal">Check</span> analyzes your biometric response and video behavior to detect manipulation during live calls. Then use <a href="/squadcheck.html" style="color:var(--teal);text-decoration:none;">Squad<span class="teal">Check</span>&trade;</a> to share it with friends and see if they noticed the same moment.</p>
       <div class="hero-ctas">
         <a href="/analyze.html" class="btn-primary">Try It Free</a>
         <a href="#how" class="btn-ghost">See How It Works</a>
@@ -1025,7 +1035,7 @@
           <h3>Get your result, then compare it</h3>
           <p><span style="color:var(--green);font-weight:700;">LIKELY REAL</span> / <span style="color:var(--yellow);font-weight:700;">UNCERTAIN</span> / <span style="color:var(--red);font-weight:700;">LIKELY INAUTHENTIC</span></p>
           <p style="margin-top:10px;">When both signals agree, confidence is high. When they diverge, something doesn't line up.</p>
-          <p style="margin-top:10px;">Send it to your friends with <a href="/squadcheck.html" style="color:var(--accent);text-decoration:none;">Squad<span class="teal">Check</span>&trade;</a> and see if they noticed the same moment.</p>
+          <p style="margin-top:10px;">Send it to your friends with <a href="/squadcheck.html" style="color:var(--teal);text-decoration:none;">Squad<span class="teal">Check</span>&trade;</a> and see if they noticed the same moment.</p>
         </div>
       </div>
       <div class="how-bridge">That's when a second opinion matters most. <a href="#squadcheck">Try Squad<span class="teal">Check</span></a></div>
